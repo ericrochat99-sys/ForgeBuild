@@ -67,7 +67,26 @@ module ForgeBuild
         }
       end
 
+      def regenerate(entity:, model:, attributes:)
+        parameters = attributes.fetch(:parameters, attributes.fetch(:dimensions))
+        length = number(parameters, 'length')
+        thickness = number(parameters, 'thickness')
+        height = number(parameters, 'height')
+        spacing = number(parameters, 'cell_spacing', 48)
+        entity.entities.clear!
+        Geometry::RectangularPrism.create(entities: entity.entities, origin: ::Geom::Point3d.new(0, 0, 0),
+                                          width: length, length: thickness, height: height)
+        dimensions = { length: length, thickness: thickness, height: height, cell_spacing: spacing }
+        Models::ParametricObject.update(entity, dimensions: dimensions, parameters: dimensions,
+                                        quantities: { length_in: length, area_sq_in: length * height,
+                                                      volume_cu_in: length * height * thickness,
+                                                      reinforcing_locations: (length / spacing).floor + 1 })
+        entity
+      end
+
       private
+
+      def number(hash, key, default = nil) = Float(hash[key] || hash[key.to_sym] || default)
 
       def validate_type(object_type)
         type = object_type.to_s

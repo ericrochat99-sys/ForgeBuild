@@ -3,14 +3,39 @@ window.ForgeBuild = {
     document.getElementById('version').textContent = `Version ${payload.version}`;
     this.renderModules(payload.modules);
   },
+  selectedAssembly: null,
+  showInspector() {
+    document.getElementById('inspector').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  },
+  selectionChanged(assembly) {
+    this.selectedAssembly = assembly;
+    const form = document.getElementById('property-form');
+    const empty = document.getElementById('selection-empty');
+    const badge = document.getElementById('selection-type');
+    form.hidden = !assembly;
+    empty.hidden = !!assembly;
+    if (!assembly) { badge.textContent = 'Nothing selected'; return; }
+    badge.textContent = `${assembly.builder} · ${assembly.object_type.replaceAll('_', ' ')}`;
+    const fields = ['assembly', 'material', 'tag', 'finish', 'fire_rating', 'comments'];
+    document.getElementById('identity-fields').innerHTML = fields.map(key =>
+      `<label class="option-field">${key.replaceAll('_', ' ')}<input data-property="${key}" value="${this.escape(assembly[key] || '')}"></label>`).join('');
+    document.getElementById('parameter-fields').innerHTML = Object.entries(assembly.parameters || assembly.dimensions || {}).map(([key, value]) =>
+      `<label class="option-field">${key.replaceAll('_', ' ')}<input type="number" min="0.001" step="0.125" data-parameter="${key}" value="${value}"></label>`).join('');
+    document.querySelectorAll('[data-display]').forEach(button => button.classList.toggle('active', button.dataset.display === (assembly.display_mode || 'detailed')));
+    document.getElementById('preset-list').innerHTML = '<option value="">Assembly presets</option>' + (assembly.presets || []).map(preset => `<option value="${this.escape(preset.name)}">${this.escape(preset.name)}${preset.default ? ' (Default)' : ''}</option>`).join('');
+  },
+  escape(value) {
+    return String(value).replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+  },
+  presetSaved(name) { this.showError(`Preset “${name}” saved.`); },
   renderModules(modules) {
     const container = document.getElementById('modules');
     if (!modules.length) return;
     container.classList.remove('empty');
     container.innerHTML = modules.map(module => `
       <button class="module-button" type="button" data-builder="${module.id}">
-        <strong>${module.name}</strong>
-        <small>${module.category} · ${module.description}</small>
+        <img src="../icons/${module.icon}.svg" alt=""><span><strong>${module.name}</strong>
+        <small>${module.category} · ${module.description}</small></span>
       </button>`).join('');
   },
   optionField(tool, option) {
@@ -103,6 +128,28 @@ document.addEventListener('DOMContentLoaded', () => {
     event.currentTarget.textContent = 'Checking…';
     document.getElementById('update-status').textContent = 'Checking GitHub Releases…';
     window.sketchup.check_for_updates();
+  });
+  document.getElementById('property-form').addEventListener('submit', event => {
+    event.preventDefault();
+    const changes = { parameters: {} };
+    event.currentTarget.querySelectorAll('[data-property]').forEach(input => { changes[input.dataset.property] = input.value; });
+    event.currentTarget.querySelectorAll('[data-parameter]').forEach(input => { changes.parameters[input.dataset.parameter] = input.value; });
+    window.sketchup.save_assembly(changes);
+  });
+  document.getElementById('property-form').addEventListener('click', event => {
+    const display = event.target.closest('[data-display]');
+    if (display) window.sketchup.set_display_mode(display.dataset.display);
+    const command = event.target.closest('[data-command]');
+    if (command) window.sketchup[`${command.dataset.command}_assembly`]();
+  });
+  document.getElementById('save-preset').addEventListener('click', () => {
+    const parameters = {};
+    document.querySelectorAll('[data-parameter]').forEach(input => { parameters[input.dataset.parameter] = input.value; });
+    window.sketchup.save_preset(document.getElementById('preset-name').value, parameters, document.getElementById('preset-default').checked);
+  });
+  document.getElementById('apply-preset').addEventListener('click', () => {
+    const name = document.getElementById('preset-list').value;
+    if (name) window.sketchup.apply_preset(name);
   });
   if (window.sketchup && window.sketchup.ready) window.sketchup.ready();
 });

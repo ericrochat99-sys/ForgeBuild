@@ -37,7 +37,23 @@ module ForgeBuild
         }
       end
 
+      def regenerate(entity:, model:, attributes:)
+        parameters = attributes.fetch(:parameters, attributes.fetch(:dimensions))
+        entity.entities.clear!
+        Geometry::RectangularPrism.create(entities: entity.entities, origin: ::Geom::Point3d.new(0, 0, 0),
+                                          width: number(parameters, 'width'), length: number(parameters, 'length'),
+                                          height: number(parameters, 'thickness'))
+        dimensions = { width: number(parameters, 'width'), length: number(parameters, 'length'),
+                       thickness: number(parameters, 'thickness') }
+        Models::ParametricObject.update(entity, dimensions: dimensions, parameters: dimensions,
+                                        quantities: { area_sq_in: dimensions[:width] * dimensions[:length],
+                                                      volume_cu_in: dimensions.values.inject(:*) })
+        entity
+      end
+
       private
+
+      def number(hash, key) = Float(hash[key] || hash[key.to_sym])
 
       def display_name(type)
         type.split('_').map(&:capitalize).join(' ')

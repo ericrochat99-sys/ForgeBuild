@@ -1,7 +1,16 @@
-# ForgeBuild 0.4.0 — Building Assembly Architecture
+# ForgeBuild 0.5.0 — Complete Shared Framework
 
-ForgeBuild is now organized around Floor, Wall, and Roof builders instead of individual CSI trades.
+ForgeBuild 0.5.0 completes the shared assembly-management layer used by the Floor, Wall, and Roof builders.
 
-Existing slab and equipment-pad tools are available in Floor Builder. Existing CMU, brick, veneer, lintel, bond-beam, grout, and reinforcing tools are available in Wall Builder. Their CSI metadata remains intact for estimating.
+## Highlights
 
-Generated objects now carry schema-versioned assembly parameters and parent/child fields. A shared regeneration dispatcher establishes the foundation for upcoming Edit and Regenerate commands. Roof Builder is registered now, with production roof geometry scheduled after the Floor and Wall milestones.
+- Select a ForgeBuild object to inspect and edit its properties and dimensional parameters.
+- Regenerate geometry without replacing the assembly group or losing its position.
+- Move, copy, delete, and change display detail from the workspace, toolbar, or right-click menu.
+- Save reusable named presets and mark preferred presets as defaults.
+- Store projects and presets in a migrated SQLite schema.
+- Automatically upgrade older Concrete and Masonry metadata to the current assembly schema.
+- Apply consistent ForgeBuild materials and tags.
+- Use clearer builder and assembly command icons.
+
+Existing `v0.4.0` objects remain supported and are upgraded in place when opened or selected.

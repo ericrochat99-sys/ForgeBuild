@@ -15,6 +15,13 @@ module ForgeBuild
       # Opens or focuses the ForgeBuild workspace.
       def show
         dialog.show
+        attach_selection_observer
+        publish_selection(dialog)
+      end
+
+      def show_inspector
+        show
+        dialog.execute_script('ForgeBuild.showInspector()')
       end
 
       private
@@ -42,7 +49,71 @@ module ForgeBuild
         instance.add_action_callback('activate_tool') do |_context, builder_id, tool_id, options|
           activate_tool(builder_id, tool_id, options)
         end
+        instance.add_action_callback('save_assembly') { |_context, changes| save_assembly(instance, changes || {}) }
+        instance.add_action_callback('regenerate_assembly') { |_context| command(instance, :regenerate) }
+        instance.add_action_callback('copy_assembly') { |_context| command(instance, :copy) }
+        instance.add_action_callback('delete_assembly') { |_context| command(instance, :delete) }
+        instance.add_action_callback('move_assembly') { |_context| Sketchup.send_action('selectMoveTool:') }
+        instance.add_action_callback('set_display_mode') { |_context, mode| set_display_mode(instance, mode) }
+        instance.add_action_callback('save_preset') { |_context, name, parameters, make_default| save_preset(instance, name, parameters, make_default) }
+        instance.add_action_callback('apply_preset') { |_context, name| apply_preset(instance, name) }
         instance
+      end
+
+      def attach_selection_observer
+        return if @selection_observer
+        @selection_observer = Observers::SelectionObserver.new { publish_selection(dialog) if @dialog }
+        Sketchup.active_model.selection.add_observer(@selection_observer)
+      end
+
+      def publish_selection(instance)
+        payload = @container.resolve(:assemblies).inspect
+        if payload
+          payload[:presets] = @container.resolve(:presets).list(builder: payload[:builder], object_type: payload[:object_type])
+        end
+        instance.execute_script("ForgeBuild.selectionChanged(#{JSON.generate(payload)})")
+      rescue StandardError => error
+        instance.execute_script("ForgeBuild.showError(#{JSON.generate(error.message)})")
+      end
+
+      def save_assembly(instance, changes)
+        @container.resolve(:assemblies).edit(@container.resolve(:assemblies).selected, changes)
+        publish_selection(instance)
+      rescue StandardError => error
+        instance.execute_script("ForgeBuild.showError(#{JSON.generate(error.message)})")
+      end
+
+      def command(instance, action)
+        service = @container.resolve(:assemblies)
+        service.public_send(action, service.selected)
+        publish_selection(instance)
+      rescue StandardError => error
+        instance.execute_script("ForgeBuild.showError(#{JSON.generate(error.message)})")
+      end
+
+      def set_display_mode(instance, mode)
+        service = @container.resolve(:assemblies)
+        service.set_display(service.selected, mode)
+        publish_selection(instance)
+      end
+
+      def save_preset(instance, name, parameters, make_default)
+        attributes = @container.resolve(:assemblies).inspect
+        @container.resolve(:presets).save(builder: attributes[:builder], object_type: attributes[:object_type],
+                                            name: name, parameters: parameters, default: make_default)
+        instance.execute_script("ForgeBuild.presetSaved(#{JSON.generate(name)})")
+      rescue StandardError => error
+        instance.execute_script("ForgeBuild.showError(#{JSON.generate(error.message)})")
+      end
+
+      def apply_preset(instance, name)
+        attributes = @container.resolve(:assemblies).inspect
+        preset = @container.resolve(:presets).list(builder: attributes[:builder], object_type: attributes[:object_type]).find { |item| item[:name] == name }
+        raise KeyError, "Unknown preset: #{name}" unless preset
+        @container.resolve(:assemblies).edit(@container.resolve(:assemblies).selected, 'parameters' => preset[:parameters])
+        publish_selection(instance)
+      rescue StandardError => error
+        instance.execute_script("ForgeBuild.showError(#{JSON.generate(error.message)})")
       end
 
       def publish_bootstrap(instance)

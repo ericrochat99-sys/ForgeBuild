@@ -17,6 +17,9 @@ button:disabled { cursor: wait; opacity: .65; }
 .badge { border-radius: 999px; padding: 3px 8px; background: rgba(232,117,36,.16); color: var(--accent); font-size: 11px; font-weight: 800; }
 .module-grid, .tool-list { display: grid; gap: 10px; margin-top: 12px; }
 .module-button, .tool-button { display: grid; width: 100%; gap: 3px; text-align: left; background: rgba(127,127,127,.13); color: inherit; border: 1px solid rgba(127,127,127,.18); }
+.module-button { grid-template-columns: 34px 1fr; align-items: center; }
+.module-button img { width: 30px; height: 30px; }
+.module-button span { display: grid; gap: 3px; }
 .module-button:hover, .tool-button:hover { border-color: var(--accent); }
 .module-button strong, .tool-button strong { font-size: 14px; }
 .module-button small, .tool-button small { opacity: .7; font-weight: 500; }
@@ -25,4 +28,15 @@ button:disabled { cursor: wait; opacity: .65; }
 .tool-options { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 8px; }
 .tool-options label { display: grid; gap: 4px; font-size: 12px; font-weight: 700; }
 .tool-options input { width: 100%; border: 1px solid rgba(127,127,127,.35); border-radius: 6px; padding: 9px; background: transparent; color: inherit; }
+.inspector form, #identity-fields, .property-grid { display: grid; gap: 8px; }
+.option-field { display: grid; gap: 4px; text-transform: capitalize; font-size: 12px; font-weight: 700; }
+.option-field input, .preset-row input { min-width: 0; width: 100%; border: 1px solid rgba(127,127,127,.35); border-radius: 6px; padding: 9px; background: transparent; color: inherit; }
+.property-grid { grid-template-columns: repeat(2, 1fr); margin: 10px 0; }
+.display-buttons, .command-grid, .preset-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.display-buttons button, .command-grid button, .preset-row button { flex: 1; min-width: 82px; padding: 8px; }
+.display-buttons button:not(.active), .command-grid button:not(:first-child), .preset-row button { background: rgba(127,127,127,.18); color: inherit; }
+button.danger { color: #fff !important; background: #a63b32 !important; }
+.preset-row { align-items: center; }
+.preset-row > input { flex: 2; }
+.preset-row label { white-space: nowrap; }
 #toast { position: fixed; right: 14px; bottom: 14px; left: 14px; padding: 10px 12px; border-radius: 8px; background: #9c2f2f; color: white; }

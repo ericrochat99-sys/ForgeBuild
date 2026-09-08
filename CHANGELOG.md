@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.5.0] - 2026-09-08
+
+### Added
+
+- Selection-driven Property Inspector with editable assembly metadata and parameters.
+- Edit, regenerate, move, copy, and delete workflows for selected assemblies.
+- 2D, simplified 3D, and detailed 3D display modes.
+- ForgeBuild right-click context menu and expanded toolbar commands with custom icons.
+- Named assembly presets, default presets, SQLite project/preset schema, and migrations.
+- Automatic migration of legacy Concrete and Masonry objects into Floor and Wall assemblies.
+- Centralized material creation and SketchUp tag assignment.
+
+### Changed
+
+- Expanded the shared framework around Floor, Wall, and Roof Builder identities.
+- Updated assembly regeneration to preserve the owning group and transformation.
+
 All notable changes follow Semantic Versioning.
 
 ## [0.4.0] - 2026-09-08

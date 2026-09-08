@@ -31,6 +31,14 @@ module ForgeBuild
         !entity.get_attribute(DICTIONARY, 'builder').nil?
       end
 
+      def self.selected(model = Sketchup.active_model)
+        model.selection.find { |entity| forge_build?(entity) }
+      end
+
+      def self.update(entity, changes)
+        write(entity, read(entity).merge(changes))
+      end
+
       def self.serialize(value)
         value.is_a?(Hash) || value.is_a?(Array) ? JSON.generate(value) : value
       end

@@ -16,6 +16,20 @@
       <div class="section-heading"><div><p id="builder-division" class="eyebrow"></p><h2 id="builder-name"></h2></div></div>
       <div id="tools" class="tool-list"></div>
     </section>
+    <section id="inspector" class="card inspector">
+      <div class="section-heading"><div><p class="eyebrow">Selection</p><h2>Property Inspector</h2></div><span id="selection-type" class="badge">Nothing selected</span></div>
+      <p id="selection-empty" class="empty-state">Select a ForgeBuild assembly to edit, regenerate, copy, move, delete, or change its display.</p>
+      <form id="property-form" hidden>
+        <div id="identity-fields"></div>
+        <div id="parameter-fields" class="property-grid"></div>
+        <div class="display-buttons" role="group" aria-label="Display mode">
+          <button type="button" data-display="2d">2D</button><button type="button" data-display="simplified">Simple 3D</button><button type="button" data-display="detailed">Detailed 3D</button>
+        </div>
+        <div class="command-grid"><button type="submit">Save & Regenerate</button><button type="button" data-command="regenerate">Regenerate</button><button type="button" data-command="move">Move</button><button type="button" data-command="copy">Copy</button><button class="danger" type="button" data-command="delete">Delete</button></div>
+        <div class="preset-row"><select id="preset-list"><option value="">Assembly presets</option></select><button id="apply-preset" type="button">Apply</button></div>
+        <div class="preset-row"><input id="preset-name" placeholder="Preset name"><label><input id="preset-default" type="checkbox"> Default</label><button id="save-preset" type="button">Save Preset</button></div>
+      </form>
+    </section>
     <section class="card update-card">
       <div><h2>Software updates</h2><p id="update-status">Keep ForgeBuild current with the latest GitHub release.</p></div>
       <button id="update-button" type="button">Check for Updates</button>
