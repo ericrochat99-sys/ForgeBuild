@@ -14,8 +14,14 @@ module UI
     def restore; end
   end
 
+  def self.add_context_menu_handler(&_block); end
+
   def self.menu(_name)
-    Object.new.tap { |menu| menu.define_singleton_method(:add_item) { |_command| } }
+    menu = Object.new
+    menu.define_singleton_method(:add_item) { |_command = nil, &_block| }
+    menu.define_singleton_method(:add_submenu) { |_name| menu }
+    menu.define_singleton_method(:add_separator) {}
+    menu
   end
 end
 

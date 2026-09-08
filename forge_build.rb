@@ -10,7 +10,7 @@ module ForgeBuild
   unless file_loaded?(__FILE__)
     extension = SketchupExtension.new(EXTENSION_NAME, File.join(EXTENSION_ROOT, 'extension'))
     extension.description = 'Commercial building modeling tools for SketchUp.'
-    extension.version = '0.3.1'
+    extension.version = '0.5.0'
     extension.creator = 'ForgeBuild'
     extension.copyright = 'Copyright 2026 ForgeBuild. All rights reserved.'
     Sketchup.register_extension(extension, true)

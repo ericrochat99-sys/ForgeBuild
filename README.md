@@ -2,6 +2,10 @@
 
 ForgeBuild is a parametric building-assembly modeling extension for SketchUp 2024+.
 
+Version 0.5.0 completes the shared assembly framework with a selection-driven Property Inspector,
+non-destructive editing and regeneration, lifecycle commands, three display modes, presets,
+SQLite-backed project storage, legacy-object migrations, and coordinated materials and tags.
+
 The product is organized in construction order around Floor, Wall, and Roof builders. CSI divisions remain attached to components for estimating, but they no longer define the modeling workflow.
 
 ## Included builders
@@ -16,7 +20,7 @@ Masonry assemblies are drawn with a two-click line tool, accept typed lengths, r
 
 - SketchUp 2024 or newer
 - Ruby 3.2-compatible runtime (provided by SketchUp 2024)
-- SQLite adapter integration is planned behind `Database::Connection`; the extension does not silently install native dependencies.
+- The `sqlite3` Ruby library for persistent project and preset storage.
 
 ## Development
 
