@@ -37,8 +37,8 @@ window.ForgeBuild = {
     button.disabled = false;
     if (result.status === 'available') {
       status.textContent = `ForgeBuild ${result.version} is available.`;
-      button.textContent = `Download v${result.version}`;
-      button.dataset.action = 'download';
+      button.textContent = `Install v${result.version}`;
+      button.dataset.action = 'install';
     } else if (result.status === 'current') {
       status.textContent = `ForgeBuild ${result.version} is up to date.`;
       button.textContent = 'Check Again';
@@ -48,6 +48,20 @@ window.ForgeBuild = {
       button.textContent = 'Try Again';
       delete button.dataset.action;
     }
+  },
+  updateInstalling() {
+    const button = document.getElementById('update-button');
+    button.disabled = true;
+    button.textContent = 'Installing…';
+    document.getElementById('update-status').textContent = 'Downloading and replacing ForgeBuild…';
+  },
+  installResult(result) {
+    const button = document.getElementById('update-button');
+    const status = document.getElementById('update-status');
+    status.textContent = result.message;
+    button.disabled = result.status === 'installed';
+    button.textContent = result.status === 'installed' ? 'Update Installed' : 'Try Again';
+    if (result.status !== 'installed') delete button.dataset.action;
   }
 };
 
@@ -68,8 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('workspace').hidden = true;
   });
   document.getElementById('update-button').addEventListener('click', (event) => {
-    if (event.currentTarget.dataset.action === 'download') {
-      window.sketchup.download_update();
+    if (event.currentTarget.dataset.action === 'install') {
+      window.sketchup.install_update();
       return;
     }
     event.currentTarget.disabled = true;

@@ -21,4 +21,10 @@ class UpdateServiceTest < Minitest::Test
     body = JSON.generate(tag_name: 'v0.1.1', assets: [])
     assert_equal 'current', service.send(:parse_response, Response.new(200, body))[:status]
   end
+
+  def test_accepts_zip_archive_signature
+    service = ForgeBuild::Services::UpdateService.new(current_version: '0.2.0')
+    assert service.send(:valid_archive?, "PK\x03\x04".b + ('data' * 30))
+    refute service.send(:valid_archive?, '<html>not an archive</html>')
+  end
 end

@@ -2,6 +2,14 @@
 
 All notable changes follow Semantic Versioning.
 
+## [0.2.1] - 2026-09-08
+
+### Changed
+
+- Changed Check for Updates into a one-click in-app download and installation workflow.
+- Added archive validation, backup, old-version removal, and automatic rollback on installation failure.
+- Corrected the extension-manager version metadata to match the application version.
+
 ## [0.2.0] - 2026-09-08
 
 ### Added

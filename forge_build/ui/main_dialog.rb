@@ -36,7 +36,7 @@ module ForgeBuild
         instance.set_file(File.expand_path('../html/main.html', __dir__))
         instance.add_action_callback('ready') { |_context| publish_bootstrap(instance) }
         instance.add_action_callback('check_for_updates') { |_context| check_for_updates(instance) }
-        instance.add_action_callback('download_update') { |_context| open_available_update }
+        instance.add_action_callback('install_update') { |_context| install_available_update(instance) }
         instance.add_action_callback('open_builder') { |_context, id| open_builder(instance, id) }
         instance.add_action_callback('activate_tool') do |_context, builder_id, tool_id, options|
           activate_tool(builder_id, tool_id, options)
@@ -65,13 +65,19 @@ module ForgeBuild
 
       def check_for_updates(instance)
         @container.resolve(:updater).check do |result|
-          @available_update_url = result[:download_url] || result[:release_url] if result[:status] == 'available'
+          @available_update = result if result[:status] == 'available'
           instance.execute_script("ForgeBuild.updateResult(#{JSON.generate(result)})")
         end
       end
 
-      def open_available_update
-        ::UI.openURL(@available_update_url) if @available_update_url
+      def install_available_update(instance)
+        return unless @available_update
+
+        instance.execute_script('ForgeBuild.updateInstalling()')
+        @container.resolve(:updater).install(@available_update) do |result|
+          instance.execute_script("ForgeBuild.installResult(#{JSON.generate(result)})")
+          @available_update = nil if result[:status] == 'installed'
+        end
       end
     end
   end

@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'fileutils'
+require 'tmpdir'
+
 module ForgeBuild
   module Services
     # Queries the official GitHub Releases feed and reports newer RBZ packages.
@@ -22,7 +25,70 @@ module ForgeBuild
         callback.call(status: 'error', message: error.message)
       end
 
+      # Downloads, replaces, and installs the latest trusted GitHub RBZ.
+      def install(update, &callback)
+        url = update[:download_url].to_s
+        return callback.call(status: 'error', message: 'This release has no RBZ download.') if url.empty?
+
+        @download_request = Sketchup::Http::Request.new(url, Sketchup::Http::GET)
+        @download_request.headers = { 'Accept' => 'application/octet-stream',
+                                      'User-Agent' => "ForgeBuild/#{@current_version}" }
+        @download_request.start do |_request, response|
+          result = response.status_code == 200 ? install_response(response.body, update[:version]) :
+                   { status: 'error', message: "Download returned HTTP #{response.status_code}" }
+          callback.call(result)
+          @download_request = nil
+        end
+      rescue StandardError => error
+        @download_request = nil
+        callback.call(status: 'error', message: error.message)
+      end
+
       private
+
+      def install_response(body, version)
+        raise 'The downloaded file is not a valid RBZ archive.' unless valid_archive?(body)
+
+        Dir.mktmpdir('forgebuild-update-') do |directory|
+          archive = File.join(directory, "ForgeBuild-v#{version}.rbz")
+          File.binwrite(archive, body)
+          replace_install(archive, directory)
+        end
+        { status: 'installed', version: version,
+          message: "ForgeBuild #{version} is installed. Restart SketchUp to activate all changes." }
+      rescue StandardError => error
+        { status: 'error', message: "Update failed; the previous version was restored. #{error.message}" }
+      end
+
+      def replace_install(archive, temporary_directory)
+        plugins = nil
+        backup = nil
+        plugins = Sketchup.find_support_file('Plugins')
+        raise 'SketchUp Plugins folder was not found.' if plugins.to_s.empty?
+
+        backup = File.join(temporary_directory, 'backup')
+        FileUtils.mkdir_p(backup)
+        installed_paths(plugins).each { |path| FileUtils.mv(path, backup) if File.exist?(path) }
+
+        success = Sketchup.install_from_archive(archive, false)
+        raise 'SketchUp rejected the downloaded extension.' unless success
+      rescue StandardError
+        installed_paths(plugins).each { |path| FileUtils.rm_rf(path) if File.exist?(path) } if plugins
+        restore_backup(backup, plugins) if plugins && backup && File.directory?(backup)
+        raise
+      end
+
+      def restore_backup(backup, plugins)
+        Dir.children(backup).each { |name| FileUtils.mv(File.join(backup, name), plugins) }
+      end
+
+      def installed_paths(plugins)
+        [File.join(plugins, 'forge_build.rb'), File.join(plugins, 'forge_build')]
+      end
+
+      def valid_archive?(body)
+        body.is_a?(String) && body.bytesize > 100 && body.start_with?("PK\x03\x04".b)
+      end
 
       def parse_response(response)
         return { status: 'error', message: "GitHub returned HTTP #{response.status_code}" } unless response.status_code == 200
