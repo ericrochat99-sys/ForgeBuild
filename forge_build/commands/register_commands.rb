@@ -10,12 +10,12 @@ module ForgeBuild
       def call(container:)
         return if @registered
 
-        command = UI::Command.new('Open ForgeBuild') { container.resolve(:main_dialog).show }
+        command = ::UI::Command.new('Open ForgeBuild') { container.resolve(:main_dialog).show }
         command.tooltip = 'Open ForgeBuild'
         command.status_bar_text = 'Open the ForgeBuild workspace'
-        UI.menu('Extensions').add_item(command)
+        ::UI.menu('Extensions').add_item(command)
 
-        toolbar = UI::Toolbar.new('ForgeBuild')
+        toolbar = ::UI::Toolbar.new('ForgeBuild')
         toolbar.add_item(command)
         toolbar.restore
         @registered = true

@@ -35,12 +35,25 @@ module ForgeBuild
         )
         instance.set_file(File.expand_path('../html/main.html', __dir__))
         instance.add_action_callback('ready') { |_context| publish_bootstrap(instance) }
+        instance.add_action_callback('check_for_updates') { |_context| check_for_updates(instance) }
+        instance.add_action_callback('download_update') { |_context| open_available_update }
         instance
       end
 
       def publish_bootstrap(instance)
         payload = { version: ForgeBuild::VERSION, modules: @modules.entries.map(&:name) }
         instance.execute_script("ForgeBuild.bootstrap(#{JSON.generate(payload)})")
+      end
+
+      def check_for_updates(instance)
+        @container.resolve(:updater).check do |result|
+          @available_update_url = result[:download_url] || result[:release_url] if result[:status] == 'available'
+          instance.execute_script("ForgeBuild.updateResult(#{JSON.generate(result)})")
+        end
+      end
+
+      def open_available_update
+        ::UI.openURL(@available_update_url) if @available_update_url
       end
     end
   end

@@ -1,6 +1,6 @@
-# ForgeBuild 0.1.0
+# ForgeBuild 0.1.1
 
-This pre-alpha release establishes the internal architecture and installable SketchUp extension shell. It does not yet include production geometry builders or PDF/AI recognition.
+This maintenance release fixes the startup error caused by Ruby namespace resolution and adds an in-app Check for Updates button connected to official GitHub Releases.
 
 ## Installation
 

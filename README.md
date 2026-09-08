@@ -24,7 +24,7 @@ See [the architecture guide](docs/ARCHITECTURE.md), [roadmap](docs/ROADMAP.md), 
 
 ## Status
 
-Pre-alpha foundation (`0.1.0`). The builders are intentionally not advertised as complete.
+Pre-alpha foundation (`0.1.1`). The builders are intentionally not advertised as complete.
 
 ## License
 

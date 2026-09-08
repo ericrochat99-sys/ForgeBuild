@@ -5,6 +5,7 @@ require_relative 'version'
 require_relative 'core/container'
 require_relative 'core/module_registry'
 require_relative 'services/settings_service'
+require_relative 'services/update_service'
 require_relative 'project/project'
 require_relative 'ui/main_dialog'
 require_relative 'commands/register_commands'
@@ -22,6 +23,7 @@ module ForgeBuild
     # Registers services before any user interface is created.
     def boot
       container.register(:settings) { Services::SettingsService.new }
+      container.register(:updater) { Services::UpdateService.new(current_version: VERSION) }
       container.register(:main_dialog) { UI::MainDialog.new(container: container, modules: modules) }
       Commands::RegisterCommands.call(container: container)
       self
