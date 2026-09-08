@@ -2,7 +2,8 @@
 
 module ForgeBuild
   module Builders
-    module Masonry
+    module Wall
+      # Owns structural wall systems and their finishes, openings, and reinforcing.
       class Builder < Core::Builder
         TYPE_DEFAULTS = {
           cmu_wall: [8, 96], brick_wall: [8, 96], brick_veneer: [4, 96],
@@ -26,36 +27,34 @@ module ForgeBuild
         end
 
         TOOLS = [
-          [:cmu_wall, 'CMU Wall', 'Draw a parametric concrete masonry unit wall.'],
+          [:cmu_wall, 'CMU Wall', 'Draw a parametric CMU wall assembly.'],
           [:brick_wall, 'Brick Wall', 'Draw a full-depth structural brick wall.'],
-          [:brick_veneer, 'Brick Veneer', 'Draw a nonstructural brick veneer assembly.'],
-          [:stone_veneer, 'Stone Veneer', 'Draw a manufactured or natural stone veneer.'],
+          [:brick_veneer, 'Brick Veneer', 'Draw a brick wall finish layer.'],
+          [:stone_veneer, 'Stone Veneer', 'Draw a stone wall finish layer.'],
           [:pilaster, 'Pilaster', 'Place a reinforced masonry pilaster.'],
           [:control_joint, 'Control Joint', 'Place a vertical masonry movement joint.'],
-          [:lintel, 'Lintel', 'Draw a masonry or steel lintel over an opening.'],
-          [:bond_beam, 'Bond Beam', 'Draw a horizontal reinforced masonry bond beam.'],
-          [:grouted_cells, 'Grouted Cells', 'Lay out grouted masonry cells along a wall run.'],
-          [:reinforcing, 'Reinforcing', 'Lay out Division 04 masonry reinforcement.']
-        ].map { |type, name, description|
-          Tool.new(id: type, name: name, description: description, options: options(type))
+          [:lintel, 'Lintel', 'Draw a masonry or steel lintel.'],
+          [:bond_beam, 'Bond Beam', 'Draw a reinforced masonry bond beam.'],
+          [:grouted_cells, 'Grouted Cells', 'Lay out grouted cells along a wall run.'],
+          [:reinforcing, 'Reinforcing', 'Lay out masonry reinforcement.']
+        ].map { |type, label, description|
+          Tool.new(id: type, name: label, description: description, options: options(type))
         }.freeze
 
-        def id = :masonry
-        def name = 'Masonry Builder'
-        def division = '04'
+        def id = :wall
+        def name = 'Wall Builder'
+        def divisions = %w[03 04 05 06 07 09].freeze
         def tools = TOOLS
 
         def activate_tool(id, options = {})
           selected = tool(id)
           defaults = TYPE_DEFAULTS.fetch(selected.id)
-          thickness = positive_number(options, 'thickness', defaults[0])
-          height = positive_number(options, 'height', defaults[1])
-          cell_spacing = positive_number(options, 'cell_spacing', 48)
-
           Sketchup.active_model.select_tool(
             Tools::MasonryLineTool.new(service: container.resolve(:masonry_objects),
-                                       object_type: selected.id.to_s, thickness: thickness,
-                                       height: height, cell_spacing: cell_spacing)
+                                       object_type: selected.id.to_s,
+                                       thickness: positive_number(options, 'thickness', defaults[0]),
+                                       height: positive_number(options, 'height', defaults[1]),
+                                       cell_spacing: positive_number(options, 'cell_spacing', 48))
           )
         end
 

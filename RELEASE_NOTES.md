@@ -1,9 +1,7 @@
-# ForgeBuild 0.3.1 — Reusable Builder Window
+# ForgeBuild 0.4.0 — Building Assembly Architecture
 
-This patch fixes the ForgeBuild workspace becoming empty after placing the first object.
+ForgeBuild is now organized around Floor, Wall, and Roof builders instead of individual CSI trades.
 
-Starting a Concrete or Masonry tool now hides the builder window instead of permanently closing its SketchUp `HtmlDialog`. Reopening ForgeBuild from the toolbar restores the same populated workspace, allowing you to switch tools and continue working.
+Existing slab and equipment-pad tools are available in Floor Builder. Existing CMU, brick, veneer, lintel, bond-beam, grout, and reinforcing tools are available in Wall Builder. Their CSI metadata remains intact for estimating.
 
-The selected placement tool also remains active after creating an object, so you can place multiple objects of the same type without returning to the dialog each time.
-
-If the ForgeBuild window is manually closed with the X, the extension now discards that closed dialog and creates a fresh, fully initialized workspace the next time ForgeBuild is opened.
+Generated objects now carry schema-versioned assembly parameters and parent/child fields. A shared regeneration dispatcher establishes the foundation for upcoming Edit and Regenerate commands. Roof Builder is registered now, with production roof geometry scheduled after the Floor and Wall milestones.

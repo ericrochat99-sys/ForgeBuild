@@ -51,12 +51,15 @@ module ForgeBuild
         length = run_length.to_f
         wall_area = length * height.to_f
         {
-          id: SecureRandom.uuid, object_type: type, builder: 'masonry',
+          id: SecureRandom.uuid, schema_version: Models::ParametricObject::SCHEMA_VERSION,
+          parent_id: nil, child_ids: [], object_type: type, builder: 'wall',
           dimensions: { length: length, thickness: thickness.to_f, height: height.to_f,
+                        cell_spacing: spacing },
+          parameters: { length: length, thickness: thickness.to_f, height: height.to_f,
                         cell_spacing: spacing },
           assembly: display_name(type), material: MATERIALS.fetch(type), csi_division: '04',
           cost_code: COST_CODES.fetch(type),
-          quantities: {
+          display_mode: 'detailed', quantities: {
             length_in: length, area_sq_in: wall_area,
             volume_cu_in: wall_area * thickness.to_f,
             reinforcing_locations: (length / spacing).floor + 1

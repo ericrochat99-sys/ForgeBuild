@@ -10,9 +10,12 @@ class ParametricObjectTest < Minitest::Test
   end
   def test_round_trips_structured_metadata
     entity = Entity.new
-    ForgeBuild::Models::ParametricObject.write(entity, builder: 'concrete', dimensions: { width: 120.0 })
+    ForgeBuild::Models::ParametricObject.write(entity, schema_version: 2, builder: 'floor',
+                                               dimensions: { width: 120.0 }, parent_id: nil,
+                                               child_ids: [])
     result = ForgeBuild::Models::ParametricObject.read(entity)
-    assert_equal 'concrete', result[:builder]
+    assert_equal 'floor', result[:builder]
+    assert_equal 2, result[:schema_version]
     assert_equal({ 'width' => 120.0 }, result[:dimensions])
     assert ForgeBuild::Models::ParametricObject.forge_build?(entity)
   end

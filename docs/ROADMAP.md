@@ -4,19 +4,23 @@
 
 - Application lifecycle, diagnostics, module manifest validation, SQLite migrations, project manager, preferences, CI, and repeatable RBZ packaging.
 
-## Phase 2 — Modeling primitives
+## Phase 2 — Floor Builder
 
-- Units and measurements, operation safety, metadata schema, materials, assemblies, floor builder, then wall openings and joins.
+- Polygon floors, slab systems, joists, beams, rim boards, decks, openings, presets, editing, and regeneration.
 
-## Phase 3 — Building systems
+## Phase 3 — Wall Builder
 
-- Roof, ceiling, doors/windows, structural, plumbing, HVAC, electrical, finishes, and equipment modules.
+- Wood, steel, CMU, concrete, ICF and SIP wall systems; openings, corners, layers, reinforcing, editing, and regeneration.
 
-## Phase 4 — Information and delivery
+## Phase 4 — Roof Builder
+
+- Gable, hip, shed and flat roofs; rafters, trusses, roof layers, openings, fascia, soffits, drainage, connections, editing, and regeneration.
+
+## Phase 5 — Information and delivery
 
 - Quantity takeoff, reports, IFC/DWG interchange, updater hardening, and extension signing/distribution.
 
-## Phase 5 — Assisted workflows
+## Phase 6 — Assisted workflows
 
 - PDF calibration and manual tracing assistance first; OCR and AI recognition only after explicit product requirements, evaluation data, and privacy architecture are approved.
 
@@ -25,6 +29,7 @@ Every phase is delivered through small features with tests, migration notes, cha
 ## Current delivery
 
 - Phase 1A complete: shared builder contract and dynamic trade workspace discovery.
-- Phase 1B complete: Concrete Builder vertical slice with slab-on-grade and equipment-pad placement.
-- Next: selection-driven Property Inspector and in-place regeneration.
-- Next: footings, foundation walls, grade beams, curbs, reinforcing, joints, reports, and SQLite-backed assembly defaults.
+- Phase 1B complete: shared Floor, Wall, and Roof assembly identities.
+- Existing slab tools migrated into Floor Builder; masonry tools migrated into Wall Builder.
+- Next: selection-driven Property Inspector and in-place regeneration handlers.
+- Next: polygon floors, floor openings, joist systems, beams, and SQLite-backed assembly presets.

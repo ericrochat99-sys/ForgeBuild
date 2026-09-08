@@ -5,8 +5,10 @@ module ForgeBuild
     # Stable metadata schema written to every ForgeBuild component or group.
     class ParametricObject
       DICTIONARY = 'ForgeBuild.Object'
-      FIELDS = %i[id object_type builder dimensions assembly material fire_rating csi_division
-                  cost_code manufacturer model_number finish tag comments quantities].freeze
+      SCHEMA_VERSION = 2
+      FIELDS = %i[id schema_version parent_id child_ids object_type builder dimensions parameters
+                  assembly material fire_rating csi_division cost_code manufacturer model_number
+                  finish tag comments quantities display_mode].freeze
 
       def self.write(entity, attributes)
         attributes.each do |key, value|

@@ -10,6 +10,8 @@ class MasonryObjectServiceTest < Minitest::Test
   def test_calculates_wall_quantities_and_division_metadata
     attributes = @service.attributes('cmu_wall', 240, 8, 96, 48)
     assert_equal '04', attributes[:csi_division]
+    assert_equal 'wall', attributes[:builder]
+    assert_equal 2, attributes[:schema_version]
     assert_equal '04 22 00', attributes[:cost_code]
     assert_equal 23_040.0, attributes[:quantities][:area_sq_in]
     assert_equal 184_320.0, attributes[:quantities][:volume_cu_in]

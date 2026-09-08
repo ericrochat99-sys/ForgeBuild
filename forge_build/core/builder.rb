@@ -2,7 +2,7 @@
 
 module ForgeBuild
   module Core
-    # Contract shared by every first- and third-party trade builder.
+    # Contract shared by every building-assembly builder.
     class Builder
       Tool = Struct.new(:id, :name, :description, :options, keyword_init: true) do
         def to_h
@@ -18,7 +18,8 @@ module ForgeBuild
 
       def id = raise(NotImplementedError)
       def name = raise(NotImplementedError)
-      def division = raise(NotImplementedError)
+      def category = 'Building Assembly'
+      def divisions = [].freeze
       def tools = [].freeze
 
       def tool(id)
@@ -31,7 +32,7 @@ module ForgeBuild
       end
 
       def workspace_payload
-        { id: id, name: name, division: division, tools: tools.map(&:to_h) }
+        { id: id, name: name, category: category, divisions: divisions, tools: tools.map(&:to_h) }
       end
     end
   end

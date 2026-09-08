@@ -10,7 +10,7 @@ window.ForgeBuild = {
     container.innerHTML = modules.map(module => `
       <button class="module-button" type="button" data-builder="${module.id}">
         <strong>${module.name}</strong>
-        <small>CSI Division ${module.division} · ${module.description}</small>
+        <small>${module.category} · ${module.description}</small>
       </button>`).join('');
   },
   optionField(tool, option) {
@@ -25,14 +25,15 @@ window.ForgeBuild = {
     document.getElementById('modules').closest('.card').hidden = true;
     const workspace = document.getElementById('workspace');
     workspace.hidden = false;
-    document.getElementById('builder-division').textContent = `CSI Division ${builder.division}`;
+    document.getElementById('builder-division').textContent = builder.divisions.length ?
+      `CSI Divisions ${builder.divisions.join(', ')}` : builder.category;
     document.getElementById('builder-name').textContent = builder.name;
-    document.getElementById('tools').innerHTML = builder.tools.map(tool => `
+    document.getElementById('tools').innerHTML = builder.tools.length ? builder.tools.map(tool => `
       <div class="tool-options" data-tool-options="${tool.id}">
         <div><strong>${tool.name}</strong><small>${tool.description}</small></div>
         ${(tool.options || []).map(option => this.optionField(tool, option)).join('')}
         <button class="tool-button" type="button" data-builder="${builder.id}" data-tool="${tool.id}"><strong>Place</strong></button>
-      </div>`).join('');
+      </div>`).join('') : '<p class="empty-state">This builder is registered. Modeling tools are scheduled for the next milestone.</p>';
   },
   showError(message) {
     const toast = document.getElementById('toast');

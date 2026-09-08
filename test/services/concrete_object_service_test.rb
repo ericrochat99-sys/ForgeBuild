@@ -7,5 +7,8 @@ class ConcreteObjectServiceTest < Minitest::Test
     assert_equal 28_800.0, attributes[:quantities][:area_sq_in]
     assert_equal 172_800.0, attributes[:quantities][:volume_cu_in]
     assert_equal '03', attributes[:csi_division]
+    assert_equal 'floor', attributes[:builder]
+    assert_equal 2, attributes[:schema_version]
+    assert_equal 6.0, attributes[:parameters][:thickness]
   end
 end

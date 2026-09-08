@@ -2,15 +2,17 @@
 
 ## Builder contract
 
-Every trade workspace subclasses `ForgeBuild::Core::Builder`, provides stable identity and CSI division metadata, advertises its tools, and activates tools through the shared application container. Builders register with `ModuleRegistry`; the main dialog discovers them dynamically.
+Every assembly workspace subclasses `ForgeBuild::Core::Builder`, provides stable identity and applicable CSI division metadata, advertises its tools, and activates tools through the shared application container. The three primary identities are `floor`, `wall`, and `roof`.
 
 ## Parametric objects
 
-Generated groups store a stable object ID, builder and object type, dimensions, assembly data, CSI division, cost code, material information, and computed quantities in the `ForgeBuild.Object` attribute dictionary.
+Generated groups store a schema version, stable object ID, parent/child relationships, builder and object type, source parameters, dimensions, assembly data, display mode, CSI information, materials, and computed quantities in `ForgeBuild.Object`.
 
-## Concrete vertical slice
+## Assembly vertical slices
 
-`Builders::Concrete::Builder` exposes slab-on-grade and equipment-pad tools. `ConcreteRectangleTool` owns native SketchUp input, `ConcreteObjectService` owns construction and metadata, and `Geometry::RectangularPrism` owns geometry generation.
+`Builders::Floor::Builder` exposes the existing slab-on-grade and equipment-pad tools. `Builders::Wall::Builder` owns the current masonry systems and will expand to wood, steel, concrete, ICF, and SIP. `Builders::Roof::Builder` reserves the stable roof assembly boundary for the next milestone.
+
+`RegenerationService` dispatches stored assemblies by builder and object type. Builder-specific handlers reconstruct child geometry from the parent's stored parameters while retaining the parent object's stable identity.
 
 ForgeBuild separates responsibilities so builders can evolve independently:
 

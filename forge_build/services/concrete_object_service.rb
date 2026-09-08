@@ -26,11 +26,13 @@ module ForgeBuild
 
       def attributes(type, width, length, thickness)
         {
-          id: SecureRandom.uuid, object_type: type, builder: 'concrete',
+          id: SecureRandom.uuid, schema_version: Models::ParametricObject::SCHEMA_VERSION,
+          parent_id: nil, child_ids: [], object_type: type, builder: 'floor',
           dimensions: { width: width.to_f, length: length.to_f, thickness: thickness.to_f },
+          parameters: { width: width.to_f, length: length.to_f, thickness: thickness.to_f },
           assembly: display_name(type), material: 'Cast-in-place concrete', csi_division: '03',
           cost_code: type == 'slab_on_grade' ? '03 30 00' : '03 30 00',
-          quantities: { area_sq_in: width.to_f * length.to_f,
+          display_mode: 'detailed', quantities: { area_sq_in: width.to_f * length.to_f,
                         volume_cu_in: width.to_f * length.to_f * thickness.to_f }
         }
       end

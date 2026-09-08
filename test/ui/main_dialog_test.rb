@@ -42,7 +42,7 @@ class MainDialogTest < Minitest::Test
     subject = ForgeBuild::UI::MainDialog.new(container: Object.new, modules: modules)
     subject.define_singleton_method(:dialog) { dialog }
 
-    subject.send(:activate_tool, 'masonry', 'cmu_wall', { 'height' => '96' })
+    subject.send(:activate_tool, 'wall', 'cmu_wall', { 'height' => '96' })
 
     assert_equal ['cmu_wall', { 'height' => '96' }], modules.builder.activation
     assert_equal true, dialog.hidden

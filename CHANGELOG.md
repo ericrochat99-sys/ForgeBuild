@@ -2,6 +2,21 @@
 
 All notable changes follow Semantic Versioning.
 
+## [0.4.0] - 2026-09-08
+
+### Changed
+
+- Reorganized ForgeBuild around Floor, Wall, and Roof building assemblies instead of CSI trade builders.
+- Migrated slab and equipment-pad tools into Floor Builder.
+- Migrated all masonry systems into Wall Builder while retaining CSI metadata.
+- Updated the main workspace language and builder metadata for the assembly workflow.
+
+### Added
+
+- Registered the Roof Builder as the stable home for upcoming roof systems.
+- Added schema-versioned parent/child and source-parameter metadata for generated assemblies.
+- Added a builder-agnostic regeneration dispatcher and regression tests.
+
 ## [0.3.1] - 2026-09-08
 
 ### Fixed
