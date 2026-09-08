@@ -34,6 +34,7 @@ module ForgeBuild
           style: ::UI::HtmlDialog::STYLE_DIALOG
         )
         instance.set_file(File.expand_path('../html/main.html', __dir__))
+        instance.set_on_closed { @dialog = nil }
         instance.add_action_callback('ready') { |_context| publish_bootstrap(instance) }
         instance.add_action_callback('check_for_updates') { |_context| check_for_updates(instance) }
         instance.add_action_callback('install_update') { |_context| install_available_update(instance) }
@@ -58,7 +59,7 @@ module ForgeBuild
 
       def activate_tool(builder_id, tool_id, options)
         @modules.build(builder_id).activate_tool(tool_id, options || {})
-        dialog.close
+        dialog.hide
       rescue StandardError => error
         ::UI.messagebox("ForgeBuild could not start the tool: #{error.message}")
       end

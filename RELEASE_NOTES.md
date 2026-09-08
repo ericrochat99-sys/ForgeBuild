@@ -1,22 +1,9 @@
-# ForgeBuild 0.3.0 — Division 04 Masonry Builder
+# ForgeBuild 0.3.1 — Reusable Builder Window
 
-ForgeBuild now includes a dedicated **Division 04 Masonry Builder** for commercial construction modeling.
+This patch fixes the ForgeBuild workspace becoming empty after placing the first object.
 
-## New masonry tools
+Starting a Concrete or Masonry tool now hides the builder window instead of permanently closing its SketchUp `HtmlDialog`. Reopening ForgeBuild from the toolbar restores the same populated workspace, allowing you to switch tools and continue working.
 
-- CMU Walls
-- Brick Walls
-- Brick Veneer
-- Stone Veneer
-- Pilasters
-- Control Joints
-- Lintels
-- Bond Beams
-- Grouted Cells
-- Masonry Reinforcing
+The selected placement tool also remains active after creating an object, so you can place multiple objects of the same type without returning to the dialog each time.
 
-Each assembly uses a two-click line placement workflow, supports typed lengths, and provides masonry-specific controls for nominal thickness, height, and reinforcing spacing.
-
-Generated objects retain ForgeBuild parametric metadata, Division 04 CSI cost codes, material and assembly classifications, run length, wall area, volume, and calculated reinforcing locations.
-
-The shared builder interface now supports builder-defined option fields, allowing future trade modules to expose their own inputs without hard-coding them into the main dialog.
+If the ForgeBuild window is manually closed with the X, the extension now discards that closed dialog and creates a fresh, fully initialized workspace the next time ForgeBuild is opened.

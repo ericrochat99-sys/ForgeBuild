@@ -2,6 +2,14 @@
 
 All notable changes follow Semantic Versioning.
 
+## [0.3.1] - 2026-09-08
+
+### Fixed
+
+- Kept the ForgeBuild dialog reusable after a tool is activated instead of closing and retaining an invalid HtmlDialog.
+- Rebuilds the main dialog after the user manually closes it, preventing an empty builder registry on reopen.
+- Added a regression test for repeated tool activation workflow.
+
 ## [0.3.0] - 2026-09-08
 
 ### Added
