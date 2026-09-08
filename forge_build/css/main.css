@@ -13,3 +13,16 @@ footer { padding: 0 16px 16px; }
 .update-card { display: grid; gap: 14px; }
 button { border: 0; border-radius: 7px; padding: 10px 14px; background: var(--accent); color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
 button:disabled { cursor: wait; opacity: .65; }
+.section-heading { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.badge { border-radius: 999px; padding: 3px 8px; background: rgba(232,117,36,.16); color: var(--accent); font-size: 11px; font-weight: 800; }
+.module-grid, .tool-list { display: grid; gap: 10px; margin-top: 12px; }
+.module-button, .tool-button { display: grid; width: 100%; gap: 3px; text-align: left; background: rgba(127,127,127,.13); color: inherit; border: 1px solid rgba(127,127,127,.18); }
+.module-button:hover, .tool-button:hover { border-color: var(--accent); }
+.module-button strong, .tool-button strong { font-size: 14px; }
+.module-button small, .tool-button small { opacity: .7; font-weight: 500; }
+.eyebrow { color: var(--accent); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+.text-button { margin: -6px 0 14px -8px; padding: 6px 8px; background: transparent; color: var(--accent); }
+.tool-options { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 8px; }
+.tool-options label { display: grid; gap: 4px; font-size: 12px; font-weight: 700; }
+.tool-options input { width: 100%; border: 1px solid rgba(127,127,127,.35); border-radius: 6px; padding: 9px; background: transparent; color: inherit; }
+#toast { position: fixed; right: 14px; bottom: 14px; left: 14px; padding: 10px 12px; border-radius: 8px; background: #9c2f2f; color: white; }

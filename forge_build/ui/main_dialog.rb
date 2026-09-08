@@ -37,12 +37,30 @@ module ForgeBuild
         instance.add_action_callback('ready') { |_context| publish_bootstrap(instance) }
         instance.add_action_callback('check_for_updates') { |_context| check_for_updates(instance) }
         instance.add_action_callback('download_update') { |_context| open_available_update }
+        instance.add_action_callback('open_builder') { |_context, id| open_builder(instance, id) }
+        instance.add_action_callback('activate_tool') do |_context, builder_id, tool_id, options|
+          activate_tool(builder_id, tool_id, options)
+        end
         instance
       end
 
       def publish_bootstrap(instance)
-        payload = { version: ForgeBuild::VERSION, modules: @modules.entries.map(&:name) }
+        payload = { version: ForgeBuild::VERSION, modules: @modules.entries.map(&:to_h) }
         instance.execute_script("ForgeBuild.bootstrap(#{JSON.generate(payload)})")
+      end
+
+      def open_builder(instance, id)
+        payload = @modules.build(id).workspace_payload
+        instance.execute_script("ForgeBuild.openBuilder(#{JSON.generate(payload)})")
+      rescue KeyError => error
+        instance.execute_script("ForgeBuild.showError(#{JSON.generate(error.message)})")
+      end
+
+      def activate_tool(builder_id, tool_id, options)
+        @modules.build(builder_id).activate_tool(tool_id, options || {})
+        dialog.close
+      rescue StandardError => error
+        ::UI.messagebox("ForgeBuild could not start the tool: #{error.message}")
       end
 
       def check_for_updates(instance)

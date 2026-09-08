@@ -2,6 +2,20 @@
 
 All notable changes follow Semantic Versioning.
 
+## [0.2.0] - 2026-09-08
+
+### Added
+
+- Shared builder contract and dynamic trade workspace discovery.
+- Stable parametric-object metadata schema.
+- Division 03 Concrete Builder workspace.
+- Click-drag slab-on-grade and equipment-pad tools with typed dimensions.
+- Concrete area and volume metadata and automated tests.
+
+### Changed
+
+- Reworked the main dialog into a builder and tool-selection workspace.
+
 ## [0.1.1] - 2026-09-08
 
 ### Fixed

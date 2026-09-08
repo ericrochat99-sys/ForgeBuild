@@ -21,3 +21,10 @@
 - PDF calibration and manual tracing assistance first; OCR and AI recognition only after explicit product requirements, evaluation data, and privacy architecture are approved.
 
 Every phase is delivered through small features with tests, migration notes, changelog entries, and semantic versioning.
+
+## Current delivery
+
+- Phase 1A complete: shared builder contract and dynamic trade workspace discovery.
+- Phase 1B complete: Concrete Builder vertical slice with slab-on-grade and equipment-pad placement.
+- Next: selection-driven Property Inspector and in-place regeneration.
+- Next: footings, foundation walls, grade beams, curbs, reinforcing, joints, reports, and SQLite-backed assembly defaults.

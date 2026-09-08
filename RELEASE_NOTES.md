@@ -1,10 +1,10 @@
-# ForgeBuild 0.1.1
+# ForgeBuild 0.2.0 — Concrete Builder Phase 1
 
-This maintenance release fixes the startup error caused by Ruby namespace resolution and adds an in-app Check for Updates button connected to official GitHub Releases.
+ForgeBuild now has its first working trade workspace. Open ForgeBuild, choose **Concrete Builder**, select **Slab on Grade** or **Equipment Pad**, enter the thickness, and click **Place**. In the model, click two opposite corners or click once and type `width,length` in SketchUp's Measurements box.
 
-- ForgeBuild now loads correctly in SketchUp 2024+.
-- Check for Updates reports whether the installed version is current.
-- When an update exists, the button opens the official downloadable RBZ asset.
+Each placed group retains ForgeBuild metadata including its object type, dimensions, material, CSI division, cost code, area, and volume. This release also establishes the shared builder API that future trade modules will use.
+
+This is a pre-alpha vertical slice. In-place geometry editing, SQLite-backed assembly defaults, and the remaining concrete tools are planned next.
 
 ## Installation
 

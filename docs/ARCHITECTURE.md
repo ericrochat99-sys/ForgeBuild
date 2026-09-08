@@ -1,5 +1,17 @@
 # Architecture
 
+## Builder contract
+
+Every trade workspace subclasses `ForgeBuild::Core::Builder`, provides stable identity and CSI division metadata, advertises its tools, and activates tools through the shared application container. Builders register with `ModuleRegistry`; the main dialog discovers them dynamically.
+
+## Parametric objects
+
+Generated groups store a stable object ID, builder and object type, dimensions, assembly data, CSI division, cost code, material information, and computed quantities in the `ForgeBuild.Object` attribute dictionary.
+
+## Concrete vertical slice
+
+`Builders::Concrete::Builder` exposes slab-on-grade and equipment-pad tools. `ConcreteRectangleTool` owns native SketchUp input, `ConcreteObjectService` owns construction and metadata, and `Geometry::RectangularPrism` owns geometry generation.
+
 ForgeBuild separates responsibilities so builders can evolve independently:
 
 - `core`: dependency container and module registration contracts.

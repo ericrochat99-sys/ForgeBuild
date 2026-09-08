@@ -2,7 +2,7 @@
 
 ForgeBuild is a modular commercial-building modeling extension for SketchUp 2024+.
 
-This repository currently contains the production-oriented foundation: a safe SketchUp loader, application bootstrap, module registry, settings service, project model, starter HtmlDialog shell, and automated tests. Geometry builders and PDF/AI recognition will be added incrementally behind these boundaries.
+This repository contains the production-oriented foundation and the first trade workspace. ForgeBuild now includes a shared builder contract, extensible module registry, parametric-object metadata schema, and a Division 03 Concrete Builder with slab-on-grade and equipment-pad placement tools.
 
 ## Requirements
 
@@ -24,7 +24,7 @@ See [the architecture guide](docs/ARCHITECTURE.md), [roadmap](docs/ROADMAP.md), 
 
 ## Status
 
-Pre-alpha foundation (`0.1.1`). The builders are intentionally not advertised as complete.
+Pre-alpha Phase 1 (`0.2.0`). The Concrete Builder is an initial vertical slice; additional concrete assemblies and trade builders remain on the roadmap.
 
 ## License
 
