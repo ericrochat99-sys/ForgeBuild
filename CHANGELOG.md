@@ -2,6 +2,19 @@
 
 All notable changes follow Semantic Versioning.
 
+## [Unreleased]
+
+### Added
+
+- Division 04 Masonry Builder with CMU wall, brick wall, brick veneer, stone veneer, pilaster, control joint, lintel, bond beam, grouted cell, and reinforcing tools.
+- Two-click angled masonry placement with typed-length input.
+- Division 04 object metadata, CSI cost codes, wall area, volume, and reinforcing-location quantities.
+- Masonry service regression tests.
+
+### Changed
+
+- Extended the shared builder tool schema and dialog renderer to support builder-defined option fields.
+
 ## [0.2.1] - 2026-09-08
 
 ### Changed

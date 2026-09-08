@@ -4,9 +4,9 @@ module ForgeBuild
   module Core
     # Contract shared by every first- and third-party trade builder.
     class Builder
-      Tool = Struct.new(:id, :name, :description, keyword_init: true) do
+      Tool = Struct.new(:id, :name, :description, :options, keyword_init: true) do
         def to_h
-          { id: id, name: name, description: description }
+          { id: id, name: name, description: description, options: options || [] }
         end
       end
 

@@ -4,9 +4,14 @@ module ForgeBuild
   module Builders
     module Concrete
       class Builder < Core::Builder
+        THICKNESS = ->(value) { [{ id: 'thickness', label: 'Thickness', type: 'number', value: value,
+                                  min: 0.125, step: 0.125, unit: 'inches' }] }.freeze
+
         TOOLS = [
-          Tool.new(id: :slab_on_grade, name: 'Slab on Grade', description: 'Place a parametric rectangular slab.'),
-          Tool.new(id: :equipment_pad, name: 'Equipment Pad', description: 'Place a parametric housekeeping pad.')
+          Tool.new(id: :slab_on_grade, name: 'Slab on Grade',
+                   description: 'Place a parametric rectangular slab.', options: THICKNESS.call(6)),
+          Tool.new(id: :equipment_pad, name: 'Equipment Pad',
+                   description: 'Place a parametric housekeeping pad.', options: THICKNESS.call(4))
         ].freeze
 
         def id = :concrete

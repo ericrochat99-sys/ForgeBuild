@@ -13,6 +13,13 @@ window.ForgeBuild = {
         <small>CSI Division ${module.division} · ${module.description}</small>
       </button>`).join('');
   },
+  optionField(tool, option) {
+    const id = `${tool.id}-${option.id}`;
+    if (option.type === 'checkbox') {
+      return `<label class="option-field"><span><input id="${id}" type="checkbox" data-option="${option.id}" ${option.value ? 'checked' : ''}> ${option.label}</span></label>`;
+    }
+    return `<label class="option-field">${option.label}<input id="${id}" type="number" min="${option.min || 0.125}" step="${option.step || 0.125}" value="${option.value}" data-option="${option.id}"><small>${option.unit || ''}</small></label>`;
+  },
   openBuilder(builder) {
     document.querySelector('.intro').hidden = true;
     document.getElementById('modules').closest('.card').hidden = true;
@@ -21,8 +28,9 @@ window.ForgeBuild = {
     document.getElementById('builder-division').textContent = `CSI Division ${builder.division}`;
     document.getElementById('builder-name').textContent = builder.name;
     document.getElementById('tools').innerHTML = builder.tools.map(tool => `
-      <div class="tool-options">
-        <label>${tool.name}<input type="number" min="0.125" step="0.125" value="${tool.id === 'equipment_pad' ? 4 : 6}" data-thickness="${tool.id}"><small>${tool.description} Thickness (inches)</small></label>
+      <div class="tool-options" data-tool-options="${tool.id}">
+        <div><strong>${tool.name}</strong><small>${tool.description}</small></div>
+        ${(tool.options || []).map(option => this.optionField(tool, option)).join('')}
         <button class="tool-button" type="button" data-builder="${builder.id}" data-tool="${tool.id}"><strong>Place</strong></button>
       </div>`).join('');
   },
@@ -73,15 +81,19 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('tools').addEventListener('click', event => {
     const button = event.target.closest('[data-tool]');
     if (!button) return;
-    const input = document.querySelector(`[data-thickness="${button.dataset.tool}"]`);
-    window.sketchup.activate_tool(button.dataset.builder, button.dataset.tool, { thickness: input.value });
+    const container = button.closest('[data-tool-options]');
+    const options = {};
+    container.querySelectorAll('[data-option]').forEach(input => {
+      options[input.dataset.option] = input.type === 'checkbox' ? input.checked : input.value;
+    });
+    window.sketchup.activate_tool(button.dataset.builder, button.dataset.tool, options);
   });
   document.getElementById('back-button').addEventListener('click', () => {
     document.querySelector('.intro').hidden = false;
     document.getElementById('modules').closest('.card').hidden = false;
     document.getElementById('workspace').hidden = true;
   });
-  document.getElementById('update-button').addEventListener('click', (event) => {
+  document.getElementById('update-button').addEventListener('click', event => {
     if (event.currentTarget.dataset.action === 'install') {
       window.sketchup.install_update();
       return;
