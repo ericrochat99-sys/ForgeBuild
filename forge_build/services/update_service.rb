@@ -43,7 +43,7 @@ module ForgeBuild
       end
 
       def newer?(candidate, installed)
-        normalize(candidate) > normalize(installed)
+        (normalize(candidate) <=> normalize(installed)) == 1
       end
 
       def normalize(version)
