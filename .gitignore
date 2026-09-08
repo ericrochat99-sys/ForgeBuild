@@ -1,0 +1,5 @@
+/dist/
+/.bundle/
+*.gem
+*.sqlite3
+*.log

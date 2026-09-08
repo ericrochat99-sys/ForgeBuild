@@ -1,0 +1,12 @@
+:root { color-scheme: light dark; --accent: #e87524; --panel: rgba(127,127,127,.12); }
+* { box-sizing: border-box; }
+body { margin: 0; font: 14px/1.45 system-ui, sans-serif; }
+header { display: flex; gap: 12px; align-items: center; padding: 20px; border-bottom: 1px solid var(--panel); }
+.mark { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 8px; background: var(--accent); color: white; font-weight: 800; }
+h1, h2, p { margin: 0; }
+h1 { font-size: 20px; } h2 { margin-bottom: 8px; font-size: 15px; }
+header p, footer { opacity: .65; font-size: 12px; }
+main { display: grid; gap: 12px; padding: 16px; }
+.card { padding: 16px; border: 1px solid var(--panel); border-radius: 10px; background: var(--panel); }
+.empty { opacity: .65; }
+footer { padding: 0 16px 16px; }
