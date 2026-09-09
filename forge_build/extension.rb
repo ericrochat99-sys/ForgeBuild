@@ -32,6 +32,8 @@ require_relative 'services/migration_service'
 require_relative 'services/preset_service'
 require_relative 'services/project_store'
 require_relative 'services/assembly_service'
+require_relative 'services/information_service'
+require_relative 'services/export_service'
 require_relative 'observers/selection_observer'
 require_relative 'tools/concrete_rectangle_tool'
 require_relative 'tools/floor_placement_tool'
@@ -77,6 +79,8 @@ module ForgeBuild
         Services::AssemblyService.new(regeneration: container.resolve(:regeneration), display: container.resolve(:display),
                                       materials: container.resolve(:materials), migration: container.resolve(:migration))
       end
+      container.register(:information) { Services::InformationService.new }
+      container.register(:exports) { Services::ExportService.new(information: container.resolve(:information)) }
       container.register(:main_dialog) { UI::MainDialog.new(container: container, modules: modules) }
       register_builders
       register_regeneration

@@ -100,7 +100,20 @@ window.ForgeBuild = {
     button.disabled = result.status === 'installed';
     button.textContent = result.status === 'installed' ? 'Update Installed' : 'Try Again';
     if (result.status !== 'installed') delete button.dataset.action;
-  }
+  },
+  reportResult(report) {
+    const quantityLines = (report.takeoff || []).reduce((sum, row) => sum + Object.keys(row.quantities || {}).length, 0);
+    const scheduleRows = Object.values(report.schedules || {}).reduce((sum, rows) => sum + rows.length, 0);
+    const warnings = (report.validations || []).length + (report.missing_information || []).length;
+    document.getElementById('report-summary').innerHTML = `
+      <div class="metric-grid"><div><strong>${report.object_count}</strong><small>assemblies</small></div>
+      <div><strong>${quantityLines}</strong><small>quantity lines</small></div>
+      <div><strong>${scheduleRows}</strong><small>schedule rows</small></div>
+      <div><strong>${warnings}</strong><small>validation items</small></div>
+      <div><strong>${(report.clashes || []).length}</strong><small>possible clashes</small></div>
+      <div><strong>${(report.materials || []).length}</strong><small>material groups</small></div></div>`;
+  },
+  exportResult(path) { this.showError(`Commercial delivery package exported to ${path}`); }
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -161,5 +174,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const name = document.getElementById('preset-list').value;
     if (name) window.sketchup.apply_preset(name);
   });
+  const reportOptions = () => ({ waste_factors: { default: Number(document.getElementById('waste-factor').value || 0) } });
+  document.getElementById('refresh-reports').addEventListener('click', () => window.sketchup.refresh_reports(reportOptions()));
+  document.getElementById('export-reports').addEventListener('click', () => window.sketchup.export_reports(reportOptions()));
   if (window.sketchup && window.sketchup.ready) window.sketchup.ready();
 });

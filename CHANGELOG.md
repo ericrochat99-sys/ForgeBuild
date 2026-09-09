@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.9.0] - 2026-09-09
+
+### Added
+
+- Phase 5 model-wide quantity takeoff grouped by assembly, material, CSI division, cost code, level, area, and building.
+- Material lists with configurable waste factors plus alternates and allowances in the delivery report model.
+- Opening, structure, assembly, and complete-object schedules.
+- Fire-rating, acoustic, thermal, and accessibility validation warnings.
+- Missing-information reporting and bounding-box-based cross-system clash warnings.
+- IFC class and DWG layer classification metadata for every exported assembly.
+- Commercial Delivery dashboard with model metrics and one-click report refresh.
+- Complete delivery-package export with estimator-ready CSV files, an Excel-compatible multi-sheet workbook, and JSON assembly summary.
+- Commercial Reports and Export Delivery Package toolbar commands and icons.
+
+### Changed
+
+- Advanced ForgeBuild to version 0.9.0 and marked Phase 5 complete in the roadmap.
+
 ## [0.8.0] - 2026-09-09
 
 ### Added

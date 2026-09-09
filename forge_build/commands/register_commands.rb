@@ -14,7 +14,7 @@ module ForgeBuild
         commands.each_value { |command| menu.add_item(command) }
 
         toolbar = ::UI::Toolbar.new('ForgeBuild')
-        %i[open edit regenerate move display copy delete].each { |id| toolbar.add_item(commands.fetch(id)) }
+        %i[open edit regenerate move display copy delete reports export].each { |id| toolbar.add_item(commands.fetch(id)) }
         toolbar.restore
         install_context_menu(container)
         @registered = true
@@ -35,6 +35,14 @@ module ForgeBuild
             current = Models::ParametricObject.read(entity).fetch(:display_mode, 'detailed')
             modes = Services::DisplayService::MODES
             assemblies.call.set_display(entity, modes[(modes.index(current) + 1) % modes.length])
+          }],
+          reports: ['Commercial Reports', 'Open takeoff, schedules, validation, and coordination reports', -> { container.resolve(:main_dialog).show }],
+          export: ['Export Delivery Package', 'Export CSV and Excel-compatible estimating files', lambda {
+            directory = ::UI.select_directory(title: 'Export ForgeBuild Commercial Delivery Package')
+            if directory
+              path = container.resolve(:exports).export(model: Sketchup.active_model, directory: directory)
+              ::UI.messagebox("ForgeBuild reports exported to:\n#{path}")
+            end
           }]
         }
         definitions.each_with_object({}) do |(id, (name, help, action)), result|
