@@ -34,6 +34,19 @@ read-only and do not alter model geometry. `ExportService` converts the same rep
 an Excel-compatible SpreadsheetML workbook, and a JSON assembly summary so exported totals remain
 consistent across estimating, BuilderTrend import preparation, procurement, and coordination.
 
+## Drawing-assisted modeling
+
+`DrawingService` maintains a model-local registry for imported drawing underlays, calibration,
+alignment, and revision history. `DrawingCalibrationTool` and `DrawingTraceTool` keep all direct
+SketchUp interaction outside the report and recognition services. Traces create normal Floor,
+Wall, and Roof Builder objects, so regeneration and estimating remain unchanged.
+
+`RecognitionService` accepts OCR output or pasted annotations and extracts reviewable drawing
+information. It never creates geometry automatically: every inferred assembly carries a pending
+state and requires an explicit user confirmation. `DrawingComparisonService` compares those
+recognized features to parametric model objects and reports drawing-only, model-only, and
+unresolved conditions.
+
 Each builder will register a descriptor and factory with `Core::ModuleRegistry`. The core application consumes the registry and does not require edits for every new module.
 
 SketchUp model changes must run inside an operation so native Undo/Redo remains reliable. Geometry code must accept explicit inputs, return structured results, and keep metadata writes separate from mesh creation where practical.

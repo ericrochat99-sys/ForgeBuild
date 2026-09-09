@@ -34,12 +34,17 @@ require_relative 'services/project_store'
 require_relative 'services/assembly_service'
 require_relative 'services/information_service'
 require_relative 'services/export_service'
+require_relative 'services/drawing_service'
+require_relative 'services/recognition_service'
+require_relative 'services/drawing_comparison_service'
 require_relative 'observers/selection_observer'
 require_relative 'tools/concrete_rectangle_tool'
 require_relative 'tools/floor_placement_tool'
 require_relative 'tools/masonry_line_tool'
 require_relative 'tools/wall_placement_tool'
 require_relative 'tools/roof_placement_tool'
+require_relative 'tools/drawing_calibration_tool'
+require_relative 'tools/drawing_trace_tool'
 require_relative 'builders/floor/builder'
 require_relative 'builders/wall/builder'
 require_relative 'builders/roof/builder'
@@ -81,6 +86,9 @@ module ForgeBuild
       end
       container.register(:information) { Services::InformationService.new }
       container.register(:exports) { Services::ExportService.new(information: container.resolve(:information)) }
+      container.register(:drawings) { Services::DrawingService.new }
+      container.register(:recognition) { Services::RecognitionService.new }
+      container.register(:drawing_comparison) { Services::DrawingComparisonService.new }
       container.register(:main_dialog) { UI::MainDialog.new(container: container, modules: modules) }
       register_builders
       register_regeneration

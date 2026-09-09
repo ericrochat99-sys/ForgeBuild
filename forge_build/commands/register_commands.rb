@@ -14,7 +14,7 @@ module ForgeBuild
         commands.each_value { |command| menu.add_item(command) }
 
         toolbar = ::UI::Toolbar.new('ForgeBuild')
-        %i[open edit regenerate move display copy delete reports export].each { |id| toolbar.add_item(commands.fetch(id)) }
+        %i[open edit regenerate move display copy delete reports export drawings].each { |id| toolbar.add_item(commands.fetch(id)) }
         toolbar.restore
         install_context_menu(container)
         @registered = true
@@ -43,7 +43,8 @@ module ForgeBuild
               path = container.resolve(:exports).export(model: Sketchup.active_model, directory: directory)
               ::UI.messagebox("ForgeBuild reports exported to:\n#{path}")
             end
-          }]
+          }],
+          drawings: ['Drawing Assistant', 'Import, calibrate, trace, recognize, and compare drawings', -> { container.resolve(:main_dialog).show }]
         }
         definitions.each_with_object({}) do |(id, (name, help, action)), result|
           result[id] = ::UI::Command.new(name, &action).tap do |command|

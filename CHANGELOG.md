@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.10.0] - 2026-09-09
+
+### Added
+
+- Phase 6 Drawing Assistant for architectural, structural, mechanical, electrical, plumbing, and fire-protection underlays.
+- PDF/image/DWG/DXF import registration with sheet, discipline, page, revision, source, visibility, scale, rotation, and origin metadata.
+- Two-point drawing calibration and persistent drawing scale records.
+- Manual tracing tools for floors, walls, roofs, openings, column grids, and levels.
+- Revision and addendum history with overlay-change comparison records.
+- OCR-text/annotation parsing for dimensions, elevations, rooms, wall types, detail references, assembly tags, and grid lines.
+- Commercial assembly suggestions from drawing annotations with mandatory user-confirmation state.
+- Model-to-drawing comparison with matched, drawing-only, model-only, and unresolved-condition reporting.
+- Drawing Assistant workspace, toolbar command, icon, and automated service tests.
+
+### Changed
+
+- Advanced ForgeBuild to version 0.10.0 and marked Phase 6 complete.
+
 ## [0.9.0] - 2026-09-09
 
 ### Added

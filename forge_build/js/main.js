@@ -2,6 +2,7 @@ window.ForgeBuild = {
   bootstrap(payload) {
     document.getElementById('version').textContent = `Version ${payload.version}`;
     this.renderModules(payload.modules);
+    this.renderDrawings(payload.drawings || []);
   },
   selectedAssembly: null,
   showInspector() {
@@ -113,7 +114,30 @@ window.ForgeBuild = {
       <div><strong>${(report.clashes || []).length}</strong><small>possible clashes</small></div>
       <div><strong>${(report.materials || []).length}</strong><small>material groups</small></div></div>`;
   },
-  exportResult(path) { this.showError(`Commercial delivery package exported to ${path}`); }
+  exportResult(path) { this.showError(`Commercial delivery package exported to ${path}`); },
+  renderDrawings(drawings) {
+    const select = document.getElementById('drawing-list');
+    select.innerHTML = '<option value="">Registered drawings</option>' + drawings.map(drawing =>
+      `<option value="${this.escape(drawing.id)}">${this.escape(drawing.sheet || drawing.filename)} · ${this.escape(drawing.revision || 'original')}</option>`).join('');
+  },
+  drawingImported(drawing) {
+    const select = document.getElementById('drawing-list');
+    select.insertAdjacentHTML('beforeend', `<option selected value="${this.escape(drawing.id)}">${this.escape(drawing.sheet || drawing.filename)} · ${this.escape(drawing.revision || 'original')}</option>`);
+    this.showError(`Imported ${drawing.filename}. Calibrate it against a known dimension before tracing.`);
+  },
+  recognitionResult(result) {
+    this.recognition = result;
+    const items = [
+      ['Dimensions', result.dimensions], ['Elevations', result.elevations], ['Rooms', result.rooms],
+      ['Wall types', result.wall_types], ['Details', result.details], ['Assembly tags', result.assembly_tags],
+      ['Suggestions requiring confirmation', result.suggestions]
+    ];
+    document.getElementById('recognition-summary').innerHTML = items.map(([label, values]) =>
+      `<div class="recognition-row"><strong>${label}</strong><span>${(values || []).length}</span></div>`).join('');
+  },
+  comparisonResult(result) {
+    document.getElementById('recognition-summary').innerHTML += `<div class="comparison"><strong>Model comparison</strong><p>${result.matched_count} matched · ${result.unresolved_count} drawing-only · ${(result.model_only || []).length} model-only</p></div>`;
+  }
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -177,5 +201,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const reportOptions = () => ({ waste_factors: { default: Number(document.getElementById('waste-factor').value || 0) } });
   document.getElementById('refresh-reports').addEventListener('click', () => window.sketchup.refresh_reports(reportOptions()));
   document.getElementById('export-reports').addEventListener('click', () => window.sketchup.export_reports(reportOptions()));
+  document.getElementById('import-drawing').addEventListener('click', () => window.sketchup.import_drawing({
+    discipline: document.getElementById('drawing-discipline').value,
+    sheet: document.getElementById('drawing-sheet').value,
+    revision: document.getElementById('drawing-revision').value,
+    page: Number(document.getElementById('drawing-page').value || 1)
+  }));
+  document.getElementById('calibrate-drawing').addEventListener('click', () => {
+    const id = document.getElementById('drawing-list').value;
+    if (id) window.sketchup.calibrate_drawing(id);
+  });
+  document.getElementById('trace-buttons').addEventListener('click', event => {
+    const button = event.target.closest('[data-trace]');
+    if (button) window.sketchup.trace_drawing(button.dataset.trace);
+  });
+  document.getElementById('recognize-annotations').addEventListener('click', () => window.sketchup.recognize_annotations(document.getElementById('annotation-text').value));
+  document.getElementById('compare-drawing').addEventListener('click', () => window.sketchup.compare_drawing());
   if (window.sketchup && window.sketchup.ready) window.sketchup.ready();
 });

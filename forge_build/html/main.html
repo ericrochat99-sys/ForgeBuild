@@ -38,6 +38,23 @@
       <div class="command-grid"><button id="refresh-reports" type="button">Refresh Reports</button><button id="export-reports" type="button">Export CSV + Excel</button></div>
       <div id="report-summary" class="report-summary"><p class="empty-state">Refresh to analyze the active model.</p></div>
     </section>
+    <section id="drawing-assistant" class="card drawing-assistant">
+      <div class="section-heading"><div><p class="eyebrow">Phase 6</p><h2>Drawing Assistant</h2></div><span class="badge">User confirmed</span></div>
+      <p>Import and calibrate drawing underlays, trace building assemblies, review extracted annotations, and compare drawing intent with the model.</p>
+      <div class="property-grid">
+        <label class="option-field">Discipline<select id="drawing-discipline"><option>architectural</option><option>structural</option><option>mechanical</option><option>electrical</option><option>plumbing</option><option>fire protection</option></select></label>
+        <label class="option-field">Sheet<input id="drawing-sheet" placeholder="A101"></label>
+        <label class="option-field">Revision<input id="drawing-revision" placeholder="Addendum 1"></label>
+        <label class="option-field">PDF page<input id="drawing-page" type="number" min="1" value="1"></label>
+      </div>
+      <div class="command-grid"><button id="import-drawing" type="button">Import Drawing</button><select id="drawing-list"><option value="">Registered drawings</option></select><button id="calibrate-drawing" type="button">Calibrate</button></div>
+      <h3>Trace from drawing</h3>
+      <div id="trace-buttons" class="trace-grid"><button data-trace="floor">Floor</button><button data-trace="wall">Wall</button><button data-trace="roof">Roof</button><button data-trace="opening">Opening</button><button data-trace="grid">Grid</button><button data-trace="level">Level</button></div>
+      <h3>Annotation recognition</h3>
+      <textarea id="annotation-text" rows="6" placeholder="Paste OCR text or drawing annotations: dimensions, elevations, room names, wall types, detail references, and assembly tags…"></textarea>
+      <div class="command-grid"><button id="recognize-annotations" type="button">Analyze Annotations</button><button id="compare-drawing" type="button">Compare to Model</button></div>
+      <div id="recognition-summary" class="report-summary"><p class="empty-state">Suggestions are never modeled until you review and confirm them.</p></div>
+    </section>
     <section class="card update-card">
       <div><h2>Software updates</h2><p id="update-status">Keep ForgeBuild current with the latest GitHub release.</p></div>
       <button id="update-button" type="button">Check for Updates</button>

@@ -2,7 +2,10 @@
 
 ForgeBuild is a parametric building-assembly modeling extension for SketchUp 2024+.
 
-Version 0.9.0 adds Phase 5 commercial information and delivery with model-wide takeoffs,
+Version 0.10.0 adds the Phase 6 Drawing Assistant with calibrated underlays, assembly tracing,
+revision tracking, OCR annotation parsing, confirmation-gated suggestions, and model comparison.
+
+Version 0.9.0 added Phase 5 commercial information and delivery with model-wide takeoffs,
 schedules, material lists, validation and clash warnings, and CSV/Excel-compatible exports.
 
 Version 0.8.0 added the Phase 4 Roof Builder with commercial low-slope and specialty roofs,
@@ -49,7 +52,7 @@ See [the architecture guide](docs/ARCHITECTURE.md), [roadmap](docs/ROADMAP.md), 
 
 ## Status
 
-Pre-alpha. Floor, Wall, and Roof builders plus the Phase 5 commercial delivery workflow are active. Drawing-assisted modeling remains on the roadmap.
+Pre-alpha. Floor, Wall, and Roof builders, commercial delivery, and drawing-assisted modeling workflows are active.
 
 ## License
 

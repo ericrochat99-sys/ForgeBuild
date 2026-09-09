@@ -1,26 +1,28 @@
-# ForgeBuild 0.9.0 — Phase 5 Commercial Information and Delivery
+# ForgeBuild 0.10.0 — Phase 6 Drawing-Assisted Modeling
 
-ForgeBuild 0.9.0 turns Floor, Wall, and Roof Builder objects into coordinated commercial estimating and project-delivery information.
+ForgeBuild 0.10.0 adds a drawing-assisted workflow for turning architectural, structural, and MEP underlays into coordinated Floor, Wall, and Roof Builder objects.
 
-## Takeoff and schedules
+## Drawing setup
 
-- Model-wide quantity takeoff grouped by assembly, material, CSI division, cost code, level, area, and building.
-- Quantities for concrete, masonry, reinforcing, steel, deck, framing, insulation, sheathing, cladding, roofing, finishes, openings, and accessories based on each assembly's stored values.
-- Opening, structural-member, assembly, and complete-object schedules.
-- Material procurement lists with configurable waste factors.
-- Alternates and allowances supported in the report data model.
+- Register PDF, image, DWG, and DXF underlays with discipline, sheet, page, revision, and source metadata.
+- Calibrate imported drawings by clicking two known points and entering the actual dimension.
+- Store scale, rotation, origin, visibility, and persistent entity references with the SketchUp model.
+- Track drawing revisions and addenda with comparison-ready history.
 
-## Review and coordination
+## Tracing and recognition
 
-- Fire-rating, acoustic, thermal, and accessibility information checks.
-- Missing metadata reporting for incomplete assemblies.
-- Possible clash warnings across building systems and coordinated openings.
-- Consistent IFC class, CSI cost-code, and DWG layer metadata for downstream interchange.
+- Trace floors, walls, roofs, openings, column grids, and levels directly over drawing underlays.
+- Generate regular parametric ForgeBuild assemblies from traces so editing, regeneration, quantities, materials, and exports continue to work.
+- Parse OCR output or pasted annotations for dimensions, elevations, room names, wall types, detail references, assembly tags, and grid lines.
+- Suggest commercial wall and roof assemblies from annotations.
+- Require explicit user confirmation for every recognized or suggested assembly; recognition never creates geometry automatically.
 
-## Commercial exports
+## Coordination
 
-- New Commercial Delivery dashboard inside the main ForgeBuild workspace.
-- One-click report refresh with assembly, quantity, schedule, warning, clash, and material metrics.
-- Delivery packages containing CSV takeoffs, material lists, schedules, validation reports, clash warnings, and classification mapping.
-- Excel-compatible multi-sheet workbook and a complete JSON assembly summary.
-- Dedicated Commercial Reports and Export Delivery Package toolbar commands.
+- Compare recognized drawing features with the model.
+- Report matched features, drawing-only conditions, model-only objects, and unresolved scope.
+- Use the new Drawing Assistant workspace and toolbar command for the complete workflow.
+
+## Validation
+
+- Added automated tests for drawing registration, calibration, revisions, annotation parsing, confirmation state, and model comparison.
