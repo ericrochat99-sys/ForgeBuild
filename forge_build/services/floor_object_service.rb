@@ -105,6 +105,11 @@ module ForgeBuild
           Geometry::FloorAssembly.linear(entities: entities, **p)
         when :point
           Geometry::FloorAssembly.point(entities: entities, **p)
+        when :face
+          face = entities.add_face(p[:vertices].map { |point| ::Geom::Point3d.new(point) })
+          raise 'Unable to regenerate floor boundary' unless face
+          face.reverse! if face.normal.z.negative?
+          face.pushpull(p[:thickness])
         end
       end
 
@@ -175,8 +180,3 @@ module ForgeBuild
     end
   end
 end
-        when :face
-          face = entities.add_face(p[:vertices].map { |point| ::Geom::Point3d.new(point) })
-          raise 'Unable to regenerate floor boundary' unless face
-          face.reverse! if face.normal.z.negative?
-          face.pushpull(p[:thickness])
