@@ -51,7 +51,7 @@ module ForgeBuild
 
       def draw(view)
         return unless @origin && @input.valid?
-        view.drawing_color = '#e87524'
+        view.drawing_color = '#A77747'
         view.line_width = 2
         if @kind == :area
           point = @input.position

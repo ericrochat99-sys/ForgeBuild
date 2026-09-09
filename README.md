@@ -2,8 +2,10 @@
 
 ForgeBuild is a parametric building-assembly modeling extension for SketchUp 2024+.
 
-Version 0.10.0 adds the Phase 6 Drawing Assistant with calibrated underlays, assembly tracing,
+Version 1.0.0 adds the Phase 6 Drawing Assistant with calibrated underlays, assembly tracing,
 revision tracking, OCR annotation parsing, confirmation-gated suggestions, and model comparison.
+It also introduces the ForgeBuild v1 brand system aligned with ForgeCase: Forge Black, Forge Bronze,
+architectural white/gray surfaces, and the shared “Built for What’s Next” product-family language.
 
 Version 0.9.0 added Phase 5 commercial information and delivery with model-wide takeoffs,
 schedules, material lists, validation and clash warnings, and CSV/Excel-compatible exports.

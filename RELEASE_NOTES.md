@@ -1,6 +1,13 @@
-# ForgeBuild 0.10.0 — Phase 6 Drawing-Assisted Modeling
+# ForgeBuild 1.0.0 — Phase 6 Drawing-Assisted Modeling
 
-ForgeBuild 0.10.0 adds a drawing-assisted workflow for turning architectural, structural, and MEP underlays into coordinated Floor, Wall, and Roof Builder objects.
+ForgeBuild 1.0.0 is the first production release. It adds a drawing-assisted workflow for turning architectural, structural, and MEP underlays into coordinated Floor, Wall, and Roof Builder objects.
+
+## Forge product-family branding
+
+- New angular ForgeBuild mark derived from the visual language used by ForgeCase.
+- Forge Black `#2D3036`, Forge Bronze `#A77747`, white, and light-gray interface palette.
+- Montserrat/Inter-style typography, square architectural panels, restrained bronze accents, and consistent form controls.
+- “FORGE BUILD — Commercial Building Solutions” header and “Built for What’s Next” tagline.
 
 ## Drawing setup
 
