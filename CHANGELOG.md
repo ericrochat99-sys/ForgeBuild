@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.1] - 2026-09-09
+
+### Fixed
+
+- Prevented the drawing importer from opening a SketchUp undo operation around `Model#import`, which caused the “Undo operation already open” failure.
+- Isolated ForgeBuild drawing metadata registration in a separate operation after SketchUp finishes importing the plan.
+- Added regression coverage that fails whenever import is called inside an open operation.
+
 ## [1.0.0] - 2026-09-09
 
 ### Added

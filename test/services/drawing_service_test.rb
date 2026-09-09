@@ -7,9 +7,34 @@ module ForgeBuild
   module Services
     class DrawingServiceTest < Minitest::Test
       class FakeModel
-        def initialize = @attributes = {}
+        attr_reader :events
+        def initialize
+          @attributes = {}
+          @events = []
+          @entities = []
+        end
         def get_attribute(dictionary, key, default = nil) = @attributes.fetch([dictionary, key], default)
         def set_attribute(dictionary, key, value) = @attributes[[dictionary, key]] = value
+        def entities = @entities
+        def selection = []
+        def import(_path, _options)
+          raise 'Undo operation already open' if @operation_open
+          @events << :import
+          @entities << FakeEntity.new(11)
+          true
+        end
+        def start_operation(*_args)
+          @operation_open = true
+          @events << :start_operation
+        end
+        def commit_operation
+          @operation_open = false
+          @events << :commit_operation
+        end
+        def abort_operation
+          @operation_open = false
+          @events << :abort_operation
+        end
       end
       FakeEntity = Struct.new(:persistent_id, :name) do
         def set_attribute(*_args); end
@@ -34,6 +59,12 @@ module ForgeBuild
         @service.add_revision(model: @model, id: drawing[:id], revision: '1', path: 'A101-r1.pdf', notes: 'Addendum 1')
         result = @service.compare_revisions(model: @model, id: drawing[:id], older: '0', newer: '1')
         assert result[:changed]
+      end
+
+      def test_import_finishes_before_metadata_undo_operation_starts
+        result = @service.import(model: @model, path: '/plans/A101.pdf', sheet: 'A101')
+        assert_equal [:import, :start_operation, :commit_operation], @model.events
+        assert_equal 'A101.pdf', result[:filename]
       end
     end
   end
