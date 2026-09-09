@@ -61,7 +61,25 @@ module ForgeBuild
           submenu.add_item('Move') { Sketchup.send_action('selectMoveTool:') }
           submenu.add_item('Copy') { container.resolve(:assemblies).copy(entity) }
           submenu.add_item('Delete') { container.resolve(:assemblies).delete(entity) }
+          if Models::ParametricObject.read(entity)[:builder] == 'wall'
+            wall_menu = submenu.add_submenu('Wall Editing')
+            wall_menu.add_item('Stretch') { prompt_wall_value('New wall length', entity) { |value| container.resolve(:wall_editing).stretch(entity, value) } }
+            wall_menu.add_item('Split') { prompt_wall_value('Split distance from start', entity) { |value| container.resolve(:wall_editing).split(entity, value) } }
+            wall_menu.add_item('Offset Copy') { prompt_wall_value('Offset distance', entity) { |value| container.resolve(:wall_editing).offset(entity, value) } }
+            wall_menu.add_item('Join Selected Walls') { container.resolve(:wall_editing).join(container.resolve(:wall_editing).walls) }
+            wall_menu.add_item('Connect Selected Walls') { container.resolve(:wall_editing).connect(container.resolve(:wall_editing).walls) }
+            wall_menu.add_item('Align Selected Walls') { container.resolve(:wall_editing).align(container.resolve(:wall_editing).walls) }
+            wall_menu.add_item('Renumber Walls') { ::UI.messagebox("Renumbered #{container.resolve(:wall_editing).renumber} walls.") }
+            wall_menu.add_item('Wall Schedule Summary') { ::UI.messagebox("Wall schedule contains #{container.resolve(:wall_editing).schedule.length} assemblies.") }
+          end
         end
+      end
+
+      def prompt_wall_value(label, entity)
+        value = ::UI.inputbox([label], ['12\''], 'ForgeBuild Wall Editing')
+        yield value.first.to_l if value
+      rescue StandardError => error
+        ::UI.messagebox(error.message)
       end
     end
   end

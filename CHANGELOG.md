@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.7.0] - 2026-09-09
+
+### Added
+
+- Phase 3 Wall Builder catalog with 51 commercial wall systems, layers, openings, joints, and accessories.
+- CMU, reinforced masonry, concrete, metal-stud, shaft, chase, pony, furred, structural-stud, wood, IMP, tilt-up, precast, ICF, SIP, storefront, curtain-wall, and glazed-partition systems.
+- Exterior and interior layer tools for sheathing, barriers, insulation, rainscreens, veneers, panels, EIFS, stucco, gypsum, cement board, and acoustical panels.
+- Door, frame, borrowed-lite, storefront, window, louver, access-panel, and overhead-door opening objects.
+- Fire/smoke ratings, STC, R-value, UL/GA design, security classification, CSI, cost-code, material, and quantity metadata.
+- Sloped and gable wall geometry using independently editable start and end heights.
+- Stud-layout geometry and counts for framed walls.
+- Wall stretch, split, offset, join, connect, align, renumber, and schedule-summary commands.
+- Parent/child relationships between host walls and layers, openings, joints, and accessories.
+
+### Changed
+
+- Routed current and legacy masonry objects through the unified Wall Object Service.
+- Added text-property support to builder option forms.
+
 ## [0.6.0] - 2026-09-08
 
 ### Added

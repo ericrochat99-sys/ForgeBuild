@@ -19,8 +19,9 @@ window.ForgeBuild = {
     const fields = ['assembly', 'material', 'tag', 'finish', 'fire_rating', 'comments'];
     document.getElementById('identity-fields').innerHTML = fields.map(key =>
       `<label class="option-field">${key.replaceAll('_', ' ')}<input data-property="${key}" value="${this.escape(assembly[key] || '')}"></label>`).join('');
-    document.getElementById('parameter-fields').innerHTML = Object.entries(assembly.parameters || assembly.dimensions || {}).filter(([, value]) => typeof value === 'number').map(([key, value]) =>
-      `<label class="option-field">${key.replaceAll('_', ' ')}<input type="number" min="0.001" step="0.125" data-parameter="${key}" value="${value}"></label>`).join('');
+    document.getElementById('parameter-fields').innerHTML = Object.entries(assembly.parameters || assembly.dimensions || {})
+      .filter(([key, value]) => key !== 'system' && (typeof value === 'number' || typeof value === 'string'))
+      .map(([key, value]) => `<label class="option-field">${key.replaceAll('_', ' ')}<input type="${typeof value === 'number' ? 'number' : 'text'}" ${typeof value === 'number' ? 'step="0.125"' : ''} data-parameter="${key}" value="${this.escape(value)}"></label>`).join('');
     document.querySelectorAll('[data-display]').forEach(button => button.classList.toggle('active', button.dataset.display === (assembly.display_mode || 'detailed')));
     document.getElementById('preset-list').innerHTML = '<option value="">Assembly presets</option>' + (assembly.presets || []).map(preset => `<option value="${this.escape(preset.name)}">${this.escape(preset.name)}${preset.default ? ' (Default)' : ''}</option>`).join('');
   },
@@ -42,6 +43,9 @@ window.ForgeBuild = {
     const id = `${tool.id}-${option.id}`;
     if (option.type === 'checkbox') {
       return `<label class="option-field"><span><input id="${id}" type="checkbox" data-option="${option.id}" ${option.value ? 'checked' : ''}> ${option.label}</span></label>`;
+    }
+    if (option.type === 'text') {
+      return `<label class="option-field">${option.label}<input id="${id}" type="text" value="${this.escape(option.value || '')}" data-option="${option.id}"></label>`;
     }
     return `<label class="option-field">${option.label}<input id="${id}" type="number" min="${option.min || 0.125}" step="${option.step || 0.125}" value="${option.value}" data-option="${option.id}"><small>${option.unit || ''}</small></label>`;
   },

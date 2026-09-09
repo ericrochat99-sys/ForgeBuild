@@ -31,5 +31,7 @@ class AssemblyBuildersTest < Minitest::Test
     assert_includes floor.tools.map(&:id), :floor_from_face
     assert_includes wall.tools.map(&:id), :cmu_wall
     assert_includes wall.tools.map(&:id), :brick_veneer
+    assert_includes wall.tools.map(&:id), :metal_stud_wall
+    assert_includes wall.tools.map(&:id), :door_opening
   end
 end

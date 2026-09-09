@@ -12,12 +12,16 @@ require_relative 'database/migrator'
 require_relative 'services/regeneration_service'
 require_relative 'geometry/rectangular_prism'
 require_relative 'geometry/floor_assembly'
+require_relative 'geometry/wall_assembly'
 require_relative 'services/settings_service'
 require_relative 'services/update_service'
 require_relative 'services/concrete_object_service'
 require_relative 'builders/floor/catalog'
 require_relative 'services/floor_object_service'
 require_relative 'services/masonry_object_service'
+require_relative 'builders/wall/catalog'
+require_relative 'services/wall_object_service'
+require_relative 'services/wall_editing_service'
 require_relative 'services/display_service'
 require_relative 'services/material_tag_service'
 require_relative 'services/migration_service'
@@ -28,6 +32,7 @@ require_relative 'observers/selection_observer'
 require_relative 'tools/concrete_rectangle_tool'
 require_relative 'tools/floor_placement_tool'
 require_relative 'tools/masonry_line_tool'
+require_relative 'tools/wall_placement_tool'
 require_relative 'builders/floor/builder'
 require_relative 'builders/wall/builder'
 require_relative 'builders/roof/builder'
@@ -52,6 +57,8 @@ module ForgeBuild
       container.register(:concrete_objects) { Services::ConcreteObjectService.new }
       container.register(:floor_objects) { Services::FloorObjectService.new(materials: container.resolve(:materials)) }
       container.register(:masonry_objects) { Services::MasonryObjectService.new }
+      container.register(:wall_objects) { Services::WallObjectService.new(materials: container.resolve(:materials)) }
+      container.register(:wall_editing) { Services::WallEditingService.new(regeneration: container.resolve(:regeneration)) }
       container.register(:regeneration) { Services::RegenerationService.new }
       container.register(:display) { Services::DisplayService.new }
       container.register(:materials) { Services::MaterialTagService.new }
@@ -92,8 +99,8 @@ module ForgeBuild
       (Builders::Floor::Catalog::SYSTEMS.keys.map(&:to_s) - %w[slab_on_grade equipment_pad]).each do |type|
         service.register(builder: :floor, object_type: type) { |**args| container.resolve(:floor_objects).regenerate(**args) }
       end
-      Services::MasonryObjectService::TYPES.each do |type|
-        service.register(builder: :wall, object_type: type) { |**args| container.resolve(:masonry_objects).regenerate(**args) }
+      Builders::Wall::Catalog::SYSTEMS.keys.each do |type|
+        service.register(builder: :wall, object_type: type) { |**args| container.resolve(:wall_objects).regenerate(**args) }
       end
     end
 
