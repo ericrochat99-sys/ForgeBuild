@@ -1,26 +1,26 @@
-# ForgeBuild 0.6.0 — Phase 2 Floor Builder
+# ForgeBuild 0.7.0 — Phase 3 Wall Builder
 
-ForgeBuild 0.6.0 delivers the Phase 2 Floor Builder for school, commercial, institutional, and light-industrial construction.
+ForgeBuild 0.7.0 delivers the Phase 3 Wall Builder for commercial, school, healthcare, municipal, and institutional projects.
 
-## Concrete and foundations
+## Commercial systems
 
-- Slabs on grade, elevated slabs, composite slabs, and slabs on form deck.
-- Slopes, depressions, thickened edges, turndowns, and slab recess zones.
-- Spread and continuous footings, grade beams, foundation walls, piers, pads, pits, and sumps.
-- Vapor retarders, insulation, granular base, prepared subgrade, joints, reinforcing, drains, and trenches.
+- Standard and reinforced CMU, structural brick, and cast-in-place concrete walls.
+- Metal-stud, shaft, chase, pony, furred, structural-stud, and limited-use wood walls.
+- Insulated metal, tilt-up, precast, ICF, and SIP wall panels.
+- Storefront, curtain-wall, and glazed-partition placeholders.
 
-## Structural floors
+## Layers and rated construction
 
-- Steel beams, open-web joists, bridging, steel framing zones, and metal deck.
-- Deck direction, span, flute spacing, closures, pour stops, edge angles, seats, and bearing objects.
-- Precast hollow-core and precast members.
-- Wood joists, engineered-joist representations, and floor trusses.
+- Sheathing, air/weather barriers, continuous insulation, rainscreens, vapor retarders, masonry veneers, metal/fiber-cement panels, EIFS, and stucco.
+- Gypsum, abuse-resistant board, cement/tile backer, and acoustical panels.
+- Fire and smoke ratings, STC, R-value, UL/GA designs, security classifications, CSI divisions, and cost codes.
+- Parent/child host relationships for coordinated wall layers and accessories.
 
-## Openings and coordination
+## Openings, accessories, and editing
 
-- Rectangular, circular, polygonal, shaft, stair, elevator, and equipment opening objects.
-- Sleeves, penetrations, blockouts, curbs, opening reinforcement, and MEP coordination zones.
-- Rectangle, line, point, and selected-face/polygon creation workflows.
-- Host/child relationships, parameter editing, relocation, display modes, quantities, presets, and full regeneration.
+- Doors and hollow-metal frames, borrowed lites, storefront, windows, louvers, access panels, and overhead doors.
+- Lintels, headers, sills, bond beams, reinforcing, control joints, pilasters, embeds, anchors, and rated joints.
+- Level, sloped, gable, and partial-height wall profiles through editable start/end heights.
+- Stretch, split, offset, join, connect, align, copy, move, delete, renumber, and schedule-summary commands.
 
-The Floor Builder workspace now includes a filter for quickly finding systems in the expanded catalog.
+All Phase 3 objects participate in the shared Property Inspector, presets, materials/tags, display modes, quantities, and regeneration framework.

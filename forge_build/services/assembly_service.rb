@@ -6,6 +6,8 @@ module ForgeBuild
   module Services
     class AssemblyService
       EDITABLE_FIELDS = %w[assembly material finish tag comments fire_rating manufacturer model_number].freeze
+      POSITIVE_PARAMETERS = %w[width length height thickness depth].freeze
+      TEXT_PARAMETERS = %w[ul_design ga_design smoke_rating security_class notes system].freeze
       def initialize(regeneration:, display:, materials:, migration:)
         @regeneration, @display, @materials, @migration = regeneration, display, materials, migration
       end
@@ -24,7 +26,7 @@ module ForgeBuild
           name = key.to_s
           result[name.to_sym] = value if EDITABLE_FIELDS.include?(name)
         end
-        parameters = numeric_parameters(changes['parameters'] || changes[:parameters] || {})
+        parameters = parameter_values(changes['parameters'] || changes[:parameters] || {})
         normalized[:parameters] = Models::ParametricObject.read(entity).fetch(:parameters, {}).merge(parameters) unless parameters.empty?
         model.start_operation('Edit ForgeBuild Assembly', true)
         Models::ParametricObject.update(entity, normalized)
@@ -69,10 +71,16 @@ module ForgeBuild
       end
 
       private
-      def numeric_parameters(parameters)
+      def parameter_values(parameters)
         parameters.each_with_object({}) do |(key, value), result|
+          if TEXT_PARAMETERS.include?(key.to_s)
+            result[key.to_s] = value.to_s
+            next
+          end
           number = Float(value)
-          raise ArgumentError, "#{key} must be greater than zero" unless number.positive?
+          if POSITIVE_PARAMETERS.include?(key.to_s) && !number.positive?
+            raise ArgumentError, "#{key} must be greater than zero"
+          end
           result[key.to_s] = number
         end
       end

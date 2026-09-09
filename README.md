@@ -2,7 +2,10 @@
 
 ForgeBuild is a parametric building-assembly modeling extension for SketchUp 2024+.
 
-Version 0.6.0 adds the Phase 2 Floor Builder on top of the shared assembly framework, with
+Version 0.7.0 adds the Phase 3 commercial Wall Builder with structural systems, layered and
+rated construction, openings, accessories, sloped profiles, and wall-editing commands.
+
+Version 0.6.0 added the Phase 2 Floor Builder on top of the shared assembly framework, with
 concrete and foundation systems, structural framing, floor openings, coordination objects,
 selected-face/polygon generation, editable parameters, quantities, and regeneration.
 
@@ -15,7 +18,7 @@ The product is organized in construction order around Floor, Wall, and Roof buil
 ## Included builders
 
 - **Floor Builder:** concrete slabs and layers, foundations, joints, reinforcing, structural steel and wood framing, deck, precast, openings, penetrations, and coordination zones.
-- **Wall Builder:** CMU and brick walls, veneers, pilasters, joints, lintels, bond beams, grouted cells, and reinforcing.
+- **Wall Builder:** masonry, concrete, metal/wood framing, panels, layered/rated assemblies, openings, accessories, profiles, and editing commands.
 - **Roof Builder:** registered as the stable home for upcoming rafter, truss, layer, fascia, soffit, and drainage tools.
 
 Masonry assemblies are drawn with a two-click line tool, accept typed lengths, retain editable estimating metadata, and calculate run length, wall area, volume, and reinforcing locations.
