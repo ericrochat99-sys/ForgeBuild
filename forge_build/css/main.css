@@ -41,3 +41,9 @@ button.danger { color: #fff !important; background: #a63b32 !important; }
 .preset-row > input { flex: 2; }
 .preset-row label { white-space: nowrap; }
 #toast { position: fixed; right: 14px; bottom: 14px; left: 14px; padding: 10px 12px; border-radius: 8px; background: #9c2f2f; color: white; }
+.report-controls { margin: 12px 0; }
+.metric-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 12px; }
+.metric-grid div { padding: 10px; border: 1px solid rgba(127,127,127,.25); border-radius: 8px; background: rgba(127,127,127,.08); }
+.metric-grid strong, .metric-grid small { display: block; }
+.metric-grid strong { font-size: 20px; }
+.metric-grid small { opacity: .7; margin-top: 2px; }

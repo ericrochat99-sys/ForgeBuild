@@ -57,6 +57,8 @@ module ForgeBuild
         instance.add_action_callback('set_display_mode') { |_context, mode| set_display_mode(instance, mode) }
         instance.add_action_callback('save_preset') { |_context, name, parameters, make_default| save_preset(instance, name, parameters, make_default) }
         instance.add_action_callback('apply_preset') { |_context, name| apply_preset(instance, name) }
+        instance.add_action_callback('refresh_reports') { |_context, options| publish_reports(instance, options || {}) }
+        instance.add_action_callback('export_reports') { |_context, options| export_reports(instance, options || {}) }
         instance
       end
 
@@ -119,6 +121,24 @@ module ForgeBuild
       def publish_bootstrap(instance)
         payload = { version: ForgeBuild::VERSION, modules: @modules.entries.map(&:to_h) }
         instance.execute_script("ForgeBuild.bootstrap(#{JSON.generate(payload)})")
+      end
+
+      def publish_reports(instance, options = {})
+        report = @container.resolve(:information).report(model: Sketchup.active_model,
+                                                          waste_factors: options['waste_factors'] || {})
+        instance.execute_script("ForgeBuild.reportResult(#{JSON.generate(report)})")
+      rescue StandardError => error
+        instance.execute_script("ForgeBuild.showError(#{JSON.generate(error.message)})")
+      end
+
+      def export_reports(instance, options = {})
+        directory = ::UI.select_directory(title: 'Export ForgeBuild Commercial Delivery Package')
+        return unless directory
+
+        path = @container.resolve(:exports).export(model: Sketchup.active_model, directory: directory, options: options)
+        instance.execute_script("ForgeBuild.exportResult(#{JSON.generate(path)})")
+      rescue StandardError => error
+        instance.execute_script("ForgeBuild.showError(#{JSON.generate(error.message)})")
       end
 
       def open_builder(instance, id)

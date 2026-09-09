@@ -2,6 +2,7 @@
 
 require 'fileutils'
 require 'tmpdir'
+require 'digest'
 
 module ForgeBuild
   module Services
@@ -34,7 +35,7 @@ module ForgeBuild
         @download_request.headers = { 'Accept' => 'application/octet-stream',
                                       'User-Agent' => "ForgeBuild/#{@current_version}" }
         @download_request.start do |_request, response|
-          result = response.status_code == 200 ? install_response(response.body, update[:version]) :
+          result = response.status_code == 200 ? install_response(response.body, update[:version], update[:digest]) :
                    { status: 'error', message: "Download returned HTTP #{response.status_code}" }
           callback.call(result)
           @download_request = nil
@@ -46,8 +47,12 @@ module ForgeBuild
 
       private
 
-      def install_response(body, version)
+      def install_response(body, version, digest = nil)
         raise 'The downloaded file is not a valid RBZ archive.' unless valid_archive?(body)
+        if digest && !digest.to_s.empty?
+          expected = digest.to_s.sub(/\Asha256:/i, '')
+          raise 'The downloaded RBZ failed its SHA-256 integrity check.' unless Digest::SHA256.hexdigest(body) == expected
+        end
 
         Dir.mktmpdir('forgebuild-update-') do |directory|
           archive = File.join(directory, "ForgeBuild-v#{version}.rbz")
@@ -102,6 +107,7 @@ module ForgeBuild
           status: 'available',
           version: latest,
           download_url: asset && asset['browser_download_url'],
+          digest: asset && asset['digest'],
           release_url: release['html_url']
         }
       rescue JSON::ParserError, KeyError => error

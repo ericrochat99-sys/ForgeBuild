@@ -146,4 +146,5 @@ Every milestone should include automated tests, migration notes, documentation, 
 - Phase 2 complete: concrete and foundation floors, structural framing, deck and precast systems, openings, coordination objects, selected-face/polygon generation, editing, and regeneration.
 - Phase 3 complete: commercial wall systems, finish layers, rated properties, openings, accessories, profiles, editing, and schedules.
 - Phase 4 complete: low-slope and specialty roofs, framing, layers, openings, edge assemblies, drainage, editing, and schedules.
-- Next: Phase 5 commercial information, takeoff, schedules, and estimating exports.
+- Phase 5 complete: commercial takeoff, schedules, material and bid-package data, validation, coordination warnings, and estimating/interchange exports.
+- Next: Phase 6 drawing-assisted modeling, calibration, tracing, OCR, and revision coordination.

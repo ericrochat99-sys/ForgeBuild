@@ -58,6 +58,10 @@ jobs:
         if: steps.existing.outputs.exists == 'false'
         run: rake package
 
+      - name: Generate SHA-256 checksum
+        if: steps.existing.outputs.exists == 'false'
+        run: sha256sum "dist/ForgeBuild-v${{ steps.version.outputs.number }}.rbz" > "dist/ForgeBuild-v${{ steps.version.outputs.number }}.rbz.sha256"
+
       - name: Create GitHub release
         if: steps.existing.outputs.exists == 'false'
         env:
@@ -65,7 +69,7 @@ jobs:
           TAG: ${{ steps.version.outputs.tag }}
           VERSION: ${{ steps.version.outputs.number }}
         run: |
-          gh release create "$TAG" "dist/ForgeBuild-v$VERSION.rbz" \
+          gh release create "$TAG" "dist/ForgeBuild-v$VERSION.rbz" "dist/ForgeBuild-v$VERSION.rbz.sha256" \
             --target "${{ github.sha }}" \
             --title "ForgeBuild $TAG" \
             --notes-file RELEASE_NOTES.md

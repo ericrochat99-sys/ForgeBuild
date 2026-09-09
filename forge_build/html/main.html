@@ -31,6 +31,13 @@
         <div class="preset-row"><input id="preset-name" placeholder="Preset name"><label><input id="preset-default" type="checkbox"> Default</label><button id="save-preset" type="button">Save Preset</button></div>
       </form>
     </section>
+    <section id="reports" class="card reports">
+      <div class="section-heading"><div><p class="eyebrow">Phase 5</p><h2>Commercial Delivery</h2></div><span class="badge">Estimating</span></div>
+      <p>Model-wide takeoff, schedules, material lists, validation, coordination warnings, and classified interchange metadata.</p>
+      <div class="report-controls"><label class="option-field">Default waste factor<input id="waste-factor" type="number" min="0" step="0.5" value="0"><small>percent</small></label></div>
+      <div class="command-grid"><button id="refresh-reports" type="button">Refresh Reports</button><button id="export-reports" type="button">Export CSV + Excel</button></div>
+      <div id="report-summary" class="report-summary"><p class="empty-state">Refresh to analyze the active model.</p></div>
+    </section>
     <section class="card update-card">
       <div><h2>Software updates</h2><p id="update-status">Keep ForgeBuild current with the latest GitHub release.</p></div>
       <button id="update-button" type="button">Check for Updates</button>
