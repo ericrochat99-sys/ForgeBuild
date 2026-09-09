@@ -28,6 +28,7 @@ button:disabled { cursor: wait; opacity: .65; }
 .tool-options { display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 8px; }
 .tool-options label { display: grid; gap: 4px; font-size: 12px; font-weight: 700; }
 .tool-options input { width: 100%; border: 1px solid rgba(127,127,127,.35); border-radius: 6px; padding: 9px; background: transparent; color: inherit; }
+.tool-search { width: 100%; margin-top: 8px; border: 1px solid rgba(127,127,127,.35); border-radius: 7px; padding: 10px; background: transparent; color: inherit; }
 .inspector form, #identity-fields, .property-grid { display: grid; gap: 8px; }
 .option-field { display: grid; gap: 4px; text-transform: capitalize; font-size: 12px; font-weight: 700; }
 .option-field input, .preset-row input { min-width: 0; width: 100%; border: 1px solid rgba(127,127,127,.35); border-radius: 6px; padding: 9px; background: transparent; color: inherit; }

@@ -1,16 +1,26 @@
-# ForgeBuild 0.5.0 — Complete Shared Framework
+# ForgeBuild 0.6.0 — Phase 2 Floor Builder
 
-ForgeBuild 0.5.0 completes the shared assembly-management layer used by the Floor, Wall, and Roof builders.
+ForgeBuild 0.6.0 delivers the Phase 2 Floor Builder for school, commercial, institutional, and light-industrial construction.
 
-## Highlights
+## Concrete and foundations
 
-- Select a ForgeBuild object to inspect and edit its properties and dimensional parameters.
-- Regenerate geometry without replacing the assembly group or losing its position.
-- Move, copy, delete, and change display detail from the workspace, toolbar, or right-click menu.
-- Save reusable named presets and mark preferred presets as defaults.
-- Store projects and presets in a migrated SQLite schema.
-- Automatically upgrade older Concrete and Masonry metadata to the current assembly schema.
-- Apply consistent ForgeBuild materials and tags.
-- Use clearer builder and assembly command icons.
+- Slabs on grade, elevated slabs, composite slabs, and slabs on form deck.
+- Slopes, depressions, thickened edges, turndowns, and slab recess zones.
+- Spread and continuous footings, grade beams, foundation walls, piers, pads, pits, and sumps.
+- Vapor retarders, insulation, granular base, prepared subgrade, joints, reinforcing, drains, and trenches.
 
-Existing `v0.4.0` objects remain supported and are upgraded in place when opened or selected.
+## Structural floors
+
+- Steel beams, open-web joists, bridging, steel framing zones, and metal deck.
+- Deck direction, span, flute spacing, closures, pour stops, edge angles, seats, and bearing objects.
+- Precast hollow-core and precast members.
+- Wood joists, engineered-joist representations, and floor trusses.
+
+## Openings and coordination
+
+- Rectangular, circular, polygonal, shaft, stair, elevator, and equipment opening objects.
+- Sleeves, penetrations, blockouts, curbs, opening reinforcement, and MEP coordination zones.
+- Rectangle, line, point, and selected-face/polygon creation workflows.
+- Host/child relationships, parameter editing, relocation, display modes, quantities, presets, and full regeneration.
+
+The Floor Builder workspace now includes a filter for quickly finding systems in the expanded catalog.

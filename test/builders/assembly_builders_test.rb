@@ -26,7 +26,9 @@ class AssemblyBuildersTest < Minitest::Test
     floor = ForgeBuild::Builders::Floor::Builder.new(container: @container)
     wall = ForgeBuild::Builders::Wall::Builder.new(container: @container)
 
-    assert_equal %i[slab_on_grade equipment_pad], floor.tools.map(&:id)
+    assert_includes floor.tools.map(&:id), :slab_on_grade
+    assert_includes floor.tools.map(&:id), :steel_joist
+    assert_includes floor.tools.map(&:id), :floor_from_face
     assert_includes wall.tools.map(&:id), :cmu_wall
     assert_includes wall.tools.map(&:id), :brick_veneer
   end

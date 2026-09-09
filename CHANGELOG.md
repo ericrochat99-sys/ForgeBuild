@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.6.0] - 2026-09-08
+
+### Added
+
+- Complete Floor Builder catalog spanning concrete, foundations, structural framing, openings, and coordination.
+- Rectangle, linear-run, point-placement, and selected-face/polygon floor workflows.
+- Slab-on-grade parameters for slopes, depressions, thickened edges, and turndowns.
+- Elevated slabs, composite and non-composite slabs, deck profiles, underslab layers, and reinforcing zones.
+- Spread/continuous footings, grade beams, foundation walls, piers, equipment foundations, pits, sumps, drains, and trenches.
+- Steel beams, steel joists with schematic web geometry, bridging, deck, precast, wood joist, and floor-truss systems.
+- Openings, sleeves, blockouts, curbs, opening reinforcement, bearing conditions, and MEP coordination zones.
+- Parent/child relationships between host floors and associated layers, openings, joints, and coordination objects.
+- Floor-system filtering in the builder workspace and builder-specific estimating metadata and quantities.
+
+### Changed
+
+- Routed all new and legacy Floor Builder objects through a shared regeneration service.
+- Added slope, turndown, deck-rib, circular-object, and open-web geometry primitives.
+
 ## [0.5.0] - 2026-09-08
 
 ### Added

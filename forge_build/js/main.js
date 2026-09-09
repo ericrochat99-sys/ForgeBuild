@@ -19,7 +19,7 @@ window.ForgeBuild = {
     const fields = ['assembly', 'material', 'tag', 'finish', 'fire_rating', 'comments'];
     document.getElementById('identity-fields').innerHTML = fields.map(key =>
       `<label class="option-field">${key.replaceAll('_', ' ')}<input data-property="${key}" value="${this.escape(assembly[key] || '')}"></label>`).join('');
-    document.getElementById('parameter-fields').innerHTML = Object.entries(assembly.parameters || assembly.dimensions || {}).map(([key, value]) =>
+    document.getElementById('parameter-fields').innerHTML = Object.entries(assembly.parameters || assembly.dimensions || {}).filter(([, value]) => typeof value === 'number').map(([key, value]) =>
       `<label class="option-field">${key.replaceAll('_', ' ')}<input type="number" min="0.001" step="0.125" data-parameter="${key}" value="${value}"></label>`).join('');
     document.querySelectorAll('[data-display]').forEach(button => button.classList.toggle('active', button.dataset.display === (assembly.display_mode || 'detailed')));
     document.getElementById('preset-list').innerHTML = '<option value="">Assembly presets</option>' + (assembly.presets || []).map(preset => `<option value="${this.escape(preset.name)}">${this.escape(preset.name)}${preset.default ? ' (Default)' : ''}</option>`).join('');
@@ -113,6 +113,12 @@ document.addEventListener('DOMContentLoaded', () => {
       options[input.dataset.option] = input.type === 'checkbox' ? input.checked : input.value;
     });
     window.sketchup.activate_tool(button.dataset.builder, button.dataset.tool, options);
+  });
+  document.getElementById('tool-search').addEventListener('input', event => {
+    const query = event.target.value.trim().toLowerCase();
+    document.querySelectorAll('[data-tool-options]').forEach(card => {
+      card.hidden = query && !card.textContent.toLowerCase().includes(query);
+    });
   });
   document.getElementById('back-button').addEventListener('click', () => {
     document.querySelector('.intro').hidden = false;
