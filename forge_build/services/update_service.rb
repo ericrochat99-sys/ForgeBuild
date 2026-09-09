@@ -59,8 +59,14 @@ module ForgeBuild
           File.binwrite(archive, body)
           replace_install(archive, directory)
         end
-        { status: 'installed', version: version,
-          message: "ForgeBuild #{version} is installed. Restart SketchUp to activate all changes." }
+        reloaded = hot_reload_eligible?(version) && reload_installed_extension(version)
+        if reloaded
+          { status: 'installed', version: version, reloaded: true, restart_required: false,
+            message: "ForgeBuild #{version} was installed and reloaded. You can continue without restarting SketchUp." }
+        else
+          { status: 'installed', version: version, reloaded: false, restart_required: true,
+            message: "ForgeBuild #{version} was installed. Restart SketchUp to activate all changes." }
+        end
       rescue StandardError => error
         { status: 'error', message: "Update failed; the previous version was restored. #{error.message}" }
       end
@@ -89,6 +95,56 @@ module ForgeBuild
 
       def installed_paths(plugins)
         [File.join(plugins, 'forge_build.rb'), File.join(plugins, 'forge_build')]
+      end
+
+      def hot_reload_eligible?(version)
+        installed = normalize(@current_version)
+        candidate = normalize(version)
+        installed[0, 2] == candidate[0, 2] && candidate[2] >= installed[2]
+      end
+
+      def reload_installed_extension(version)
+        plugins = Sketchup.find_support_file('Plugins')
+        root = plugins && File.join(plugins, 'forge_build')
+        return false unless root && File.directory?(root)
+
+        close_dialog
+        version_file = File.join(root, 'version.rb')
+        return false unless File.file?(version_file)
+
+        ForgeBuild.send(:remove_const, :VERSION) if ForgeBuild.const_defined?(:VERSION, false)
+        Sketchup.load(version_file)
+        reloadable_files(root).each { |path| Sketchup.load(path) }
+        @current_version = version
+        true
+      rescue StandardError => error
+        warn("ForgeBuild hot reload failed: #{error.class}: #{error.message}")
+        false
+      end
+
+      def close_dialog
+        return unless ForgeBuild.respond_to?(:application)
+        application = ForgeBuild.instance_variable_get(:@application)
+        return unless application
+        main_dialog = application.container.resolve(:main_dialog)
+        dialog = main_dialog.instance_variable_get(:@dialog)
+        dialog.close if dialog && dialog.respond_to?(:close)
+        main_dialog.instance_variable_set(:@dialog, nil)
+      rescue StandardError
+        nil
+      end
+
+      def reloadable_files(root)
+        before_builders = %w[models geometry services tools].flat_map do |folder|
+          Dir[File.join(root, folder, '**', '*.rb')].sort
+        end
+        after_builders = %w[observers project ui].flat_map do |folder|
+          Dir[File.join(root, folder, '**', '*.rb')].sort
+        end
+        catalogs = Dir[File.join(root, 'builders', '**', 'catalog.rb')].sort
+        builders = Dir[File.join(root, 'builders', '**', '*.rb')].sort - catalogs
+        (before_builders + catalogs + builders + after_builders)
+          .reject { |path| File.expand_path(path) == File.expand_path(__FILE__) }
       end
 
       def valid_archive?(body)

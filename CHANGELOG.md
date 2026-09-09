@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.0.2] - 2026-09-09
+
+### Changed
+
+- Patch updates now close the active ForgeBuild dialog and hot-reload installed models, geometry, services, tools, builders, observers, project code, and UI code.
+- Successful patch reloads let users continue working without restarting SketchUp.
+- Major and minor releases still request a restart because they may change application startup, dependency registration, or toolbar wiring.
+
+### Added
+
+- Explicit `reloaded` and `restart_required` installer results and regression tests for safe patch-version eligibility.
+
 ## [1.0.1] - 2026-09-09
 
 ### Fixed

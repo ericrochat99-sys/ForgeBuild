@@ -27,4 +27,18 @@ class UpdateServiceTest < Minitest::Test
     assert service.send(:valid_archive?, "PK\x03\x04".b + ('data' * 30))
     refute service.send(:valid_archive?, '<html>not an archive</html>')
   end
+
+  def test_allows_hot_reload_for_patch_updates_only
+    service = ForgeBuild::Services::UpdateService.new(current_version: '1.0.1')
+    assert service.send(:hot_reload_eligible?, '1.0.2')
+    refute service.send(:hot_reload_eligible?, '1.1.0')
+    refute service.send(:hot_reload_eligible?, '2.0.0')
+  end
+
+  def test_reload_file_list_excludes_updater_itself
+    service = ForgeBuild::Services::UpdateService.new(current_version: '1.0.1')
+    files = service.send(:reloadable_files, File.expand_path('../../forge_build', __dir__))
+    refute files.any? { |path| path.end_with?('/services/update_service.rb') }
+    assert files.any? { |path| path.end_with?('/ui/main_dialog.rb') }
+  end
 end

@@ -99,7 +99,7 @@ window.ForgeBuild = {
     const status = document.getElementById('update-status');
     status.textContent = result.message;
     button.disabled = result.status === 'installed';
-    button.textContent = result.status === 'installed' ? 'Update Installed' : 'Try Again';
+    button.textContent = result.status === 'installed' ? (result.reloaded ? 'Updated & Reloaded' : 'Update Installed') : 'Try Again';
     if (result.status !== 'installed') delete button.dataset.action;
   },
   reportResult(report) {
