@@ -16,19 +16,21 @@ module ForgeBuild
         extension = File.extname(path).downcase
         raise ArgumentError, "Unsupported drawing format: #{extension}" unless SUPPORTED.include?(extension)
 
-        model.start_operation('Import ForgeBuild Drawing', true)
         before = model.entities.to_a
         options = { units: 'inch', merge_coplanar_faces: true, orient_faces: true, preserve_origin: true,
                     page: Integer(page) }
         success = model.import(path, options)
         raise "SketchUp could not import #{File.basename(path)}" unless success
         entity = (model.entities.to_a - before).last || model.selection.first
+        model.start_operation('Register ForgeBuild Drawing', true)
+        operation_open = true
         drawing = register(model: model, entity: entity, path: path, discipline: discipline,
                            sheet: sheet, revision: revision, page: page)
         model.commit_operation
+        operation_open = false
         drawing
       rescue StandardError
-        model.abort_operation if model.respond_to?(:abort_operation)
+        model.abort_operation if operation_open && model.respond_to?(:abort_operation)
         raise
       end
 
