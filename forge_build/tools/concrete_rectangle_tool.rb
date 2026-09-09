@@ -53,7 +53,7 @@ module ForgeBuild
 
         point = @input.position
         preview = rectangle_points(@origin, point.x - @origin.x, point.y - @origin.y)
-        view.drawing_color = '#e87524'
+        view.drawing_color = '#A77747'
         view.line_width = 2
         view.draw(::GL_LINE_LOOP, preview)
       end

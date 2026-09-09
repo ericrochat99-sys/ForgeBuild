@@ -39,7 +39,7 @@ module ForgeBuild
 
       def draw(view)
         return unless @first && @input.valid?
-        view.drawing_color = '#e87524'
+        view.drawing_color = '#A77747'
         view.line_width = 3
         view.draw(::GL_LINES, [@first, @input.position])
       end

@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.10.0] - 2026-09-09
+## [1.0.0] - 2026-09-09
 
 ### Added
 
@@ -16,7 +16,8 @@
 
 ### Changed
 
-- Advanced ForgeBuild to version 0.10.0 and marked Phase 6 complete.
+- Applied the shared Forge product-family branding from ForgeCase: Forge Black, Forge Bronze, architectural white/gray surfaces, angular mark, typography, and control styling.
+- Advanced ForgeBuild to its first production release, version 1.0.0, with Phase 6 complete.
 
 ## [0.9.0] - 2026-09-09
 
