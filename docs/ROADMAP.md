@@ -147,4 +147,5 @@ Every milestone should include automated tests, migration notes, documentation, 
 - Phase 3 complete: commercial wall systems, finish layers, rated properties, openings, accessories, profiles, editing, and schedules.
 - Phase 4 complete: low-slope and specialty roofs, framing, layers, openings, edge assemblies, drainage, editing, and schedules.
 - Phase 5 complete: commercial takeoff, schedules, material and bid-package data, validation, coordination warnings, and estimating/interchange exports.
-- Next: Phase 6 drawing-assisted modeling, calibration, tracing, OCR, and revision coordination.
+- Phase 6 complete: drawing import/registration, calibration, tracing, revisions, annotation recognition, confirmation-gated suggestions, and model comparison.
+- Next: production hardening, field validation, expanded interoperability, and the v1.0 release candidate.

@@ -59,6 +59,11 @@ module ForgeBuild
         instance.add_action_callback('apply_preset') { |_context, name| apply_preset(instance, name) }
         instance.add_action_callback('refresh_reports') { |_context, options| publish_reports(instance, options || {}) }
         instance.add_action_callback('export_reports') { |_context, options| export_reports(instance, options || {}) }
+        instance.add_action_callback('import_drawing') { |_context, options| import_drawing(instance, options || {}) }
+        instance.add_action_callback('calibrate_drawing') { |_context, id| calibrate_drawing(id) }
+        instance.add_action_callback('trace_drawing') { |_context, kind| trace_drawing(kind) }
+        instance.add_action_callback('recognize_annotations') { |_context, text| recognize_annotations(instance, text) }
+        instance.add_action_callback('compare_drawing') { |_context| compare_drawing(instance) }
         instance
       end
 
@@ -119,8 +124,53 @@ module ForgeBuild
       end
 
       def publish_bootstrap(instance)
-        payload = { version: ForgeBuild::VERSION, modules: @modules.entries.map(&:to_h) }
+        payload = { version: ForgeBuild::VERSION, modules: @modules.entries.map(&:to_h),
+                    drawings: @container.resolve(:drawings).registry(Sketchup.active_model) }
         instance.execute_script("ForgeBuild.bootstrap(#{JSON.generate(payload)})")
+      end
+
+      def import_drawing(instance, options)
+        path = ::UI.openpanel('Import Architectural, Structural, or MEP Drawing', nil, 'Drawings|*.pdf;*.png;*.jpg;*.jpeg;*.tif;*.tiff;*.dwg;*.dxf||')
+        return unless path
+        drawing = @container.resolve(:drawings).import(model: Sketchup.active_model, path: path,
+                                                        discipline: options['discipline'] || 'architectural',
+                                                        sheet: options['sheet'] || '', revision: options['revision'] || '',
+                                                        page: options['page'] || 1)
+        instance.execute_script("ForgeBuild.drawingImported(#{JSON.generate(drawing)})")
+      rescue StandardError => error
+        instance.execute_script("ForgeBuild.showError(#{JSON.generate(error.message)})")
+      end
+
+      def calibrate_drawing(id)
+        drawing = @container.resolve(:drawings).find(Sketchup.active_model, id)
+        Sketchup.active_model.select_tool(Tools::DrawingCalibrationTool.new(service: @container.resolve(:drawings), drawing: drawing))
+        dialog.hide
+      rescue StandardError => error
+        ::UI.messagebox(error.message)
+      end
+
+      def trace_drawing(kind)
+        services = { floor: @container.resolve(:floor_objects), wall: @container.resolve(:wall_objects), roof: @container.resolve(:roof_objects) }
+        Sketchup.active_model.select_tool(Tools::DrawingTraceTool.new(kind: kind, services: services))
+        dialog.hide
+      rescue StandardError => error
+        ::UI.messagebox(error.message)
+      end
+
+      def recognize_annotations(instance, text)
+        @recognized = @container.resolve(:recognition).recognize(text: text, source: 'manual/OCR')
+        instance.execute_script("ForgeBuild.recognitionResult(#{JSON.generate(@recognized)})")
+      rescue StandardError => error
+        instance.execute_script("ForgeBuild.showError(#{JSON.generate(error.message)})")
+      end
+
+      def compare_drawing(instance)
+        features = Array(@recognized && @recognized[:suggestions])
+        result = @container.resolve(:drawing_comparison).compare(
+          model_objects: @container.resolve(:information).collect(Sketchup.active_model), recognized_features: features)
+        instance.execute_script("ForgeBuild.comparisonResult(#{JSON.generate(result)})")
+      rescue StandardError => error
+        instance.execute_script("ForgeBuild.showError(#{JSON.generate(error.message)})")
       end
 
       def publish_reports(instance, options = {})
