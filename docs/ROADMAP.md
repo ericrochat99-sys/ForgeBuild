@@ -145,4 +145,5 @@ Every milestone should include automated tests, migration notes, documentation, 
 - Phase 1 complete: shared builder framework, Property Inspector, lifecycle commands, display modes, presets, SQLite schema, materials/tags, and migrations.
 - Phase 2 complete: concrete and foundation floors, structural framing, deck and precast systems, openings, coordination objects, selected-face/polygon generation, editing, and regeneration.
 - Phase 3 complete: commercial wall systems, finish layers, rated properties, openings, accessories, profiles, editing, and schedules.
-- Next: Phase 4 low-slope and specialty Roof Builder systems.
+- Phase 4 complete: low-slope and specialty roofs, framing, layers, openings, edge assemblies, drainage, editing, and schedules.
+- Next: Phase 5 commercial information, takeoff, schedules, and estimating exports.

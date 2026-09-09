@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.8.0] - 2026-09-09
+
+### Added
+
+- Phase 4 Roof Builder catalog with 56 commercial roof systems, layers, structural members, openings, accessories, and drainage components.
+- Low-slope, concrete, precast, steel-deck, tapered-insulation, gable, hip, shed, multi-plane, gymnasium, auditorium, canopy, and covered-walkway roof assemblies.
+- TPO, PVC, EPDM, modified-bitumen, built-up, cover-board, vapor-retarder, insulation, protection, ballast, metal-panel, shingle, and tile layers.
+- Steel beams, open-web joists, bridging, cold-formed framing, rafters, timber, trusses, purlins, girts, and ridge members.
+- Parapets, coping, blocking, cant strips, expansion joints, fascia, soffits, eaves, curbs, hatches, skylights, smoke vents, and penetrations.
+- Primary/overflow drains, scuppers, gutters, downspouts, and conductor heads.
+- Parametric flat, shed, gable, and hip geometry with pitch, overhang, deck flute, and standing-seam controls.
+- Roof host/child relationships, calculated plan/sloped areas, member quantities, offset/connect/renumber commands, and schedule summaries.
+
+### Changed
+
+- Activated the Roof Builder workspace and registered every roof system with shared regeneration.
+
 ## [0.7.0] - 2026-09-09
 
 ### Added
