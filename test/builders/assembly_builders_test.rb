@@ -25,6 +25,7 @@ class AssemblyBuildersTest < Minitest::Test
   def test_existing_tools_moved_to_correct_assemblies
     floor = ForgeBuild::Builders::Floor::Builder.new(container: @container)
     wall = ForgeBuild::Builders::Wall::Builder.new(container: @container)
+    roof = ForgeBuild::Builders::Roof::Builder.new(container: @container)
 
     assert_includes floor.tools.map(&:id), :slab_on_grade
     assert_includes floor.tools.map(&:id), :steel_joist
@@ -33,5 +34,8 @@ class AssemblyBuildersTest < Minitest::Test
     assert_includes wall.tools.map(&:id), :brick_veneer
     assert_includes wall.tools.map(&:id), :metal_stud_wall
     assert_includes wall.tools.map(&:id), :door_opening
+    assert_includes roof.tools.map(&:id), :low_slope_roof
+    assert_includes roof.tools.map(&:id), :steel_joist
+    assert_includes roof.tools.map(&:id), :roof_drain
   end
 end

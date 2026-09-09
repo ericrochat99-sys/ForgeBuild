@@ -13,6 +13,7 @@ require_relative 'services/regeneration_service'
 require_relative 'geometry/rectangular_prism'
 require_relative 'geometry/floor_assembly'
 require_relative 'geometry/wall_assembly'
+require_relative 'geometry/roof_assembly'
 require_relative 'services/settings_service'
 require_relative 'services/update_service'
 require_relative 'services/concrete_object_service'
@@ -22,6 +23,9 @@ require_relative 'services/masonry_object_service'
 require_relative 'builders/wall/catalog'
 require_relative 'services/wall_object_service'
 require_relative 'services/wall_editing_service'
+require_relative 'builders/roof/catalog'
+require_relative 'services/roof_object_service'
+require_relative 'services/roof_editing_service'
 require_relative 'services/display_service'
 require_relative 'services/material_tag_service'
 require_relative 'services/migration_service'
@@ -33,6 +37,7 @@ require_relative 'tools/concrete_rectangle_tool'
 require_relative 'tools/floor_placement_tool'
 require_relative 'tools/masonry_line_tool'
 require_relative 'tools/wall_placement_tool'
+require_relative 'tools/roof_placement_tool'
 require_relative 'builders/floor/builder'
 require_relative 'builders/wall/builder'
 require_relative 'builders/roof/builder'
@@ -59,6 +64,8 @@ module ForgeBuild
       container.register(:masonry_objects) { Services::MasonryObjectService.new }
       container.register(:wall_objects) { Services::WallObjectService.new(materials: container.resolve(:materials)) }
       container.register(:wall_editing) { Services::WallEditingService.new(regeneration: container.resolve(:regeneration)) }
+      container.register(:roof_objects) { Services::RoofObjectService.new(materials: container.resolve(:materials)) }
+      container.register(:roof_editing) { Services::RoofEditingService.new(regeneration: container.resolve(:regeneration)) }
       container.register(:regeneration) { Services::RegenerationService.new }
       container.register(:display) { Services::DisplayService.new }
       container.register(:materials) { Services::MaterialTagService.new }
@@ -102,6 +109,9 @@ module ForgeBuild
       Builders::Wall::Catalog::SYSTEMS.keys.each do |type|
         service.register(builder: :wall, object_type: type) { |**args| container.resolve(:wall_objects).regenerate(**args) }
       end
+      Builders::Roof::Catalog::SYSTEMS.keys.each do |type|
+        service.register(builder: :roof, object_type: type) { |**args| container.resolve(:roof_objects).regenerate(**args) }
+      end
     end
 
     def register_builders
@@ -116,8 +126,8 @@ module ForgeBuild
         Builders::Wall::Builder.new(container: container)
       end
       modules.register(id: :roof, name: 'Roof Builder', version: VERSION,
-                       divisions: %w[05 06 07],
-                       description: 'Rafters, trusses, roof layers, fascia, soffits, and drainage.') do
+                       divisions: %w[03 05 06 07 08 10 22],
+                       description: 'Commercial low-slope and specialty roofs, framing, layers, openings, and drainage.') do
         Builders::Roof::Builder.new(container: container)
       end
     end

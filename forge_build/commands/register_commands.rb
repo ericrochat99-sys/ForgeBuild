@@ -72,6 +72,13 @@ module ForgeBuild
             wall_menu.add_item('Renumber Walls') { ::UI.messagebox("Renumbered #{container.resolve(:wall_editing).renumber} walls.") }
             wall_menu.add_item('Wall Schedule Summary') { ::UI.messagebox("Wall schedule contains #{container.resolve(:wall_editing).schedule.length} assemblies.") }
           end
+          if Models::ParametricObject.read(entity)[:builder] == 'roof'
+            roof_menu = submenu.add_submenu('Roof Editing')
+            roof_menu.add_item('Offset Copy') { prompt_wall_value('Vertical offset', entity) { |value| container.resolve(:roof_editing).offset(entity, value) } }
+            roof_menu.add_item('Connect Selected Roof Objects') { container.resolve(:roof_editing).connect(container.resolve(:roof_editing).roofs) }
+            roof_menu.add_item('Renumber Roof Assemblies') { ::UI.messagebox("Renumbered #{container.resolve(:roof_editing).renumber} roof objects.") }
+            roof_menu.add_item('Roof Schedule Summary') { ::UI.messagebox("Roof schedule contains #{container.resolve(:roof_editing).schedule.length} assemblies.") }
+          end
         end
       end
 

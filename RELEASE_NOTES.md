@@ -1,26 +1,27 @@
-# ForgeBuild 0.7.0 — Phase 3 Wall Builder
+# ForgeBuild 0.8.0 — Phase 4 Roof Builder
 
-ForgeBuild 0.7.0 delivers the Phase 3 Wall Builder for commercial, school, healthcare, municipal, and institutional projects.
+ForgeBuild 0.8.0 delivers the Phase 4 Roof Builder for commercial, school, municipal, healthcare, institutional, warehouse, gymnasium, and light-industrial projects.
 
-## Commercial systems
+## Low-slope commercial roofs
 
-- Standard and reinforced CMU, structural brick, and cast-in-place concrete walls.
-- Metal-stud, shaft, chase, pony, furred, structural-stud, and limited-use wood walls.
-- Insulated metal, tilt-up, precast, ICF, and SIP wall panels.
-- Storefront, curtain-wall, and glazed-partition placeholders.
+- Flat and low-slope boundaries, crickets, saddles, sumps, and tapered-insulation zones.
+- Steel deck, concrete deck, precast systems, steel beams, open-web joists, girders, and bridging.
+- TPO, PVC, EPDM, modified-bitumen, built-up roofing, cover boards, vapor retarders, insulation, protection layers, and ballast.
+- Parapets, coping, blocking, cant strips, curbs, roof hatches, and expansion joints.
+- Primary and overflow drains, scuppers, gutters, downspouts, and conductor heads.
 
-## Layers and rated construction
+## Sloped and specialty roofs
 
-- Sheathing, air/weather barriers, continuous insulation, rainscreens, vapor retarders, masonry veneers, metal/fiber-cement panels, EIFS, and stucco.
-- Gypsum, abuse-resistant board, cement/tile backer, and acoustical panels.
-- Fire and smoke ratings, STC, R-value, UL/GA designs, security classifications, CSI divisions, and cost codes.
-- Parent/child host relationships for coordinated wall layers and accessories.
+- Gable, hip, shed, mono-slope, multi-plane, gymnasium, auditorium, canopy, and covered-walkway roofs.
+- Structural steel, cold-formed steel, dimensional lumber, timber, and engineered framing.
+- Standing-seam and exposed-fastener metal, shingles, tiles, and insulated roof panels.
+- Rafters, trusses, purlins, girts, ridge members, fascia, soffits, eaves, and overhangs.
+- Skylights, smoke vents, clerestories, equipment curbs, ducts, pipes, and penetrations.
 
-## Openings, accessories, and editing
+## Parametric workflow
 
-- Doors and hollow-metal frames, borrowed lites, storefront, windows, louvers, access panels, and overhead doors.
-- Lintels, headers, sills, bond beams, reinforcing, control joints, pilasters, embeds, anchors, and rated joints.
-- Level, sloped, gable, and partial-height wall profiles through editable start/end heights.
-- Stretch, split, offset, join, connect, align, copy, move, delete, renumber, and schedule-summary commands.
-
-All Phase 3 objects participate in the shared Property Inspector, presets, materials/tags, display modes, quantities, and regeneration framework.
+- Rectangle, line, and point placement for 56 roof systems and components.
+- Editable pitch, elevation, overhang, seam/flute spacing, member sizes, and accessory dimensions.
+- Flat, sloped, gable, hip, circular, open-web, and seamed geometry generators.
+- Parent/child roof relationships, calculated plan and sloped areas, member counts, materials/tags, display modes, presets, and full regeneration.
+- Offset, connect, move, copy, delete, renumber, and roof-schedule summary commands.
