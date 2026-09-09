@@ -142,9 +142,6 @@ Every milestone should include automated tests, migration notes, documentation, 
 
 ## Current delivery
 
-- Phase 1A complete: shared builder contract and dynamic workspace discovery.
-- Phase 1B complete: stable Floor, Wall, and Roof assembly identities.
-- Existing slab tools migrated into Floor Builder.
-- Existing masonry tools migrated into Wall Builder.
-- Assembly schema and regeneration dispatcher foundation added.
-- Next: selection-driven Property Inspector, working regeneration handlers, commercial presets, polygon floors, openings, and foundation systems.
+- Phase 1 complete: shared builder framework, Property Inspector, lifecycle commands, display modes, presets, SQLite schema, materials/tags, and migrations.
+- Phase 2 complete: concrete and foundation floors, structural framing, deck and precast systems, openings, coordination objects, selected-face/polygon generation, editing, and regeneration.
+- Next: Phase 3 commercial Wall Builder systems, layers, rated assemblies, and openings.
