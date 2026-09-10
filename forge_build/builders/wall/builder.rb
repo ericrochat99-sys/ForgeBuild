@@ -4,7 +4,7 @@ module ForgeBuild
   module Builders
     module Wall
       class Builder < Core::Builder
-        STRING_OPTIONS = %w[fire_rating smoke_rating ul_design ga_design security_class notes].freeze
+        STRING_OPTIONS = %w[fire_rating smoke_rating ul_design ga_design security_class notes insulation framing sheathing finish material].freeze
         TOOLS = Catalog::SYSTEMS.map do |id, (kind, label, description, width, height, _cost_code)|
           options = if %i[line layer].include?(kind)
                       [{ id: 'thickness', label: 'Thickness', type: 'number', value: width, min: 0.01, step: 0.125, unit: 'inches' },
@@ -17,7 +17,12 @@ module ForgeBuild
                        { id: 'height', label: 'Height', type: 'number', value: height, min: 0.01, step: 1, unit: 'inches' },
                        { id: 'sill_height', label: 'Sill / mounting height', type: 'number', value: 0, min: 0, step: 1, unit: 'inches' }]
                     end
-          options += [{ id: 'fire_rating', label: 'Fire rating', type: 'text', value: '' },
+          options += [{ id: 'material', label: 'Primary material', type: 'choice', value: id.to_s.include?('cmu') ? 'Concrete masonry' : (id.to_s.include?('stud') ? 'Steel stud' : 'Standard') },
+                      { id: 'framing', label: 'Framing system', type: 'choice', value: id.to_s.include?('stud') ? 'Cold-formed steel' : 'None' },
+                      { id: 'insulation', label: 'Insulation', type: 'choice', value: 'None' },
+                      { id: 'sheathing', label: 'Sheathing', type: 'choice', value: 'None' },
+                      { id: 'finish', label: 'Finish', type: 'choice', value: 'None' },
+                      { id: 'fire_rating', label: 'Fire rating', type: 'text', value: '' },
                       { id: 'stc', label: 'STC', type: 'number', value: 0, min: 0, step: 1 },
                       { id: 'r_value', label: 'R-value', type: 'number', value: 0, min: 0, step: 1 },
                       { id: 'smoke_rating', label: 'Smoke rating', type: 'text', value: '' },
