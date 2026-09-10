@@ -4,8 +4,8 @@ module ForgeBuild
   module UI
     # Owns the primary HtmlDialog and its Ruby-to-JavaScript boundary.
     class MainDialog
-      WIDTH = 420
-      HEIGHT = 680
+      WIDTH = 1180
+      HEIGHT = 760
 
       def initialize(container:, modules:)
         @container = container
@@ -38,7 +38,7 @@ module ForgeBuild
           resizable: true,
           width: WIDTH,
           height: HEIGHT,
-          style: ::UI::HtmlDialog::STYLE_DIALOG
+          style: ::UI::HtmlDialog::STYLE_UTILITY
         )
         instance.set_file(File.expand_path('../html/main.html', __dir__))
         instance.set_on_closed { @dialog = nil }
