@@ -7,16 +7,19 @@ module ForgeBuild
   module Services
     class DrawingServiceTest < Minitest::Test
       class FakeModel
-        attr_reader :events
+        attr_reader :events, :active_view
         def initialize
           @attributes = {}
           @events = []
           @entities = []
+          @selection = FakeSelection.new
+          @active_view = FakeView.new
         end
         def get_attribute(dictionary, key, default = nil) = @attributes.fetch([dictionary, key], default)
         def set_attribute(dictionary, key, value) = @attributes[[dictionary, key]] = value
         def entities = @entities
-        def selection = []
+        def selection = @selection
+        def find_entity_by_persistent_id(id) = @entities.find { |entity| entity.persistent_id == id }
         def import(_path, _options)
           raise 'Undo operation already open' if @operation_open
           @events << :import
@@ -35,6 +38,13 @@ module ForgeBuild
           @operation_open = false
           @events << :abort_operation
         end
+      end
+      class FakeSelection < Array
+        def add(entity) = self << entity
+      end
+      class FakeView
+        attr_reader :zoomed
+        def zoom(entity) = @zoomed = entity
       end
       FakeEntity = Struct.new(:persistent_id, :name) do
         def set_attribute(*_args); end
@@ -65,6 +75,13 @@ module ForgeBuild
         result = @service.import(model: @model, path: '/plans/A101.pdf', sheet: 'A101')
         assert_equal [:import, :start_operation, :commit_operation], @model.events
         assert_equal 'A101.pdf', result[:filename]
+      end
+
+      def test_focus_selects_and_fits_imported_plan_in_modeling_area
+        drawing = @service.import(model: @model, path: '/plans/A101.pdf', sheet: 'A101')
+        result = @service.focus(model: @model, drawing: drawing)
+        assert_equal [result[:entity]], @model.selection
+        assert_same result[:entity], @model.active_view.zoomed
       end
     end
   end

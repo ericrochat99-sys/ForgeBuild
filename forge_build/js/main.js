@@ -123,7 +123,7 @@ window.ForgeBuild = {
   drawingImported(drawing) {
     const select = document.getElementById('drawing-list');
     select.insertAdjacentHTML('beforeend', `<option selected value="${this.escape(drawing.id)}">${this.escape(drawing.sheet || drawing.filename)} · ${this.escape(drawing.revision || 'original')}</option>`);
-    this.showError(`Imported ${drawing.filename}. Calibrate it against a known dimension before tracing.`);
+    this.showError(`Imported ${drawing.filename}. Click two known dimension endpoints in the SketchUp modeling area.`);
   },
   recognitionResult(result) {
     this.recognition = result;

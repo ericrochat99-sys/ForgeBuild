@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.1] - 2026-09-10
+
+### Changed
+
+- Import Drawing is now an Import & Calibrate workflow.
+- After import, ForgeBuild selects the document, fits it in the SketchUp modeling viewport, closes the dialog, and activates calibration immediately.
+- Registered drawings can be selected later with Calibrate Again.
+
+### Fixed
+
+- Reports a clear error when SketchUp claims an import succeeded but no document entity can be identified in the modeling area.
+- Adds regression coverage for selecting and zooming to the imported plan.
+
 ## [1.1.0] - 2026-09-09
 
 ### Added
