@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.2.0] - 2026-09-10
+
+### Added
+
+- Professional BIM workspace with Project Browser, Build Progress, live Properties, simplified workflow toolbar, and status telemetry.
+- Context-sensitive next actions and a Spacebar command palette for builders, tools, reports, and settings.
+- Builder color identities, responsive dark/light themes, and a reusable interface shared by all builder modules.
+
+### Changed
+
+- Replaced the narrow dialog presentation with a large resizable utility workspace while preserving existing builder, drawing, reporting, preset, and update callbacks.
+
+
 ## [1.1.1] - 2026-09-10
 
 ### Changed
