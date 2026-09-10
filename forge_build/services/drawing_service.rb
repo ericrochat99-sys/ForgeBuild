@@ -16,7 +16,7 @@ module ForgeBuild
         extension = File.extname(path).downcase
         raise ArgumentError, "Unsupported drawing format: #{extension}" unless SUPPORTED.include?(extension)
 
-        before = model.entities.to_a
+        before = model.entities.to_a.dup
         options = { units: 'inch', merge_coplanar_faces: true, orient_faces: true, preserve_origin: true,
                     page: Integer(page) }
         success = model.import(path, options)
