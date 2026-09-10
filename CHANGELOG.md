@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.1.0] - 2026-09-09
+
+### Added
+
+- Shared SketchUp inference behavior across concrete, floor, masonry, wall, roof, drawing-trace, and drawing-calibration tools.
+- Snapping to native vertices, edges, intersections, guide geometry, faces, axes, and imported drawing/image planes through `Sketchup::InputPoint`.
+- Shift inference locking during placement and calibration.
+- Right-arrow red-axis, left-arrow green-axis, up-arrow blue-axis, and down-arrow drawing-plane constraints.
+- Native inference markers, tooltips, constrained previews, and typed-distance support from inferred anchors.
+- Regression tests for axis and drawing-plane coordinate constraints.
+
+### Changed
+
+- All ForgeBuild previews and created geometry now use the same inferred/constrained endpoint instead of displaying one point and building at another.
+
 ## [1.0.2] - 2026-09-09
 
 ### Changed

@@ -3,6 +3,7 @@
 module ForgeBuild
   module Tools
     class DrawingCalibrationTool
+      include InferenceSupport
       def initialize(service:, drawing:)
         @service, @drawing = service, drawing
         @input = ::Sketchup::InputPoint.new
@@ -14,15 +15,15 @@ module ForgeBuild
       end
 
       def onMouseMove(_flags, x, y, view)
-        @input.pick(view, x, y)
+        pick_with_inference(view, x, y)
         view.invalidate
       end
 
       def onLButtonDown(_flags, x, y, view)
-        @input.pick(view, x, y)
+        pick_with_inference(view, x, y)
         return unless @input.valid?
         if @first
-          measured = (@input.position - @first).length
+          measured = (inference_position - @first).length
           response = ::UI.inputbox(['Actual dimension'], [measured.to_l.to_s], 'Calibrate Drawing')
           return unless response
           actual = response.first.to_l
@@ -32,7 +33,8 @@ module ForgeBuild
           Sketchup.status_text = "Drawing calibrated to scale #{updated[:scale].round(6)}."
           Sketchup.active_model.select_tool(nil)
         else
-          @first = @input.position
+          @first = inference_position
+          remember_inference_anchor
           Sketchup.status_text = 'Click the second point of the known dimension.'
         end
       end
@@ -41,7 +43,8 @@ module ForgeBuild
         return unless @first && @input.valid?
         view.drawing_color = '#A77747'
         view.line_width = 3
-        view.draw(::GL_LINES, [@first, @input.position])
+        view.draw(::GL_LINES, [@first, inference_position])
+        draw_inference_point(view)
       end
 
       private

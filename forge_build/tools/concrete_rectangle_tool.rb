@@ -4,6 +4,7 @@ module ForgeBuild
   module Tools
     # Native click-drag placement tool for rectangular concrete objects.
     class ConcreteRectangleTool
+      include InferenceSupport
       def initialize(service:, object_type:, thickness:)
         @service = service
         @object_type = object_type
@@ -17,20 +18,20 @@ module ForgeBuild
       end
 
       def onMouseMove(_flags, x, y, view)
-        @input.pick(view, x, y)
-        view.tooltip = @input.tooltip if @input.valid?
+        pick_with_inference(view, x, y)
         view.invalidate
       end
 
       def onLButtonDown(_flags, x, y, view)
-        @input.pick(view, x, y)
+        pick_with_inference(view, x, y)
         return unless @input.valid?
 
         if @origin
-          create_from(@origin, @input.position)
+          create_from(@origin, inference_position)
           reset(view)
         else
-          @origin = @input.position
+          @origin = inference_position
+          remember_inference_anchor
           Sketchup.status_text = 'Click the opposite corner, or type width,length and press Enter.'
         end
       end
@@ -51,17 +52,18 @@ module ForgeBuild
       def draw(view)
         return unless @origin && @input.valid?
 
-        point = @input.position
+        point = inference_position
         preview = rectangle_points(@origin, point.x - @origin.x, point.y - @origin.y)
         view.drawing_color = '#A77747'
         view.line_width = 2
         view.draw(::GL_LINE_LOOP, preview)
+        draw_inference_point(view)
       end
 
       def getExtents
         bounds = ::Geom::BoundingBox.new
         bounds.add(@origin) if @origin
-        bounds.add(@input.position) if @input.valid?
+        bounds.add(inference_position) if @input.valid?
         bounds
       end
 
@@ -85,6 +87,7 @@ module ForgeBuild
 
       def reset(view)
         @origin = nil
+        clear_inference
         view.invalidate
         Sketchup.status_text = 'Click the first corner of the next concrete object. Press Esc to finish.'
       end
