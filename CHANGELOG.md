@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.1] - 2026-09-10
+
+### Added
+
+- Cascading multiple-choice builder workflow that starts with an assembly family, narrows to a specific system, and then reveals finer construction details.
+- Standards-oriented choices for common wall thicknesses, heights, stud spacing, insulation, framing, sheathing, finishes, fire ratings, R-values, roof pitches, overhangs, and slopes.
+- Guided review step before activating the SketchUp drawing tool.
+
+### Changed
+
+- Wall assemblies now preserve material, framing, insulation, sheathing, and finish selections in their parametric metadata.
+
 ## [1.2.0] - 2026-09-10
 
 ### Added
