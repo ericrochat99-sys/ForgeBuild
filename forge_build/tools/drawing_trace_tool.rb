@@ -4,6 +4,7 @@ module ForgeBuild
   module Tools
     # Two-click tracing for assembly boundaries, openings, grids, and levels.
     class DrawingTraceTool
+      include InferenceSupport
       DEFAULTS = {
         floor: ['slab_on_grade', { thickness: 4.0 }], wall: ['metal_stud_wall', { thickness: 4.875, height: 120.0 }],
         roof: ['low_slope_roof', { thickness: 6.0, pitch: 0.25 }], opening: ['door_opening', { width: 36.0, depth: 4.875, height: 84.0 }]
@@ -20,20 +21,22 @@ module ForgeBuild
       end
 
       def onMouseMove(_flags, x, y, view)
-        @input.pick(view, x, y)
+        pick_with_inference(view, x, y)
         view.invalidate
       end
 
       def onLButtonDown(_flags, x, y, view)
-        @input.pick(view, x, y)
+        pick_with_inference(view, x, y)
         return unless @input.valid?
-        return create_point(@input.position) if %i[opening level].include?(@kind)
+        return create_point(inference_position) if %i[opening level].include?(@kind)
         if @first
-          create_between(@first, @input.position)
+          create_between(@first, inference_position)
           @first = nil
+          clear_inference
           Sketchup.status_text = 'Trace created. Click the first point of another trace.'
         else
-          @first = @input.position
+          @first = inference_position
+          remember_inference_anchor
           Sketchup.status_text = 'Click the second trace point.'
         end
       rescue StandardError => error
@@ -45,10 +48,11 @@ module ForgeBuild
         view.drawing_color = '#27a4d8'
         view.line_width = 3
         if %i[floor roof].include?(@kind)
-          view.draw(::GL_LINE_LOOP, rectangle(@first, @input.position))
+          view.draw(::GL_LINE_LOOP, rectangle(@first, inference_position))
         else
-          view.draw(::GL_LINES, [@first, @input.position])
+          view.draw(::GL_LINES, [@first, inference_position])
         end
+        draw_inference_point(view)
       end
 
       private

@@ -1,20 +1,30 @@
-# ForgeBuild 1.0.2 — In-Session Update Reloading
+# ForgeBuild 1.1.0 — Native SketchUp Inference
 
-ForgeBuild 1.0.2 improves the one-click updater so routine patches can activate without restarting SketchUp.
+ForgeBuild 1.1.0 makes assembly placement and drawing tracing behave like native SketchUp drawing tools.
 
-## In-session reload
+## Native model interaction
 
-- Patch releases within the installed major/minor version are eligible for hot reload.
-- ForgeBuild closes its active dialog before reloading to prevent callbacks from retaining obsolete UI objects.
-- Models, geometry, services, catalogs, builders, tools, observers, project code, and dialog code reload from the newly installed extension.
-- Catalogs load before builders so rebuilt tool definitions use the new catalog data.
-- The installer reports whether the update was reloaded immediately or whether a restart is required.
+- Snap to SketchUp vertices, endpoints, midpoints, edges, intersections, guide points, guide lines, and faces.
+- Use SketchUp's red, green, and blue axes while placing floors, walls, roofs, masonry, and concrete objects.
+- Display native inference markers and inference tooltips at the point ForgeBuild will actually use.
+- Keep typed distances aligned with the current inferred direction.
 
-## Restart safeguards
+## Plans and photos
 
-- Major and minor upgrades still request a restart because they may change startup registration, dependency wiring, or toolbar commands.
-- If any in-session reload step fails, the installation remains complete and ForgeBuild asks for a restart instead of leaving the user with a false success message.
+- Pick points directly on imported plans and photo/image entities.
+- Keep subsequent points associated with the first inferred anchor.
+- Press Down Arrow to constrain tracing to the elevation of the imported drawing plane.
+- Trace raster linework manually while retaining native SketchUp snapping wherever actual model or guide geometry exists.
 
-## Interface
+## Keyboard constraints
 
-- The update button displays **Updated & Reloaded** after a successful in-session activation.
+- Hold Shift to lock the current SketchUp inference.
+- Press Right Arrow for the red axis.
+- Press Left Arrow for the green axis.
+- Press Up Arrow for the blue axis.
+- Press Down Arrow to remain on the current drawing or image plane.
+
+## Consistency
+
+- Concrete, floor, masonry, wall, roof, plan tracing, and drawing calibration now share one inference implementation.
+- Previews and generated geometry use the same constrained coordinate.
