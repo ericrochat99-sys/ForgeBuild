@@ -1,21 +1,11 @@
-# ForgeBuild 1.1.1 — Import Directly into the Drawing Workspace
+# ForgeBuild 1.2.1 — Guided Builder Choices
 
-ForgeBuild 1.1.1 changes plan import into a direct import-and-calibrate workflow.
+ForgeBuild builders now guide users from broad construction decisions to finer assembly details instead of displaying every tool simultaneously.
 
-## New import flow
+- Select an assembly family first, such as masonry, framed wall, exterior system, opening, roof membrane, deck, framing, or drainage.
+- Select the specific assembly type next.
+- Refine dimensions, spacing, slope, pitch, materials, insulation, sheathing, finish, and ratings using multiple-choice fields where standards-based choices are appropriate.
+- Review the complete assembly before starting the SketchUp drawing tool.
+- Wall objects now retain material, framing, insulation, sheathing, and finish parameters.
 
-1. Choose **Import & Calibrate** in the Drawing Assistant.
-2. Select the PDF, TIFF, image, DWG, or DXF plan.
-3. ForgeBuild registers and selects the imported document in the SketchUp modeling area.
-4. The camera fits the complete imported document in view.
-5. The ForgeBuild dialog closes so it no longer covers the plan.
-6. Calibration activates immediately.
-7. Click two endpoints of a known plan dimension and enter its actual length.
-
-The registered drawing remains available through **Calibrate Again** for later correction.
-
-## Reliability
-
-- ForgeBuild now verifies that SketchUp created an identifiable entity for the imported plan.
-- A clear error appears if the native importer reports success without placing a document in the modeling area.
-- Added regression coverage for automatic selection and zoom-to-plan behavior.
+Existing geometry tools and builder IDs remain compatible.
