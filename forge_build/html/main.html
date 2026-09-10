@@ -1,67 +1,13 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ForgeBuild</title>
-  <link rel="stylesheet" href="../css/main.css">
-</head>
-<body>
-  <header class="brand-header"><img class="brand-mark" src="../icons/forge-build-mark.svg" alt="ForgeBuild mark"><div class="brand-copy"><div class="brand-name"><span>FORGE</span><strong>BUILD</strong></div><div class="brand-descriptor">Commercial Building Solutions</div><div class="brand-tagline">Built for What’s Next</div></div></header>
-  <main>
-    <section class="card intro"><h2>Building assembly workspaces</h2><p>Build the structure in order: floors, walls, then roofs. Each assembly remains editable and regeneratable.</p></section>
-    <section class="card"><div class="section-heading"><h2>Builders</h2><span class="badge">Assembly workflow</span></div><div id="modules" class="module-grid empty">No builder modules installed yet.</div></section>
-    <section id="workspace" class="card workspace" hidden>
-      <button id="back-button" class="text-button" type="button">← All builders</button>
-      <div class="section-heading"><div><p id="builder-division" class="eyebrow"></p><h2 id="builder-name"></h2></div></div>
-      <input id="tool-search" class="tool-search" type="search" placeholder="Filter building systems…">
-      <div id="tools" class="tool-list"></div>
-    </section>
-    <section id="inspector" class="card inspector">
-      <div class="section-heading"><div><p class="eyebrow">Selection</p><h2>Property Inspector</h2></div><span id="selection-type" class="badge">Nothing selected</span></div>
-      <p id="selection-empty" class="empty-state">Select a ForgeBuild assembly to edit, regenerate, copy, move, delete, or change its display.</p>
-      <form id="property-form" hidden>
-        <div id="identity-fields"></div>
-        <div id="parameter-fields" class="property-grid"></div>
-        <div class="display-buttons" role="group" aria-label="Display mode">
-          <button type="button" data-display="2d">2D</button><button type="button" data-display="simplified">Simple 3D</button><button type="button" data-display="detailed">Detailed 3D</button>
-        </div>
-        <div class="command-grid"><button type="submit">Save & Regenerate</button><button type="button" data-command="regenerate">Regenerate</button><button type="button" data-command="move">Move</button><button type="button" data-command="copy">Copy</button><button class="danger" type="button" data-command="delete">Delete</button></div>
-        <div class="preset-row"><select id="preset-list"><option value="">Assembly presets</option></select><button id="apply-preset" type="button">Apply</button></div>
-        <div class="preset-row"><input id="preset-name" placeholder="Preset name"><label><input id="preset-default" type="checkbox"> Default</label><button id="save-preset" type="button">Save Preset</button></div>
-      </form>
-    </section>
-    <section id="reports" class="card reports">
-      <div class="section-heading"><div><p class="eyebrow">Phase 5</p><h2>Commercial Delivery</h2></div><span class="badge">Estimating</span></div>
-      <p>Model-wide takeoff, schedules, material lists, validation, coordination warnings, and classified interchange metadata.</p>
-      <div class="report-controls"><label class="option-field">Default waste factor<input id="waste-factor" type="number" min="0" step="0.5" value="0"><small>percent</small></label></div>
-      <div class="command-grid"><button id="refresh-reports" type="button">Refresh Reports</button><button id="export-reports" type="button">Export CSV + Excel</button></div>
-      <div id="report-summary" class="report-summary"><p class="empty-state">Refresh to analyze the active model.</p></div>
-    </section>
-    <section id="drawing-assistant" class="card drawing-assistant">
-      <div class="section-heading"><div><p class="eyebrow">Phase 6</p><h2>Drawing Assistant</h2></div><span class="badge">User confirmed</span></div>
-      <p>Import and calibrate drawing underlays, trace building assemblies, review extracted annotations, and compare drawing intent with the model.</p>
-      <div class="property-grid">
-        <label class="option-field">Discipline<select id="drawing-discipline"><option>architectural</option><option>structural</option><option>mechanical</option><option>electrical</option><option>plumbing</option><option>fire protection</option></select></label>
-        <label class="option-field">Sheet<input id="drawing-sheet" placeholder="A101"></label>
-        <label class="option-field">Revision<input id="drawing-revision" placeholder="Addendum 1"></label>
-        <label class="option-field">PDF page<input id="drawing-page" type="number" min="1" value="1"></label>
-      </div>
-      <div class="command-grid"><button id="import-drawing" type="button">Import &amp; Calibrate</button><select id="drawing-list"><option value="">Registered drawings</option></select><button id="calibrate-drawing" type="button">Calibrate Again</button></div>
-      <h3>Trace from drawing</h3>
-      <div id="trace-buttons" class="trace-grid"><button data-trace="floor">Floor</button><button data-trace="wall">Wall</button><button data-trace="roof">Roof</button><button data-trace="opening">Opening</button><button data-trace="grid">Grid</button><button data-trace="level">Level</button></div>
-      <h3>Annotation recognition</h3>
-      <textarea id="annotation-text" rows="6" placeholder="Paste OCR text or drawing annotations: dimensions, elevations, room names, wall types, detail references, and assembly tags…"></textarea>
-      <div class="command-grid"><button id="recognize-annotations" type="button">Analyze Annotations</button><button id="compare-drawing" type="button">Compare to Model</button></div>
-      <div id="recognition-summary" class="report-summary"><p class="empty-state">Suggestions are never modeled until you review and confirm them.</p></div>
-    </section>
-    <section class="card update-card">
-      <div><h2>Software updates</h2><p id="update-status">Keep ForgeBuild current with the latest GitHub release.</p></div>
-      <button id="update-button" type="button">Check for Updates</button>
-    </section>
-  </main>
-  <div id="toast" role="status" hidden></div>
-  <footer id="version"></footer>
-  <script src="../js/main.js"></script>
-</body>
-</html>
+<!doctype html><html lang="en" data-theme="dark"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ForgeBuild</title><link rel="stylesheet" href="../css/main.css"></head><body>
+<header><div class="brand"><img src="../icons/forge-build-mark.svg"><b>FORGE<span>BUILD</span><small>COMMERCIAL BIM</small></b></div><nav><button data-view="plans">Import Plans</button><button data-view="builders">Builders</button><button data-view="reports">Estimate</button><button data-view="reports">Reports</button><button data-view="assistant">AI</button><button data-view="settings">Settings</button></nav><button id="theme">◐</button></header>
+<div class="answers"><div><small>WHAT AM I BUILDING?</small><b id="what">Project Setup</b></div><div><small>WHAT STEP AM I ON?</small><b id="step">Import Plans</b></div><div><small>WHAT CAN I DO NEXT?</small><b id="next">Import and calibrate a plan</b></div></div>
+<main><aside><section><label>PROJECT</label><h2>Project Browser</h2><div class="tree-tools"><button>＋</button><button>−</button><button>◎ Isolate</button></div><div id="tree"></div></section><section><label>GUIDED WORKFLOW</label><h2>Build Progress</h2><ol id="progress"></ol></section></aside>
+<div class="center"><div class="workspace-title"><div><label>ACTIVE WORKSPACE</label><h1 id="title">Start your project</h1><p id="subtitle">Import a plan or select a builder to begin.</p></div><button id="palette-open">⌕ Search commands <kbd>Space</kbd></button></div><div id="context" class="actions"></div>
+<section id="builders" class="view"><h2>Builders</h2><p>Choose a construction system. Every builder shares the same workflow and live properties.</p><div id="modules" class="builders"></div><div id="workspace" hidden><button id="back-button">← All builders</button><p id="builder-division"></p><h2 id="builder-name"></h2><input id="tool-search" placeholder="Filter building systems…"><div id="tools"></div></div></section>
+<section id="plans" class="view" hidden><h2>Plans & Drawings</h2><p>Import the document into the modeling area, then calibrate from a known dimension.</p><div class="grid"><label>Discipline<select id="drawing-discipline"><option>architectural</option><option>structural</option><option>mechanical</option><option>electrical</option><option>plumbing</option><option>fire protection</option></select></label><label>Sheet<input id="drawing-sheet" placeholder="A101"></label><label>Revision<input id="drawing-revision"></label><label>PDF page<input id="drawing-page" type="number" min="1" value="1"></label></div><div class="actions"><button class="primary" id="import-drawing">Import & Calibrate</button><select id="drawing-list"><option value="">Registered drawings</option></select><button id="calibrate-drawing">Calibrate Again</button></div><h3>Trace assembly</h3><div id="trace-buttons" class="actions"><button data-trace="floor">Floor</button><button data-trace="wall">Wall</button><button data-trace="roof">Roof</button><button data-trace="opening">Opening</button><button data-trace="grid">Grid</button><button data-trace="level">Level</button></div></section>
+<section id="reports" class="view" hidden><h2>Estimate & Reports</h2><label>Waste factor % <input id="waste-factor" type="number" value="0"></label><div class="actions"><button class="primary" id="refresh-reports">Refresh Reports</button><button id="export-reports">Export CSV + Excel</button></div><div id="report-summary" class="summary">Refresh to analyze the model.</div></section>
+<section id="assistant" class="view" hidden><h2>AI Drawing Assistant</h2><textarea id="annotation-text" rows="8" placeholder="Paste drawing annotations or OCR text…"></textarea><div class="actions"><button class="primary" id="recognize-annotations">Analyze</button><button id="compare-drawing">Compare to Model</button></div><div id="recognition-summary" class="summary"></div></section>
+<section id="settings" class="view" hidden><h2>Settings</h2><button id="update-button">Check for Updates</button><p id="update-status"></p><button id="reset-layout">Reset layout</button></section></div>
+<aside><section><label>LIVE SELECTION</label><div class="property-head"><h2>Properties</h2><span id="selection-type">Nothing selected</span></div><p id="selection-empty">Select a ForgeBuild assembly to edit it.</p><form id="property-form" hidden><div id="identity-fields"></div><div id="parameter-fields" class="grid"></div><div class="segments"><button type="button" data-display="2d">2D</button><button type="button" data-display="simplified">Simple</button><button type="button" data-display="detailed">Detailed</button></div><div class="actions"><button class="primary">Apply</button><button type="button" data-command="regenerate">Regenerate</button><button type="button" data-command="move">Move</button><button type="button" data-command="copy">Duplicate</button><button type="button" data-command="delete" class="danger">Delete</button></div><div class="preset"><select id="preset-list"><option value="">Presets</option></select><button id="apply-preset" type="button">Apply</button></div><div class="preset"><input id="preset-name" placeholder="Preset name"><label><input id="preset-default" type="checkbox">Default</label><button id="save-preset" type="button">Save</button></div></form></section></aside></main>
+<footer><span id="status-project">Project: Untitled</span><span id="status-builder">Builder: None</span><span id="status-tool">Tool: Select</span><span id="status-selection">Selected: None</span><span>Scale: —</span><span>Units: Model</span><span>Snap: On</span><span>Level: Level 1</span><span id="version"></span></footer>
+<div id="palette" hidden><div class="palette-box"><div class="search"><b>›</b><input id="palette-search" placeholder="Search builders, commands, tools, reports…"><kbd>Esc</kbd></div><div id="palette-results"></div></div></div><div id="toast" hidden></div><script src="../js/main.js"></script></body></html>
