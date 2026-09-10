@@ -22,6 +22,7 @@ module ForgeBuild
         success = model.import(path, options)
         raise "SketchUp could not import #{File.basename(path)}" unless success
         entity = (model.entities.to_a - before).last || model.selection.first
+        raise 'The plan imported, but ForgeBuild could not identify it in the modeling area.' unless entity
         model.start_operation('Register ForgeBuild Drawing', true)
         operation_open = true
         drawing = register(model: model, entity: entity, path: path, discipline: discipline,
@@ -32,6 +33,17 @@ module ForgeBuild
       rescue StandardError
         model.abort_operation if operation_open && model.respond_to?(:abort_operation)
         raise
+      end
+
+      def focus(model:, drawing:)
+        entity = find_entity(model, drawing[:entity_id])
+        raise 'The imported plan is no longer available in the modeling area.' unless entity
+
+        model.selection.clear
+        model.selection.add(entity)
+        view = model.active_view
+        view.zoom(entity) if view.respond_to?(:zoom)
+        { drawing: drawing, entity: entity }
       end
 
       def register(model:, entity:, path:, discipline:, sheet: '', revision: '', page: 1)
@@ -106,6 +118,11 @@ module ForgeBuild
         entity.name = "ForgeBuild Drawing #{drawing[:sheet]}" if entity.respond_to?(:name=)
       end
       def persistent_id(entity) = entity.respond_to?(:persistent_id) ? entity.persistent_id : nil
+      def find_entity(model, id)
+        return nil unless id
+        return model.find_entity_by_persistent_id(id) if model.respond_to?(:find_entity_by_persistent_id)
+        model.entities.find { |entity| entity.respond_to?(:persistent_id) && entity.persistent_id == id }
+      end
     end
   end
 end

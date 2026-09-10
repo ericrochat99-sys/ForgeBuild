@@ -137,8 +137,18 @@ module ForgeBuild
                                                         sheet: options['sheet'] || '', revision: options['revision'] || '',
                                                         page: options['page'] || 1)
         instance.execute_script("ForgeBuild.drawingImported(#{JSON.generate(drawing)})")
+        start_imported_drawing_calibration(drawing)
       rescue StandardError => error
         instance.execute_script("ForgeBuild.showError(#{JSON.generate(error.message)})")
+      end
+
+      def start_imported_drawing_calibration(drawing)
+        model = Sketchup.active_model
+        @container.resolve(:drawings).focus(model: model, drawing: drawing)
+        instance = Tools::DrawingCalibrationTool.new(service: @container.resolve(:drawings), drawing: drawing)
+        model.select_tool(instance)
+        dialog.hide
+        Sketchup.status_text = 'Plan imported and fitted to the modeling area. Click two endpoints of a known dimension to calibrate.'
       end
 
       def calibrate_drawing(id)
