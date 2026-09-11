@@ -19,9 +19,11 @@
     return number ? Number(number[1]) : null;
   }
 
-  function formatInches(value) {
+  function formatValue(key, value) {
+    if (['fire_rating', 'ul_design', 'ga_design', 'smoke_rating', 'security_class', 'system', 'material', 'finish', 'framing', 'insulation', 'sheathing', 'notes'].includes(key)) return value;
     const n = Number(value);
     if (!Number.isFinite(n)) return value;
+    if (['pitch', 'slope', 'r_value', 'stc'].includes(key)) return String(n);
     const feet = Math.floor(Math.abs(n) / 12);
     const inches = Math.round((Math.abs(n) - (feet * 12)) * 100) / 100;
     const sign = n < 0 ? '-' : '';
@@ -43,43 +45,46 @@
     if (input) input.value = value;
   }
 
-  function extractChanges(text, selection) {
+  function fallbackExtractChanges(text, selection) {
     const lower = text.toLowerCase();
-    const changes = {};
+    const parameters = {};
+    const attributes = {};
     const warnings = [];
     const actions = [];
+    const questions = [];
 
     const height = lower.match(/(?:height|high|tall|wall height)\D{0,12}(-?\d+(?:\.\d+)?\s*(?:'|ft|feet)?\s*-?\s*\d*(?:\"|in|inch|inches)?)/i)
       || lower.match(/(-?\d+(?:\.\d+)?\s*(?:'|ft|feet))\s*(?:high|tall)/i);
-    if (height) changes.height = String(parseLength(height[1]));
+    if (height) parameters.height = String(parseLength(height[1]));
 
     const thickness = lower.match(/(?:thickness|thick|wall type|cmu|stud)\D{0,18}(\d+(?:\.\d+)?\s*(?:\"|in|inch|inches)?)/i)
       || lower.match(/(\d+(?:\.\d+)?\s*(?:\"|in|inch|inches))\s*(?:thick|cmu|stud)/i);
-    if (thickness) changes.thickness = String(parseLength(thickness[1]));
+    if (thickness) parameters.thickness = String(parseLength(thickness[1]));
 
     const width = lower.match(/(?:width|wide)\D{0,12}(-?\d+(?:\.\d+)?\s*(?:'|ft|feet|\"|in|inch|inches)?)/i);
-    if (width) changes.width = String(parseLength(width[1]));
+    if (width) parameters.width = String(parseLength(width[1]));
 
     const length = lower.match(/(?:length|long)\D{0,12}(-?\d+(?:\.\d+)?\s*(?:'|ft|feet|\"|in|inch|inches)?)/i);
-    if (length) changes.length = String(parseLength(length[1]));
+    if (length) parameters.length = String(parseLength(length[1]));
 
     const elevation = lower.match(/(?:elevation|level)\D{0,12}(-?\d+(?:\.\d+)?\s*(?:'|ft|feet|\"|in|inch|inches)?)/i);
-    if (elevation) changes.elevation = String(parseLength(elevation[1]));
+    if (elevation) parameters.elevation = String(parseLength(elevation[1]));
 
     const fire = lower.match(/(\d+)\s*(?:hr|hour|hours)\s*(?:fire|rated|rating)?/i);
-    if (fire) changes.fire_rating = `${fire[1]} hour`;
+    if (fire) attributes.fire_rating = `${fire[1]} hour`;
 
     const stc = lower.match(/stc\D{0,8}(\d+)/i);
-    if (stc) changes.stc = stc[1];
+    if (stc) parameters.stc = stc[1];
 
     const rValue = lower.match(/r[- ]?value\D{0,8}(\d+)/i) || lower.match(/\br[- ]?(\d{1,3})\b/i);
-    if (rValue) changes.r_value = rValue[1];
+    if (rValue) parameters.r_value = rValue[1];
 
     const pitch = lower.match(/(?:pitch|slope)\D{0,10}(\d+(?:\.\d+)?)/i);
-    if (pitch) changes.pitch = pitch[1];
+    if (pitch) parameters.pitch = pitch[1];
 
     if (/push|pull|stretch|extend|resize|longer|shorter|taller|higher/i.test(text)) {
       actions.push('Use Push/Pull Assembly after applying parameter changes to preview the geometry edit.');
+      questions.push('Which side should remain fixed during push/pull?');
     }
     if (/door|window|opening|louver|storefront|borrowed lite|overhead/i.test(text)) {
       warnings.push('Openings should be created with the wall opening tools instead of only editing wall parameters.');
@@ -89,23 +94,27 @@
       actions.push('Verify rating metadata against the assembly type before exporting schedules.');
     }
     if (/apply to similar|all similar|same type/i.test(text)) {
-      warnings.push('Apply-to-similar is planned for Phase 4; this panel currently applies changes to the selected assembly only.');
+      warnings.push('Apply-to-similar will update matching assemblies with the same builder and object type.');
     }
 
-    Object.keys(changes).forEach(key => {
-      if (changes[key] == null || changes[key] === 'NaN') delete changes[key];
+    Object.keys(parameters).forEach(key => {
+      if (parameters[key] == null || parameters[key] === 'NaN') delete parameters[key];
     });
 
+    const changes = { parameters, attributes };
     return {
       object: selection ? `${selection.builder || 'assembly'} / ${selection.object_type || 'selected object'}` : 'No selection',
       changes,
       actions,
       warnings,
-      prompt: buildPrompt(text, selection, changes)
+      questions,
+      safety: warnings.length ? 'review_required' : 'ready',
+      apply_to_similar: /apply to similar|all similar|same type/i.test(text),
+      prompt: buildPrompt(text, selection, changes, warnings, questions)
     };
   }
 
-  function buildPrompt(text, selection, changes) {
+  function buildPrompt(text, selection, changes, warnings = [], questions = []) {
     const parameters = currentParameters();
     return [
       'Review this ForgeBuild assembly edit request and return JSON with safe parameter changes, warnings, and follow-up questions.',
@@ -113,25 +122,49 @@
       `Current parameters: ${JSON.stringify(parameters)}`,
       `Requested edit: ${text}`,
       `Heuristic changes: ${JSON.stringify(changes)}`,
+      `Warnings: ${JSON.stringify(warnings)}`,
+      `Questions: ${JSON.stringify(questions)}`,
       'Do not create openings by changing wall dimensions only; use opening tools when required.'
     ].join('\n');
   }
 
-  function renderResult(result) {
+  function normalizeResult(result) {
+    const changes = result.changes || {};
+    return {
+      ...result,
+      changes: {
+        parameters: changes.parameters || {},
+        attributes: changes.attributes || {}
+      },
+      warnings: result.warnings || [],
+      actions: result.actions || [],
+      questions: result.questions || []
+    };
+  }
+
+  function renderResult(rawResult) {
+    const result = normalizeResult(rawResult);
     const output = document.getElementById('assembly-ai-result');
     if (!output) return;
-    const changeRows = Object.entries(result.changes || {}).map(([key, value]) => `<li><b>${esc(key.replaceAll('_', ' '))}</b>: ${esc(formatInches(value))}</li>`).join('');
+    const parameterRows = Object.entries(result.changes.parameters || {}).map(([key, value]) => `<li><b>${esc(key.replaceAll('_', ' '))}</b>: ${esc(formatValue(key, value))}</li>`).join('');
+    const attributeRows = Object.entries(result.changes.attributes || {}).map(([key, value]) => `<li><b>${esc(key.replaceAll('_', ' '))}</b>: ${esc(formatValue(key, value))}</li>`).join('');
     const actionRows = (result.actions || []).map(item => `<li>${esc(item)}</li>`).join('');
     const warningRows = (result.warnings || []).map(item => `<li>${esc(item)}</li>`).join('');
+    const questionRows = (result.questions || []).map(item => `<li>${esc(item)}</li>`).join('');
+    const status = result.safety === 'review_required' ? 'Review required' : 'Ready to apply';
     output.innerHTML = `
       <div class="assembly-ai-result-card">
-        <b>Suggested edit</b>
-        ${changeRows ? `<ul>${changeRows}</ul>` : '<p>No direct parameter changes detected. Use the prompt below or enter clearer dimensions.</p>'}
+        <div class="assembly-ai-status ${result.safety === 'review_required' ? 'warn' : 'ready'}">${esc(status)}</div>
+        <b>Suggested parameter changes</b>
+        ${parameterRows ? `<ul>${parameterRows}</ul>` : '<p>No direct parameter changes detected.</p>'}
+        ${attributeRows ? `<b>Metadata changes</b><ul>${attributeRows}</ul>` : ''}
         ${actionRows ? `<b>Recommended workflow</b><ul>${actionRows}</ul>` : ''}
         ${warningRows ? `<b>Warnings</b><ul class="assembly-ai-warnings">${warningRows}</ul>` : ''}
-        <details><summary>AI handoff prompt</summary><textarea readonly rows="7">${esc(result.prompt)}</textarea></details>
+        ${questionRows ? `<b>Questions before final modeling</b><ul>${questionRows}</ul>` : ''}
+        <label class="assembly-ai-similar"><input type="checkbox" id="assembly-ai-similar" ${result.apply_to_similar ? 'checked' : ''}> Apply to all similar assemblies</label>
+        <details><summary>AI handoff prompt</summary><textarea readonly rows="9">${esc(result.prompt)}</textarea></details>
       </div>`;
-    output.dataset.changes = JSON.stringify(result.changes || {});
+    output.dataset.result = JSON.stringify(result);
   }
 
   function injectPanel() {
@@ -145,20 +178,33 @@
         <div><label>PHASE 4 + PHASE 9</label><h3>AI Edit Assistant</h3></div>
         <span>Selected assembly</span>
       </div>
-      <textarea id="assembly-ai-request" rows="4" placeholder="Example: Make this wall 12 ft high, 8 inch CMU, 2 hour rated, then remind me to add door openings."></textarea>
+      <textarea id="assembly-ai-request" rows="4" placeholder="Example: Make this wall 12 ft high, 8 inch CMU, 2 hour rated, and apply it to all similar walls."></textarea>
       <div class="assembly-ai-actions">
         <button type="button" class="primary" id="assembly-ai-analyze">Analyze Edit</button>
-        <button type="button" id="assembly-ai-apply">Apply Parameters</button>
+        <button type="button" id="assembly-ai-apply">Apply Safe Edit</button>
         <button type="button" data-ai-command="push_pull_assembly">Push/Pull</button>
         <button type="button" data-ai-command="regenerate_assembly">Regenerate</button>
+      </div>
+      <div class="assembly-ai-workflow">
+        <span>1 Analyze</span><span>2 Review warnings</span><span>3 Apply</span><span>4 Regenerate/report</span>
       </div>
       <div id="assembly-ai-result" class="assembly-ai-result"></div>`;
     form.appendChild(panel);
   }
 
+  function requestBackendAnalysis(text) {
+    window.sketchup.analyze_assembly_edit({ text, parameters: currentParameters() });
+  }
+
   function install() {
     if (!window.ForgeBuild || window.ForgeBuild.__assemblyAiInstalled) return;
     window.ForgeBuild.__assemblyAiInstalled = true;
+    window.ForgeBuild.assemblyEditAnalysis = renderResult;
+    window.ForgeBuild.assemblyEditApplied = function assemblyEditApplied(result) {
+      const count = result && result.applied_count ? result.applied_count : 1;
+      window.ForgeBuild.showError(`Applied assisted edit to ${count} assembly${count === 1 ? '' : 'ies'}.`);
+    };
+
     const original = window.ForgeBuild.selectionChanged;
     window.ForgeBuild.selectionChanged = function selectionChangedWithAi(selection) {
       original.call(this, selection);
@@ -169,16 +215,19 @@
       const analyze = event.target.closest('#assembly-ai-analyze');
       if (analyze) {
         const text = document.getElementById('assembly-ai-request')?.value || '';
-        const result = extractChanges(text, window.ForgeBuild.state.selection);
-        renderResult(result);
+        if (window.sketchup?.analyze_assembly_edit) requestBackendAnalysis(text);
+        else renderResult(fallbackExtractChanges(text, window.ForgeBuild.state.selection));
         return;
       }
       const apply = event.target.closest('#assembly-ai-apply');
       if (apply) {
-        const result = document.getElementById('assembly-ai-result');
-        const changes = result?.dataset.changes ? JSON.parse(result.dataset.changes) : {};
-        Object.entries(changes).forEach(([key, value]) => setParameterInput(key, value));
-        if (Object.keys(changes).length) window.sketchup.save_assembly({ parameters: changes });
+        const resultEl = document.getElementById('assembly-ai-result');
+        const result = resultEl?.dataset.result ? JSON.parse(resultEl.dataset.result) : null;
+        if (!result) return;
+        result.apply_to_similar = document.getElementById('assembly-ai-similar')?.checked || false;
+        Object.entries(result.changes.parameters || {}).forEach(([key, value]) => setParameterInput(key, value));
+        if (window.sketchup?.apply_assembly_edit) window.sketchup.apply_assembly_edit(result);
+        else window.sketchup.save_assembly({ ...(result.changes.attributes || {}), parameters: result.changes.parameters || {} });
         return;
       }
       const command = event.target.closest('[data-ai-command]');
