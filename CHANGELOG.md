@@ -15,6 +15,7 @@
 - Cleaner placement control layout for floor and wall drawing tools.
 - Better start-point, baseline, and assembly preview feedback while drawing.
 - Saved drawing mode, snap angle, snap distance, and wall alignment per builder.
+- Hardened dimension-label drawing so placement tools continue working across SketchUp draw_text variants.
 
 ## v1.2.6
 
