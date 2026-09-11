@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.2.4] - 2026-09-11
+
+### Added
+
+- Shift-key wall placement alignment cycling: Center, Left, Right, then Center.
+- Live preview and status-bar feedback for the active wall alignment mode.
+- Assembly-specific applicability rules for builder fields.
+
+### Changed
+
+- Builder details now use progressive disclosure with required setup first and optional construction and performance sections collapsed.
+- Wall and masonry geometry now follows the same Center, Left, or Right alignment shown in the live preview.
+- Irrelevant fields are removed from the selected assembly form and omitted from the tool payload.
+- Assembly-family names and field labels are clearer and consistently capitalized.
+
 ## [1.2.3] - 2026-09-11
 
 ### Added
