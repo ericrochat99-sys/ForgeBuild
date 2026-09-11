@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.2.3] - 2026-09-11
+
+### Added
+
+- Plan Set Manager for browsing folders containing multiple PDF plan files.
+- Per-file selection, PDF page, and elevation controls before batch import.
+- Ability to reposition any registered plan to a different model elevation after import.
+
+### Fixed
+
+- Context-sensitive Calibrate action now activates the drawing calibration tool.
+- Calibrate Again now uses the selected plan or falls back to the latest imported plan instead of silently doing nothing.
+- Calibration now focuses and zooms to the target plan and displays explicit endpoint instructions.
+
 ## [1.2.2] - 2026-09-11
 
 ### Added
