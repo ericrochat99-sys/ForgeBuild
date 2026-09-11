@@ -60,6 +60,9 @@ module ForgeBuild
         instance.add_action_callback('refresh_reports') { |_context, options| publish_reports(instance, options || {}) }
         instance.add_action_callback('export_reports') { |_context, options| export_reports(instance, options || {}) }
         instance.add_action_callback('import_drawing') { |_context, options| import_drawing(instance, options || {}) }
+        instance.add_action_callback('browse_plan_set') { |_context| browse_plan_set(instance) }
+        instance.add_action_callback('import_plan_set') { |_context, selections| import_plan_set(instance, selections || []) }
+        instance.add_action_callback('set_drawing_elevation') { |_context, id, elevation| set_drawing_elevation(instance, id, elevation) }
         instance.add_action_callback('calibrate_drawing') { |_context, id| calibrate_drawing(id) }
         instance.add_action_callback('trace_drawing') { |_context, kind| trace_drawing(kind) }
         instance.add_action_callback('recognize_annotations') { |_context, text| recognize_annotations(instance, text) }
@@ -135,9 +138,53 @@ module ForgeBuild
         drawing = @container.resolve(:drawings).import(model: Sketchup.active_model, path: path,
                                                         discipline: options['discipline'] || 'architectural',
                                                         sheet: options['sheet'] || '', revision: options['revision'] || '',
-                                                        page: options['page'] || 1)
+                                                        page: options['page'] || 1, elevation: options['elevation'] || 0)
         instance.execute_script("ForgeBuild.drawingImported(#{JSON.generate(drawing)})")
         start_imported_drawing_calibration(drawing)
+      rescue StandardError => error
+        instance.execute_script("ForgeBuild.showError(#{JSON.generate(error.message)})")
+      end
+
+      def browse_plan_set(instance)
+        directory = ::UI.select_directory(title: 'Choose Folder Containing Plan PDFs')
+        return unless directory
+
+        files = Dir.children(directory).select { |name| File.extname(name).casecmp('.pdf').zero? }.sort
+        raise 'No PDF files were found in the selected folder.' if files.empty?
+
+        payload = files.map { |name| { path: File.join(directory, name), filename: name } }
+        instance.execute_script("ForgeBuild.planSetFound(#{JSON.generate(payload)})")
+      rescue StandardError => error
+        instance.execute_script("ForgeBuild.showError(#{JSON.generate(error.message)})")
+      end
+
+      def import_plan_set(instance, selections)
+        raise 'Select at least one plan to import.' if selections.empty?
+
+        drawings = selections.map do |selection|
+          @container.resolve(:drawings).import(
+            model: Sketchup.active_model,
+            path: selection['path'],
+            discipline: selection['discipline'] || 'architectural',
+            sheet: selection['sheet'] || File.basename(selection['path'], '.*'),
+            revision: selection['revision'] || '',
+            page: selection['page'] || 1,
+            elevation: selection['elevation'] || 0
+          )
+        end
+        @container.resolve(:drawings).focus(model: Sketchup.active_model, drawing: drawings.last)
+        instance.execute_script("ForgeBuild.planSetImported(#{JSON.generate(drawings)})")
+      rescue StandardError => error
+        instance.execute_script("ForgeBuild.showError(#{JSON.generate(error.message)})")
+      end
+
+      def set_drawing_elevation(instance, id, elevation)
+        raise 'Choose an imported plan first.' if id.to_s.strip.empty?
+
+        drawing = @container.resolve(:drawings).set_elevation(
+          model: Sketchup.active_model, id: id, elevation: elevation
+        )
+        instance.execute_script("ForgeBuild.drawingElevationChanged(#{JSON.generate(drawing)})")
       rescue StandardError => error
         instance.execute_script("ForgeBuild.showError(#{JSON.generate(error.message)})")
       end
