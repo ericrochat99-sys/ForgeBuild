@@ -32,6 +32,7 @@ require_relative 'services/migration_service'
 require_relative 'services/preset_service'
 require_relative 'services/project_store'
 require_relative 'services/assembly_service'
+require_relative 'services/assembly_edit_assistant_service'
 require_relative 'services/information_service'
 require_relative 'services/export_service'
 require_relative 'services/drawing_service'
@@ -86,6 +87,7 @@ module ForgeBuild
         Services::AssemblyService.new(regeneration: container.resolve(:regeneration), display: container.resolve(:display),
                                       materials: container.resolve(:materials), migration: container.resolve(:migration))
       end
+      container.register(:assembly_edit_assistant) { Services::AssemblyEditAssistantService.new(assemblies: container.resolve(:assemblies)) }
       container.register(:information) { Services::InformationService.new }
       container.register(:exports) { Services::ExportService.new(information: container.resolve(:information)) }
       container.register(:drawings) { Services::DrawingService.new }
