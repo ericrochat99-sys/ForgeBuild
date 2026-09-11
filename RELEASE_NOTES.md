@@ -1,20 +1,24 @@
-# ForgeBuild 1.2.3 — Plan Set Manager and Calibration Fixes
+# ForgeBuild 1.2.4 — Easier Builder Setup and Wall Alignment
 
-ForgeBuild now supports multi-PDF plan sets and reliable drawing calibration.
+ForgeBuild now provides a cleaner assembly setup workflow and direct control over which side of a reference line receives a wall.
 
-## Plan Set Manager
+## Wall placement alignment
 
-- Browse a folder containing multiple PDF plan files.
-- Select only the plans that should be imported.
-- Choose the PDF page for each selected file.
-- Assign a separate model elevation to each plan before import.
-- Import multiple selected plans in one operation.
-- Select any registered plan and move it to another elevation later.
+- Walls begin in Center placement mode.
+- Tap Shift once to place the wall on the left side of the drawing line.
+- Tap Shift again to place it on the right side.
+- Tap Shift a third time to return to center.
+- The live 2D footprint and final wall geometry use the same placement mode.
+- SketchUp's status bar displays Center, Left, or Right while drawing.
+- Arrow-key axis constraints remain available.
 
-## Calibration fixes
+## Simpler builder setup
 
-- The context-sensitive Calibrate button now starts calibration.
-- Calibrate Again uses the selected drawing or automatically uses the latest imported plan.
-- ForgeBuild focuses and zooms to the plan before activating calibration.
-- Clear SketchUp status instructions identify the next calibration step.
-- If no plan is available, ForgeBuild displays an actionable message instead of failing silently.
+- Required dimensions appear first.
+- Construction options are grouped into a collapsed optional section.
+- Ratings and advanced design information are grouped separately.
+- The Start Drawing button remains visible at the bottom of the form.
+- Each assembly displays only applicable fields.
+- Irrelevant fields are omitted from both the interface and drawing-tool payload.
+
+Examples include masonry-specific controls for CMU, framing and sheathing controls for stud walls, opening dimensions for doors and windows, and minimal placement controls for joints and details.
