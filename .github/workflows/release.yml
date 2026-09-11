@@ -43,6 +43,13 @@ jobs:
             echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Refresh existing release notes
+        if: steps.existing.outputs.exists == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: gh release edit "$TAG" --notes-file RELEASE_NOTES.md
+
       - name: Set up Ruby
         if: steps.existing.outputs.exists == 'false'
         uses: ruby/setup-ruby@v1
