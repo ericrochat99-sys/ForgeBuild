@@ -7,7 +7,7 @@ module ForgeBuild
       def initialize(service:, object_type:, kind:, options: {})
         @service, @object_type, @kind, @options = service, object_type, kind, options
         @input = ::Sketchup::InputPoint.new
-        @wall_alignment = :center
+        @wall_alignment = initial_wall_alignment
       end
       def activate
         @origin = nil
@@ -23,7 +23,7 @@ module ForgeBuild
         if point_kind?
           create(origin: inference_position)
         elsif @origin
-          create_wall_run(@origin, inference_position)
+          create_wall_run(@origin, controlled_position(@origin))
           reset(view)
         else
           @origin = inference_position
@@ -34,7 +34,8 @@ module ForgeBuild
       def onUserText(text, view)
         return unless @origin && !point_kind?
         length = text.to_l
-        direction = @input.valid? ? (inference_position - @origin).normalize : X_AXIS
+        endpoint = controlled_position(@origin)
+        direction = @input.valid? ? (endpoint - @origin).normalize : X_AXIS
         create_wall_run(@origin, @origin.offset(direction, length))
         reset(view)
       rescue StandardError => error
@@ -44,8 +45,9 @@ module ForgeBuild
         return unless @input.valid?
 
         if @origin && !point_kind?
-          thickness = @options.fetch(:thickness, @options.fetch('thickness', 6.0))
-          draw_linear_assembly_preview(view, @origin, inference_position, thickness, '#a85d38', @wall_alignment)
+          thickness = wall_thickness
+          endpoint = controlled_position(@origin)
+          draw_linear_assembly_preview(view, @origin, endpoint, thickness, '#a85d38', effective_alignment)
           draw_placement_cursor(view, @origin, '#d1492e')
         else
           draw_placement_cursor(view, inference_position, '#d1492e')
@@ -56,7 +58,7 @@ module ForgeBuild
       def getExtents
         bounds = ::Geom::BoundingBox.new
         bounds.add(@origin) if @origin
-        bounds.add(inference_position) if @input.valid?
+        bounds.add(controlled_position(@origin)) if @input.valid?
         bounds
       end
       def onKeyDown(key, repeat, flags, view)
@@ -74,10 +76,21 @@ module ForgeBuild
       private
       def wall_thickness = @options.fetch(:thickness, @options.fetch('thickness', 6.0))
       def create_wall_run(origin, endpoint)
-        adjusted_origin, adjusted_endpoint = aligned_run(origin, endpoint, wall_thickness, @wall_alignment)
-        create(origin: adjusted_origin, endpoint: adjusted_endpoint, placement_alignment: @wall_alignment.to_s)
+        adjusted_origin, adjusted_endpoint = aligned_run(origin, endpoint, wall_thickness, effective_alignment)
+        create(origin: adjusted_origin, endpoint: adjusted_endpoint, placement_alignment: effective_alignment.to_s)
       end
-      def alignment_prompt(message) = "#{message} Placement: #{@wall_alignment.to_s.capitalize} (tap Shift to change)."
+      def alignment_prompt(message)
+        snap = truthy_option(:snap_to_angle, true) ? " Snap: #{numeric_option(:snap_angle, 45).to_i}°" : ' Snap: free'
+        "#{message} Placement: #{effective_alignment.to_s.capitalize} (tap Shift to change).#{snap}"
+      end
+      def initial_wall_alignment
+        requested = option_value(:snap_alignment, 'automatic').to_s
+        %w[center left right].include?(requested) ? requested.to_sym : :center
+      end
+      def effective_alignment
+        requested = option_value(:snap_alignment, 'automatic').to_s
+        %w[center left right].include?(requested) ? requested.to_sym : @wall_alignment
+      end
       def point_kind? = %i[opening point].include?(@kind)
       def create(arguments) = @service.create(**{ model: Sketchup.active_model, object_type: @object_type }.merge(@options).merge(arguments))
       def reset(view)
