@@ -1,28 +1,16 @@
-# ForgeBuild 1.2.9 — Phase 4 + Phase 9 Assisted Assembly Editing
+# ForgeBuild 1.2.10 — Drawing Tool Startup Fix
 
-ForgeBuild v1.2.9 adds a stronger Phase 4 + Phase 9 workflow that combines direct assembly editing with an AI-assisted edit planner.
+ForgeBuild v1.2.10 fixes the error that prevented Wall Builder and Floor Builder drawing tools from starting after placement controls were added.
 
-## Assisted Assembly Editing
+## Fixed
 
-- Added the AI Edit Assistant to the selected assembly Property Inspector.
-- Added a Ruby backend `AssemblyEditAssistantService` for deterministic natural-language edit planning.
-- Added natural-language parsing for common assembly edits including height, thickness, width, length, depth, elevation, pitch, slope, STC, R-value, fire rating, material, finish, framing, insulation, sheathing, and commercial assembly metadata.
-- Added one-click application of suggested parameter and metadata changes to the selected assembly.
-- Added apply-to-similar support for matching assemblies with the same builder and object type.
+- Fixed `invalid value for Float(): "line"` when starting the Wall Builder.
+- Preserved placement modes such as Line, Polyline, Rectangle, Arc, Polygon, and Circle as tool settings instead of treating them as numeric dimensions.
+- Preserved snap toggles and wall alignment values as tool settings.
+- Kept actual dimensions, snap angles, and snap distances normalized as numeric values.
+- Applied the correction to both Wall Builder and Floor Builder.
+- Added regression coverage for placement-control option handling.
 
-## Phase 4 Editing Workflow
+## Installation
 
-- Expanded editable assembly fields so assisted edits can update geometry parameters and commercial metadata through the existing regeneration workflow.
-- Separated geometry parameter changes from metadata changes before applying edits.
-- Added safer warnings and follow-up questions for openings, rated assemblies, fixed-side push/pull decisions, and apply-to-similar edits.
-- Added quick access to Push/Pull and Regenerate from the AI edit panel.
-
-## Phase 9 AI Workflow
-
-- Added an AI-ready handoff prompt containing the selected assembly, current parameters, requested edit, detected changes, warnings, questions, and safe-edit instructions.
-- Kept a browser-side fallback analyzer for compatibility while routing primary analysis through Ruby callbacks.
-- Improved the AI panel with ready/review-required status, separated result sections, and apply workflow guidance.
-
-## Notes
-
-This release is the first serious link between the Phase 4 assembly-editing workflow and the Phase 9 AI-assistance workflow. The next work should add grip editing, live preview before commit, richer opening creation, and a true external model-backed assistant call when available.
+Use ForgeBuild's **Check for Updates** button, or download and install `ForgeBuild-v1.2.10.rbz` from this release.
