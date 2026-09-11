@@ -55,6 +55,8 @@ module ForgeBuild
         instance.add_action_callback('delete_assembly') { |_context| command(instance, :delete) }
         instance.add_action_callback('move_assembly') { |_context| Sketchup.send_action('selectMoveTool:') }
         instance.add_action_callback('push_pull_assembly') { |_context| activate_push_pull }
+        instance.add_action_callback('analyze_assembly_edit') { |_context, request| analyze_assembly_edit(instance, request || {}) }
+        instance.add_action_callback('apply_assembly_edit') { |_context, plan| apply_assembly_edit(instance, plan || {}) }
         instance.add_action_callback('set_display_mode') { |_context, mode| set_display_mode(instance, mode) }
         instance.add_action_callback('save_preset') { |_context, name, parameters, make_default| save_preset(instance, name, parameters, make_default) }
         instance.add_action_callback('apply_preset') { |_context, name| apply_preset(instance, name) }
@@ -90,6 +92,30 @@ module ForgeBuild
       def save_assembly(instance, changes)
         @container.resolve(:assemblies).edit(@container.resolve(:assemblies).selected, changes)
         publish_selection(instance)
+      rescue StandardError => error
+        instance.execute_script("ForgeBuild.showError(#{JSON.generate(error.message)})")
+      end
+
+      def analyze_assembly_edit(instance, request)
+        selection = @container.resolve(:assemblies).inspect
+        result = @container.resolve(:assembly_edit_assistant).analyze(
+          selection: selection,
+          request: request['text'] || request[:text] || '',
+          current_parameters: request['parameters'] || request[:parameters] || {}
+        )
+        instance.execute_script("ForgeBuild.assemblyEditAnalysis(#{JSON.generate(result)})")
+      rescue StandardError => error
+        instance.execute_script("ForgeBuild.showError(#{JSON.generate(error.message)})")
+      end
+
+      def apply_assembly_edit(instance, plan)
+        result = @container.resolve(:assembly_edit_assistant).apply(
+          entity: @container.resolve(:assemblies).selected,
+          plan: plan,
+          model: Sketchup.active_model
+        )
+        publish_selection(instance)
+        instance.execute_script("ForgeBuild.assemblyEditApplied(#{JSON.generate(result)})")
       rescue StandardError => error
         instance.execute_script("ForgeBuild.showError(#{JSON.generate(error.message)})")
       end
