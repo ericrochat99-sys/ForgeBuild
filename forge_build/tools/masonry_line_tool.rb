@@ -50,11 +50,14 @@ module ForgeBuild
       end
 
       def draw(view)
-        return unless @origin && @input.valid?
+        return unless @input.valid?
 
-        view.drawing_color = '#a85d38'
-        view.line_width = 3
-        view.draw(::GL_LINES, [@origin, inference_position])
+        if @origin
+          draw_linear_assembly_preview(view, @origin, inference_position, @thickness, '#9b6848')
+          draw_placement_cursor(view, @origin, '#d1492e')
+        else
+          draw_placement_cursor(view, inference_position, '#d1492e')
+        end
         draw_inference_point(view)
       end
 
