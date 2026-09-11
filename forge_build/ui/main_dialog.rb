@@ -151,12 +151,22 @@ module ForgeBuild
         Sketchup.status_text = 'Plan imported and fitted to the modeling area. Click two endpoints of a known dimension to calibrate.'
       end
 
-      def calibrate_drawing(id)
-        drawing = @container.resolve(:drawings).find(Sketchup.active_model, id)
-        Sketchup.active_model.select_tool(Tools::DrawingCalibrationTool.new(service: @container.resolve(:drawings), drawing: drawing))
+      def calibrate_drawing(id = nil)
+        model = Sketchup.active_model
+        drawings = @container.resolve(:drawings)
+        drawing = if id.to_s.strip.empty?
+                    drawings.registry(model).last
+                  else
+                    drawings.find(model, id)
+                  end
+        raise 'Import a plan before starting calibration.' unless drawing
+
+        drawings.focus(model: model, drawing: drawing)
+        model.select_tool(Tools::DrawingCalibrationTool.new(service: drawings, drawing: drawing))
         dialog.hide
+        Sketchup.status_text = 'Calibration active: click the first endpoint of a known dimension on the plan.'
       rescue StandardError => error
-        ::UI.messagebox(error.message)
+        ::UI.messagebox("ForgeBuild could not start calibration: #{error.message}")
       end
 
       def trace_drawing(kind)
