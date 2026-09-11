@@ -7,12 +7,19 @@
 .assembly-ai-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .assembly-ai-actions button{border-radius:999px;padding:7px 10px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:inherit;cursor:pointer}
 .assembly-ai-actions button.primary{background:#27a4d8;border-color:#27a4d8;color:#071118;font-weight:800}
+.assembly-ai-workflow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:10px}
+.assembly-ai-workflow span{padding:6px 7px;border:1px solid rgba(255,255,255,.1);border-radius:9px;background:rgba(255,255,255,.04);color:#b8c6d3;font-size:10px;text-align:center;font-weight:700}
 .assembly-ai-result-card{margin-top:12px;padding:12px;border-radius:12px;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.12)}
+.assembly-ai-status{display:inline-flex;margin-bottom:8px;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+.assembly-ai-status.ready{background:rgba(60,180,120,.16);border:1px solid rgba(60,180,120,.38);color:#b9f7d3}
+.assembly-ai-status.warn{background:rgba(255,175,75,.16);border:1px solid rgba(255,175,75,.42);color:#ffd39c}
 .assembly-ai-result-card b{display:block;margin:6px 0;color:#f2f7fb}
 .assembly-ai-result-card p{margin:6px 0;color:#c7d1da;font-size:12px;line-height:1.4}
 .assembly-ai-result-card ul{margin:6px 0 10px 18px;padding:0;color:#c7d1da;font-size:12px;line-height:1.45}
 .assembly-ai-result-card li{margin:3px 0}
 .assembly-ai-warnings li{color:#ffd39c}
+.assembly-ai-similar{display:flex;align-items:center;gap:7px;margin:10px 0;padding:8px;border-radius:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);font-size:12px;color:#d7e1ea}
+.assembly-ai-similar input{accent-color:#27a4d8}
 .assembly-ai-result-card details{margin-top:10px}
 .assembly-ai-result-card summary{cursor:pointer;color:#8ecdf0;font-size:12px;font-weight:700}
 .assembly-ai-result-card textarea{margin-top:8px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11px;color:#dcecf8}
