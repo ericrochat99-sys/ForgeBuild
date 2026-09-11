@@ -51,15 +51,31 @@ module ForgeBuild
       end
 
       def draw(view)
-        return unless @origin && @input.valid?
+        return unless @input.valid?
+
+        unless @origin
+          draw_placement_cursor(view, inference_position, '#d1492e')
+          draw_inference_point(view)
+          return
+        end
+
         view.drawing_color = '#A77747'
         view.line_width = 2
         if @kind == :area
           point = inference_position
-          view.draw(::GL_LINE_LOOP, rectangle(@origin, point.x - @origin.x, point.y - @origin.y))
+          preview = rectangle(@origin, point.x - @origin.x, point.y - @origin.y)
+          fill = ::Sketchup::Color.new('#A77747')
+          fill.alpha = 45
+          view.drawing_color = fill
+          view.draw(::GL_POLYGON, preview)
+          view.drawing_color = '#A77747'
+          view.draw(::GL_LINE_LOOP, preview)
+        elsif @kind == :linear
+          draw_linear_assembly_preview(view, @origin, inference_position, @options.fetch(:width, 6.0), '#A77747')
         else
           view.draw(::GL_LINES, [@origin, inference_position])
         end
+        draw_placement_cursor(view, @origin, '#d1492e')
         draw_inference_point(view)
       end
 
