@@ -25,6 +25,15 @@ module ForgeBuild
         @inference_position || @input.position
       end
 
+      def controlled_position(anchor = inference_anchor)
+        point = inference_position
+        return point unless point && anchor
+
+        point = snap_point_to_angle(anchor, point) if truthy_option(:snap_to_angle, true)
+        point = snap_point_to_distance(anchor, point) if truthy_option(:snap_to_distance, false)
+        point
+      end
+
       def remember_inference_anchor
         @anchor_input = ::Sketchup::InputPoint.new(@input)
         @inference_position = @input.position
@@ -144,6 +153,55 @@ module ForgeBuild
 
       private
 
+      def option_value(name, default = nil)
+        return default unless defined?(@options) && @options
+
+        @options.fetch(name, @options.fetch(name.to_s, default))
+      end
+
+      def truthy_option(name, default = false)
+        value = option_value(name, default)
+        value == true || value.to_s.downcase == 'true' || value.to_s == '1'
+      end
+
+      def numeric_option(name, default)
+        value = option_value(name, default)
+        return value.to_l if value.respond_to?(:to_l) && value.to_s =~ /['"a-z]/i
+        Float(value)
+      rescue StandardError
+        default
+      end
+
+      def snap_point_to_angle(anchor, point)
+        run = point - anchor
+        return point unless run.length.positive?
+
+        increment = numeric_option(:snap_angle, 45.0).to_f
+        return point unless increment.positive?
+
+        angle = Math.atan2(run.y, run.x)
+        snapped = (angle / increment.degrees).round * increment.degrees
+        planar_length = Math.sqrt((run.x * run.x) + (run.y * run.y))
+        ::Geom::Point3d.new(anchor.x + (Math.cos(snapped) * planar_length),
+                            anchor.y + (Math.sin(snapped) * planar_length),
+                            point.z)
+      end
+
+      def snap_point_to_distance(anchor, point)
+        run = point - anchor
+        distance = run.length
+        increment = numeric_option(:snap_distance, 12.0).to_f
+        return point unless distance.positive? && increment.positive?
+
+        snapped = (distance / increment).round * increment
+        snapped = increment if snapped.zero?
+        vector = run
+        vector.length = snapped
+        anchor.offset(vector)
+      rescue StandardError
+        point
+      end
+
       def inference_anchor
         return @origin if defined?(@origin) && @origin
         return @first if defined?(@first) && @first
@@ -153,7 +211,11 @@ module ForgeBuild
       def inference_tooltip
         label = @input.tooltip.to_s
         constraint = { red: 'Red axis', green: 'Green axis', blue: 'Blue axis', drawing_plane: 'Drawing plane' }[@axis_constraint]
-        constraint ? "#{label} · #{constraint}" : label
+        snap = []
+        snap << "#{numeric_option(:snap_angle, 45).to_i}°" if truthy_option(:snap_to_angle, true)
+        snap << "#{numeric_option(:snap_distance, 12).to_i} in." if truthy_option(:snap_to_distance, false)
+        suffix = (constraint ? [constraint] : []) + snap
+        suffix.empty? ? label : "#{label} · #{suffix.join(' · ')}"
       end
     end
   end
