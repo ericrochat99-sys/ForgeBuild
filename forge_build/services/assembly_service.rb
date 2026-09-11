@@ -40,6 +40,33 @@ module ForgeBuild
         raise
       end
 
+      def resize(entity, parameter:, value:, shift_vector: nil, model: Sketchup.active_model)
+        raise ArgumentError, 'Select a ForgeBuild assembly first' unless entity
+
+        name = parameter.to_s
+        raise ArgumentError, "Unsupported assembly dimension: #{name}" unless POSITIVE_PARAMETERS.include?(name)
+        number = Float(value)
+        raise ArgumentError, "#{name} must be greater than zero" unless number.positive?
+
+        attributes = Models::ParametricObject.read(entity)
+        parameters = attributes.fetch(:parameters, {}).dup
+        key = parameters.key?(name.to_sym) ? name.to_sym : name
+        raise ArgumentError, "#{name} is not available for this assembly" unless parameters.key?(key)
+
+        model.start_operation('Push/Pull ForgeBuild Assembly', true)
+        parameters[key] = number
+        Models::ParametricObject.update(entity, parameters: parameters)
+        @regeneration.regenerate(entity, model: model)
+        entity.transform!(::Geom::Transformation.translation(shift_vector)) if shift_vector
+        @materials.apply(entity, Models::ParametricObject.read(entity), model: model)
+        @display.apply(entity, Models::ParametricObject.read(entity).fetch(:display_mode, 'detailed'))
+        model.commit_operation
+        inspect(entity)
+      rescue StandardError
+        model.abort_operation
+        raise
+      end
+
       def regenerate(entity, model: Sketchup.active_model)
         result = @regeneration.regenerate(entity, model: model)
         @display.apply(entity, Models::ParametricObject.read(entity).fetch(:display_mode, 'detailed'))
