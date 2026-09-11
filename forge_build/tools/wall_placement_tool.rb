@@ -40,11 +40,23 @@ module ForgeBuild
         ::UI.messagebox(error.message)
       end
       def draw(view)
-        return unless @origin && @input.valid?
-        view.drawing_color = '#a85d38'
-        view.line_width = 3
-        view.draw(::GL_LINES, [@origin, inference_position])
+        return unless @input.valid?
+
+        if @origin && !point_kind?
+          thickness = @options.fetch(:thickness, @options.fetch('thickness', 6.0))
+          draw_linear_assembly_preview(view, @origin, inference_position, thickness, '#a85d38')
+          draw_placement_cursor(view, @origin, '#d1492e')
+        else
+          draw_placement_cursor(view, inference_position, '#d1492e')
+        end
         draw_inference_point(view)
+      end
+
+      def getExtents
+        bounds = ::Geom::BoundingBox.new
+        bounds.add(@origin) if @origin
+        bounds.add(inference_position) if @input.valid?
+        bounds
       end
       private
       def point_kind? = %i[opening point].include?(@kind)
