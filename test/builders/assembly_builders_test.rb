@@ -38,4 +38,13 @@ class AssemblyBuildersTest < Minitest::Test
     assert_includes roof.tools.map(&:id), :steel_joist
     assert_includes roof.tools.map(&:id), :roof_drain
   end
+  def test_placement_control_values_are_not_parsed_as_dimensions
+    expected = %w[placement_shape snap_to_angle snap_to_distance snap_alignment]
+
+    expected.each do |option|
+      assert_includes ForgeBuild::Builders::Wall::Builder::STRING_OPTIONS, option
+      assert_includes ForgeBuild::Builders::Floor::Builder::STRING_OPTIONS, option
+    end
+  end
+
 end

@@ -6,6 +6,8 @@ module ForgeBuild
   module Builders
     module Floor
       class Builder < Core::Builder
+        STRING_OPTIONS = %w[notes placement_shape snap_to_angle snap_to_distance snap_alignment].freeze
+
         TOOLS = Catalog::SYSTEMS.map do |id, (kind, label, description, size, height)|
           options = case kind
                     when :area
@@ -48,7 +50,7 @@ module ForgeBuild
           selected = tool(id)
           kind = Catalog.definition(selected.id).first
           normalized = options.each_with_object({}) do |(key, value), result|
-            result[key.to_sym] = key == 'notes' ? value.to_s : Float(value)
+            result[key.to_sym] = STRING_OPTIONS.include?(key.to_s) ? value.to_s : Float(value)
           end
           if kind == :face
             face = Sketchup.active_model.selection.find { |entity| entity.is_a?(Sketchup::Face) }

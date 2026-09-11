@@ -4,7 +4,9 @@ module ForgeBuild
   module Builders
     module Wall
       class Builder < Core::Builder
-        STRING_OPTIONS = %w[fire_rating smoke_rating ul_design ga_design security_class notes insulation framing sheathing finish material].freeze
+        PLACEMENT_STRING_OPTIONS = %w[placement_shape snap_to_angle snap_to_distance snap_alignment].freeze
+        STRING_OPTIONS = (%w[fire_rating smoke_rating ul_design ga_design security_class notes insulation framing sheathing finish material] +
+                          PLACEMENT_STRING_OPTIONS).freeze
         TOOLS = Catalog::SYSTEMS.map do |id, (kind, label, description, width, height, _cost_code)|
           options = if %i[line layer].include?(kind)
                       [{ id: 'thickness', label: 'Thickness', type: 'number', value: width, min: 0.01, step: 0.125, unit: 'inches' },
@@ -39,7 +41,7 @@ module ForgeBuild
           selected = tool(id)
           kind = Catalog.definition(selected.id).first
           normalized = options.each_with_object({}) do |(key, value), result|
-            result[key.to_sym] = STRING_OPTIONS.include?(key) ? value.to_s : Float(value)
+            result[key.to_sym] = STRING_OPTIONS.include?(key.to_s) ? value.to_s : Float(value)
           end
           Sketchup.active_model.select_tool(Tools::WallPlacementTool.new(service: container.resolve(:wall_objects),
             object_type: selected.id.to_s, kind: kind, options: normalized))

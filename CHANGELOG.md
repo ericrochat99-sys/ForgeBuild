@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- Start Drawing no longer attempts to parse wall and floor placement modes, snap toggles, or alignment values as numeric dimensions.
+
+
 ## v1.2.9
 
 ### Added
