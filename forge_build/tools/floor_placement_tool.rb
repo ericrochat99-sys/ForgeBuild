@@ -25,7 +25,7 @@ module ForgeBuild
         if @kind == :point
           create(origin: inference_position)
         elsif @origin
-          create_between(@origin, inference_position)
+          create_between(@origin, controlled_position(@origin))
           reset(view)
         else
           @origin = inference_position
@@ -42,7 +42,8 @@ module ForgeBuild
           create(origin: @origin, width: values[0].to_l, length: values[1].to_l)
         else
           length = text.to_l
-          direction = @input.valid? ? (inference_position - @origin).normalize : X_AXIS
+          endpoint = controlled_position(@origin)
+          direction = @input.valid? ? (endpoint - @origin).normalize : X_AXIS
           create(origin: @origin, endpoint: @origin.offset(direction, length))
         end
         reset(view)
@@ -59,11 +60,11 @@ module ForgeBuild
           return
         end
 
+        endpoint = controlled_position(@origin)
         view.drawing_color = '#A77747'
         view.line_width = 2
         if @kind == :area
-          point = inference_position
-          preview = rectangle(@origin, point.x - @origin.x, point.y - @origin.y)
+          preview = rectangle(@origin, endpoint.x - @origin.x, endpoint.y - @origin.y)
           fill = ::Sketchup::Color.new('#A77747')
           fill.alpha = 45
           view.drawing_color = fill
@@ -71,9 +72,9 @@ module ForgeBuild
           view.drawing_color = '#A77747'
           view.draw(::GL_LINE_LOOP, preview)
         elsif @kind == :linear
-          draw_linear_assembly_preview(view, @origin, inference_position, @options.fetch(:width, 6.0), '#A77747')
+          draw_linear_assembly_preview(view, @origin, endpoint, @options.fetch(:width, 6.0), '#A77747')
         else
-          view.draw(::GL_LINES, [@origin, inference_position])
+          view.draw(::GL_LINES, [@origin, endpoint])
         end
         draw_placement_cursor(view, @origin, '#d1492e')
         draw_inference_point(view)
@@ -82,7 +83,7 @@ module ForgeBuild
       def getExtents
         bounds = ::Geom::BoundingBox.new
         bounds.add(@origin) if @origin
-        bounds.add(inference_position) if @input.valid?
+        bounds.add(controlled_position(@origin)) if @input.valid?
         bounds
       end
 
@@ -109,7 +110,8 @@ module ForgeBuild
       def prompt(stage)
         return 'Click to place the next floor object. Press Esc to finish.' if @kind == :point
         noun = @kind == :area ? 'corner' : 'point'
-        stage == :first ? "Click the first #{noun}." : "Click the second #{noun}, or type dimensions and press Enter."
+        snap = truthy_option(:snap_to_angle, true) ? " Snap: #{numeric_option(:snap_angle, 45).to_i}°" : ' Snap: free'
+        stage == :first ? "Click the first #{noun}.#{snap}" : "Click the second #{noun}, or type dimensions and press Enter.#{snap}"
       end
 
       def reset(view)
