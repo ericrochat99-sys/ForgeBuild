@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Phase 4 + Phase 9 AI Edit Assistant in the selected assembly Property Inspector.
+- Natural-language assembly edit analysis for common parameters including height, thickness, width, length, elevation, fire rating, STC, R-value, pitch, and slope.
+- One-click application of suggested parameter changes to the selected assembly.
+- AI-ready handoff prompt that packages the selected assembly, current parameters, requested edit, and safe-edit instructions.
+- Smart workflow warnings for openings, ratings, push/pull edits, and apply-to-similar limitations.
+- Quick access to Push/Pull and Regenerate from the AI edit panel.
+
 ## v1.2.8
 
 ### Added
