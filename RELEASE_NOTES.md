@@ -1,11 +1,11 @@
-# ForgeBuild 1.2.1 — Guided Builder Choices
+# ForgeBuild 1.2.2 — Live 2D Assembly Preview
 
-ForgeBuild builders now guide users from broad construction decisions to finer assembly details instead of displaying every tool simultaneously.
+ForgeBuild now shows the actual plan footprint of assemblies while they are being drawn.
 
-- Select an assembly family first, such as masonry, framed wall, exterior system, opening, roof membrane, deck, framing, or drainage.
-- Select the specific assembly type next.
-- Refine dimensions, spacing, slope, pitch, materials, insulation, sheathing, finish, and ratings using multiple-choice fields where standards-based choices are appropriate.
-- Review the complete assembly before starting the SketchUp drawing tool.
-- Wall objects now retain material, framing, insulation, sheathing, and finish parameters.
+- Wall and masonry previews display their selected thickness with translucent fill, outside edges, and a centerline.
+- Floor and roof placement previews display filled 2D assembly footprints.
+- A high-contrast placement cursor follows SketchUp inference snapping before the first click.
+- The selected start point remains visible while the user positions the assembly endpoint.
+- Existing axis locking, drawing-plane constraints, imported-plan snapping, and typed dimensions remain supported.
 
-Existing geometry tools and builder IDs remain compatible.
+This makes it easier to align walls and other assemblies accurately over imported construction plans before creating geometry.
