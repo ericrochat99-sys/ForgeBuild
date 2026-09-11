@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Phase 2 Trace Plan Mode workspace in the Plans & Drawings view.
+- Guided trace workflow cards for import, elevation, calibration, tracing, and review.
+- Selected-plan trace controls for calibration, elevation, focus guidance, and faded tracing UI.
+- Quick trace buttons for floors, walls, roofs, openings, grids, and levels.
+- Phase 2 trace styling for workflow cards, step indicators, and trace assembly buttons.
+
 ## v1.2.7
 
 ### Added
