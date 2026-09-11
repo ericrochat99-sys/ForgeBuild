@@ -14,7 +14,7 @@ module ForgeBuild
         commands.each_value { |command| menu.add_item(command) }
 
         toolbar = ::UI::Toolbar.new('ForgeBuild')
-        %i[open edit regenerate move display copy delete reports export drawings].each { |id| toolbar.add_item(commands.fetch(id)) }
+        %i[open edit push_pull regenerate move display copy delete reports export drawings].each { |id| toolbar.add_item(commands.fetch(id)) }
         toolbar.restore
         install_context_menu(container)
         @registered = true
@@ -26,6 +26,7 @@ module ForgeBuild
         definitions = {
           open: ['Open ForgeBuild', 'Open the ForgeBuild workspace', -> { container.resolve(:main_dialog).show }],
           edit: ['Edit Assembly', 'Edit the selected ForgeBuild assembly', -> { container.resolve(:main_dialog).show_inspector }],
+          push_pull: ['Push/Pull Assembly', 'Drag an assembly face to resize it parametrically', -> { activate_push_pull(container) }],
           regenerate: ['Regenerate Assembly', 'Rebuild selected assembly geometry', -> { assemblies.call.regenerate(selected.call) }],
           move: ['Move Assembly', 'Move the selected assembly', -> { Sketchup.send_action('selectMoveTool:') }],
           copy: ['Copy Assembly', 'Copy the selected assembly', -> { assemblies.call.copy(selected.call) }],
@@ -64,6 +65,7 @@ module ForgeBuild
           submenu = menu.add_submenu('ForgeBuild Assembly')
           submenu.add_item('Edit') { container.resolve(:main_dialog).show_inspector }
           submenu.add_item('Regenerate') { container.resolve(:assemblies).regenerate(entity) }
+          submenu.add_item('Push/Pull Assembly') { activate_push_pull(container, entity) }
           display = submenu.add_submenu('Display Mode')
           Services::DisplayService::MODES.each { |mode| display.add_item(mode.capitalize) { container.resolve(:assemblies).set_display(entity, mode) } }
           submenu.add_separator
@@ -89,6 +91,17 @@ module ForgeBuild
             roof_menu.add_item('Roof Schedule Summary') { ::UI.messagebox("Roof schedule contains #{container.resolve(:roof_editing).schedule.length} assemblies.") }
           end
         end
+      end
+
+      def activate_push_pull(container, entity = nil)
+        selected = entity || container.resolve(:assemblies).selected
+        raise 'Select a ForgeBuild assembly before using Push/Pull Assembly.' unless selected
+
+        Sketchup.active_model.select_tool(
+          Tools::AssemblyPushPullTool.new(service: container.resolve(:assemblies), entity: selected)
+        )
+      rescue StandardError => error
+        ::UI.messagebox(error.message)
       end
 
       def prompt_wall_value(label, entity)
