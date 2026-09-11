@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.2.5] - 2026-09-11
+
+### Added
+
+- Parametric Push/Pull Assembly tool for ForgeBuild geometry.
+- Face-hover highlighting and live dimension feedback while resizing.
+- Push/Pull access from the main toolbar, Properties panel, context-sensitive tools, and assembly right-click menu.
+- Construction-specific Push/Pull toolbar icon.
+
+### Changed
+
+- Dragging an assembly face now updates its stored length, width, height, thickness, or depth and regenerates the object.
+- Resizing a starting face shifts the assembly origin so the opposite face remains fixed.
+- Push/Pull changes preserve ForgeBuild metadata, materials, display mode, quantities, and Undo history.
+
 ## [1.2.4] - 2026-09-11
 
 ### Added
