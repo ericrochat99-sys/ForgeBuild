@@ -6,8 +6,11 @@ module ForgeBuild
   module Services
     class AssemblyService
       EDITABLE_FIELDS = %w[assembly material finish tag comments fire_rating manufacturer model_number].freeze
-      POSITIVE_PARAMETERS = %w[width length height thickness depth].freeze
-      TEXT_PARAMETERS = %w[ul_design ga_design smoke_rating security_class notes system].freeze
+      POSITIVE_PARAMETERS = %w[width length height thickness depth edge_width edge_depth depression_depth span overhang
+                               bearing_length seam_spacing spacing stud_spacing sill_height end_height].freeze
+      NUMERIC_PARAMETERS = %w[elevation pitch slope r_value stc].freeze
+      TEXT_PARAMETERS = %w[ul_design ga_design fire_rating smoke_rating security_class notes system material finish
+                           framing insulation sheathing].freeze
       def initialize(regeneration:, display:, materials:, migration:)
         @regeneration, @display, @materials, @migration = regeneration, display, materials, migration
       end
@@ -100,15 +103,16 @@ module ForgeBuild
       private
       def parameter_values(parameters)
         parameters.each_with_object({}) do |(key, value), result|
-          if TEXT_PARAMETERS.include?(key.to_s)
-            result[key.to_s] = value.to_s
+          name = key.to_s
+          if TEXT_PARAMETERS.include?(name)
+            result[name] = value.to_s
             next
           end
           number = Float(value)
-          if POSITIVE_PARAMETERS.include?(key.to_s) && !number.positive?
-            raise ArgumentError, "#{key} must be greater than zero"
+          if POSITIVE_PARAMETERS.include?(name) && !number.positive?
+            raise ArgumentError, "#{name} must be greater than zero"
           end
-          result[key.to_s] = number
+          result[name] = number
         end
       end
     end
