@@ -58,6 +58,51 @@ module ForgeBuild
         @input.draw(view) if @input.valid? && @input.respond_to?(:draw)
       end
 
+      # Draws a high-contrast, screen-scaled target before the first click so the
+      # user can see the exact inferred start point without obscuring the plan.
+      def draw_placement_cursor(view, point = inference_position, color = '#d95f32')
+        return unless point
+
+        radius = view.pixels_to_model(9, point)
+        x_axis = ::Geom::Vector3d.new(radius, 0, 0)
+        y_axis = ::Geom::Vector3d.new(0, radius, 0)
+        view.line_stipple = ''
+        view.line_width = 3
+        view.drawing_color = color
+        view.draw(::GL_LINES, [point.offset(x_axis.reverse), point.offset(x_axis),
+                               point.offset(y_axis.reverse), point.offset(y_axis)])
+        view.draw_points([point], 11, 2, color)
+      end
+
+      # Returns the plan-view outline of a linear assembly centered on its
+      # placement baseline. Thickness is expressed in SketchUp model inches.
+      def linear_footprint(origin, endpoint, thickness)
+        run = endpoint - origin
+        return [] unless run.length.positive?
+
+        normal = ::Geom::Vector3d.new(-run.y, run.x, 0)
+        return [] unless normal.length.positive?
+
+        normal.length = thickness.to_f / 2.0
+        [origin.offset(normal), endpoint.offset(normal),
+         endpoint.offset(normal.reverse), origin.offset(normal.reverse)]
+      end
+
+      def draw_linear_assembly_preview(view, origin, endpoint, thickness, color = '#a85d38')
+        points = linear_footprint(origin, endpoint, thickness)
+        return if points.empty?
+
+        fill = ::Sketchup::Color.new(color)
+        fill.alpha = 55
+        view.drawing_color = fill
+        view.draw(::GL_POLYGON, points)
+        view.drawing_color = color
+        view.line_stipple = ''
+        view.line_width = 3
+        view.draw(::GL_LINE_LOOP, points)
+        view.draw(::GL_LINES, [origin, endpoint])
+      end
+
       def constrained_position(point, anchor, axis)
         return point unless anchor && axis
         x, y, z = point.x, point.y, point.z
