@@ -16,6 +16,7 @@ ForgeBuild v1.2.7 improves floor and wall drawing usability so placement is easi
 - Improved placement feedback with clearer start-point and baseline previews.
 - Added Esc handling to cancel active placement tools more predictably.
 - Kept wall Shift cycling for Center / Left / Right placement behavior.
+- Hardened dimension-label drawing so older SketchUp draw_text signatures do not interrupt placement.
 
 ## Workflow Impact
 
