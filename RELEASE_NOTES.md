@@ -1,11 +1,20 @@
-# ForgeBuild 1.2.2 — Live 2D Assembly Preview
+# ForgeBuild 1.2.3 — Plan Set Manager and Calibration Fixes
 
-ForgeBuild now shows the actual plan footprint of assemblies while they are being drawn.
+ForgeBuild now supports multi-PDF plan sets and reliable drawing calibration.
 
-- Wall and masonry previews display their selected thickness with translucent fill, outside edges, and a centerline.
-- Floor and roof placement previews display filled 2D assembly footprints.
-- A high-contrast placement cursor follows SketchUp inference snapping before the first click.
-- The selected start point remains visible while the user positions the assembly endpoint.
-- Existing axis locking, drawing-plane constraints, imported-plan snapping, and typed dimensions remain supported.
+## Plan Set Manager
 
-This makes it easier to align walls and other assemblies accurately over imported construction plans before creating geometry.
+- Browse a folder containing multiple PDF plan files.
+- Select only the plans that should be imported.
+- Choose the PDF page for each selected file.
+- Assign a separate model elevation to each plan before import.
+- Import multiple selected plans in one operation.
+- Select any registered plan and move it to another elevation later.
+
+## Calibration fixes
+
+- The context-sensitive Calibrate button now starts calibration.
+- Calibrate Again uses the selected drawing or automatically uses the latest imported plan.
+- ForgeBuild focuses and zooms to the plan before activating calibration.
+- Clear SketchUp status instructions identify the next calibration step.
+- If no plan is available, ForgeBuild displays an actionable message instead of failing silently.
