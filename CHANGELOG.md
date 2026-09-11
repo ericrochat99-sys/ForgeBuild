@@ -5,11 +5,19 @@
 ### Added
 
 - Phase 4 + Phase 9 AI Edit Assistant in the selected assembly Property Inspector.
-- Natural-language assembly edit analysis for common parameters including height, thickness, width, length, elevation, fire rating, STC, R-value, pitch, and slope.
-- One-click application of suggested parameter changes to the selected assembly.
-- AI-ready handoff prompt that packages the selected assembly, current parameters, requested edit, and safe-edit instructions.
-- Smart workflow warnings for openings, ratings, push/pull edits, and apply-to-similar limitations.
+- Backend Ruby assembly edit assistant service for deterministic natural-language edit planning.
+- Natural-language assembly edit analysis for common parameters including height, thickness, width, length, depth, elevation, fire rating, STC, R-value, pitch, slope, finish, material, and CMU/slab thickness language.
+- One-click application of suggested parameter and metadata changes to the selected assembly.
+- Apply-to-similar support for updating matching assemblies with the same builder and object type.
+- AI-ready handoff prompt that packages the selected assembly, current parameters, requested edit, detected changes, warnings, questions, and safe-edit instructions.
+- Smart workflow warnings and follow-up questions for openings, ratings, push/pull edits, fixed-side decisions, apply-to-similar edits, and missing dimensions.
 - Quick access to Push/Pull and Regenerate from the AI edit panel.
+
+### Improved
+
+- Assembly parameter validation now supports assisted-edit fields including elevation, pitch, slope, STC, R-value, fire rating, system, material, finish, framing, insulation, sheathing, and other commercial assembly metadata.
+- AI Edit Assistant now routes through Ruby services instead of being only a browser-side heuristic, while keeping a fallback analyzer for compatibility.
+- Assisted edit results now separate geometry parameters from metadata changes and show ready/review-required safety status before applying.
 
 ## v1.2.8
 
