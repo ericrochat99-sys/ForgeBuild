@@ -76,20 +76,47 @@ module ForgeBuild
 
       # Returns the plan-view outline of a linear assembly centered on its
       # placement baseline. Thickness is expressed in SketchUp model inches.
-      def linear_footprint(origin, endpoint, thickness)
+      def linear_footprint(origin, endpoint, thickness, alignment = :center)
         run = endpoint - origin
         return [] unless run.length.positive?
 
         normal = ::Geom::Vector3d.new(-run.y, run.x, 0)
         return [] unless normal.length.positive?
 
-        normal.length = thickness.to_f / 2.0
-        [origin.offset(normal), endpoint.offset(normal),
-         endpoint.offset(normal.reverse), origin.offset(normal.reverse)]
+        normal.length = thickness.to_f
+        left, right = case alignment.to_sym
+                      when :left then [normal, ::Geom::Vector3d.new(0, 0, 0)]
+                      when :right then [::Geom::Vector3d.new(0, 0, 0), normal.reverse]
+                      else
+                        half = normal.clone
+                        half.length = thickness.to_f / 2.0
+                        [half, half.reverse]
+                      end
+        [origin.offset(left), endpoint.offset(left),
+         endpoint.offset(right), origin.offset(right)]
       end
 
-      def draw_linear_assembly_preview(view, origin, endpoint, thickness, color = '#a85d38')
-        points = linear_footprint(origin, endpoint, thickness)
+      # Converts the guide-line endpoints into the baseline expected by the
+      # geometry service, whose local wall depth extends in positive Y.
+      def aligned_run(origin, endpoint, thickness, alignment = :center)
+        run = endpoint - origin
+        return [origin, endpoint] unless run.length.positive?
+
+        normal = ::Geom::Vector3d.new(-run.y, run.x, 0)
+        return [origin, endpoint] unless normal.length.positive?
+
+        distance = case alignment.to_sym
+                   when :left then 0.0
+                   when :right then -thickness.to_f
+                   else -thickness.to_f / 2.0
+                   end
+        normal.length = distance.abs
+        normal.reverse! if distance.negative?
+        [origin.offset(normal), endpoint.offset(normal)]
+      end
+
+      def draw_linear_assembly_preview(view, origin, endpoint, thickness, color = '#a85d38', alignment = :center)
+        points = linear_footprint(origin, endpoint, thickness, alignment)
         return if points.empty?
 
         fill = ::Sketchup::Color.new(color)
