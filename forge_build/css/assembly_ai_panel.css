@@ -1,0 +1,18 @@
+.assembly-ai-panel{margin-top:16px;padding:14px;border:1px solid rgba(255,255,255,.14);border-radius:14px;background:linear-gradient(180deg,rgba(39,164,216,.12),rgba(10,16,22,.22));box-shadow:0 12px 30px rgba(0,0,0,.18)}
+.assembly-ai-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:10px}
+.assembly-ai-head label{display:block;color:#8ecdf0;font-size:10px;font-weight:800;letter-spacing:.12em;margin-bottom:3px}
+.assembly-ai-head h3{margin:0;font-size:15px}
+.assembly-ai-head span{padding:4px 8px;border:1px solid rgba(142,205,240,.32);border-radius:999px;color:#bfe7ff;font-size:11px;background:rgba(39,164,216,.12)}
+.assembly-ai-panel textarea{width:100%;box-sizing:border-box;border-radius:10px;border:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.25);color:inherit;padding:10px;resize:vertical}
+.assembly-ai-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.assembly-ai-actions button{border-radius:999px;padding:7px 10px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:inherit;cursor:pointer}
+.assembly-ai-actions button.primary{background:#27a4d8;border-color:#27a4d8;color:#071118;font-weight:800}
+.assembly-ai-result-card{margin-top:12px;padding:12px;border-radius:12px;background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.12)}
+.assembly-ai-result-card b{display:block;margin:6px 0;color:#f2f7fb}
+.assembly-ai-result-card p{margin:6px 0;color:#c7d1da;font-size:12px;line-height:1.4}
+.assembly-ai-result-card ul{margin:6px 0 10px 18px;padding:0;color:#c7d1da;font-size:12px;line-height:1.45}
+.assembly-ai-result-card li{margin:3px 0}
+.assembly-ai-warnings li{color:#ffd39c}
+.assembly-ai-result-card details{margin-top:10px}
+.assembly-ai-result-card summary{cursor:pointer;color:#8ecdf0;font-size:12px;font-weight:700}
+.assembly-ai-result-card textarea{margin-top:8px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:11px;color:#dcecf8}
