@@ -12,11 +12,12 @@ module ForgeBuild
         @height = height
         @cell_spacing = cell_spacing
         @input = ::Sketchup::InputPoint.new
+        @wall_alignment = :center
       end
 
       def activate
         @origin = nil
-        Sketchup.status_text = 'Click the start of the masonry run.'
+        Sketchup.status_text = alignment_prompt('Click the start of the masonry run.')
       end
 
       def onMouseMove(_flags, x, y, view)
@@ -29,12 +30,12 @@ module ForgeBuild
         return unless @input.valid?
 
         if @origin
-          create_run(@origin, inference_position)
+          create_aligned_run(@origin, inference_position)
           reset(view)
         else
           @origin = inference_position
           remember_inference_anchor
-          Sketchup.status_text = 'Click the end of the masonry run, or type its length and press Enter.'
+          Sketchup.status_text = alignment_prompt('Click the end of the masonry run, or type its length and press Enter.')
         end
       end
 
@@ -43,7 +44,7 @@ module ForgeBuild
 
         length = text.to_l
         direction = preview_direction
-        create_run(@origin, @origin.offset(direction, length))
+        create_aligned_run(@origin, @origin.offset(direction, length))
         reset(view)
       rescue StandardError => error
         ::UI.messagebox(error.message)
@@ -53,7 +54,7 @@ module ForgeBuild
         return unless @input.valid?
 
         if @origin
-          draw_linear_assembly_preview(view, @origin, inference_position, @thickness, '#9b6848')
+          draw_linear_assembly_preview(view, @origin, inference_position, @thickness, '#9b6848', @wall_alignment)
           draw_placement_cursor(view, @origin, '#d1492e')
         else
           draw_placement_cursor(view, inference_position, '#d1492e')
@@ -68,7 +69,26 @@ module ForgeBuild
         bounds
       end
 
+      def onKeyDown(key, repeat, flags, view)
+        if key == SHIFT_KEY
+          return if repeat.to_i > 1
+
+          @wall_alignment = { center: :left, left: :right, right: :center }.fetch(@wall_alignment)
+          Sketchup.status_text = alignment_prompt(@origin ? 'Click the end of the masonry run, or type its length.' : 'Click the start of the masonry run.')
+          view.invalidate
+          return
+        end
+        super
+      end
+
       private
+
+      def create_aligned_run(origin, endpoint)
+        adjusted_origin, adjusted_endpoint = aligned_run(origin, endpoint, @thickness, @wall_alignment)
+        create_run(adjusted_origin, adjusted_endpoint)
+      end
+
+      def alignment_prompt(message) = "#{message} Placement: #{@wall_alignment.to_s.capitalize} (tap Shift to change)."
 
       def create_run(origin, endpoint)
         @service.create(model: Sketchup.active_model, origin: origin, endpoint: endpoint,
@@ -87,7 +107,7 @@ module ForgeBuild
         @origin = nil
         clear_inference
         view.invalidate
-        Sketchup.status_text = 'Click the start of the next masonry run. Press Esc to finish.'
+        Sketchup.status_text = alignment_prompt('Click the start of the next masonry run. Press Esc to finish.')
       end
     end
   end
