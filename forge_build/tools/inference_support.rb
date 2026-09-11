@@ -5,6 +5,7 @@ module ForgeBuild
     # Shared SketchUp-style snapping and keyboard constraints for every placement tool.
     module InferenceSupport
       SHIFT_KEY = 16
+      ESC_KEY = 27
       LEFT_KEY = 37
       UP_KEY = 38
       RIGHT_KEY = 39
@@ -48,7 +49,11 @@ module ForgeBuild
       end
 
       def onKeyDown(key, _repeat, _flags, view)
-        if key == SHIFT_KEY && @input.valid?
+        if key == ESC_KEY
+          clear_inference
+          Sketchup.active_model.select_tool(nil)
+          return
+        elsif key == SHIFT_KEY && @input.valid?
           view.lock_inference(@input)
           @inference_locked = true
         elsif [LEFT_KEY, RIGHT_KEY, UP_KEY, DOWN_KEY].include?(key)
@@ -81,6 +86,28 @@ module ForgeBuild
         view.draw(::GL_LINES, [point.offset(x_axis.reverse), point.offset(x_axis),
                                point.offset(y_axis.reverse), point.offset(y_axis)])
         view.draw_points([point], 11, 2, color)
+      end
+
+      def draw_dimension_label(view, origin, endpoint, prefix = 'Length')
+        return unless origin && endpoint
+        distance = origin.distance(endpoint)
+        return unless distance.positive?
+
+        midpoint = ::Geom.linear_combination(0.5, origin, 0.5, endpoint)
+        label = "#{prefix}: #{format_model_length(distance)}"
+        view.draw_text(view.screen_coords(midpoint), label,
+                       size: 14, bold: true, color: '#ffffff', align: TextAlignLeft)
+      rescue StandardError
+        # draw_text signatures vary by SketchUp version. Dimension feedback is
+        # supplemental, so never let it break placement.
+      end
+
+      def format_model_length(value)
+        return value.to_l.to_s if value.respond_to?(:to_l)
+
+        value.to_s
+      rescue StandardError
+        format('%.2f in.', value.to_f)
       end
 
       # Returns the plan-view outline of a linear assembly centered on its
@@ -137,6 +164,7 @@ module ForgeBuild
         view.line_width = 3
         view.draw(::GL_LINE_LOOP, points)
         view.draw(::GL_LINES, [origin, endpoint])
+        draw_dimension_label(view, origin, endpoint)
       end
 
       def constrained_position(point, anchor, axis)
