@@ -1,17 +1,22 @@
-# ForgeBuild 1.2.6 — Floor and Wall Builder Placement Controls
+# ForgeBuild 1.2.7 — Placement Usability Sprint
 
-ForgeBuild now adds drawing-style placement controls for the Floor Builder and Wall Builder, matching the Snap-to-angle / Snap-to-distance workflow shown in the reference UI.
+ForgeBuild v1.2.7 improves floor and wall drawing usability so placement is easier to understand while tracing plans or laying out commercial assemblies.
 
-## Builder Placement Controls
+## Placement Controls
 
-- Added a compact placement control bar for Floor Builder and Wall Builder.
-- Added floor drawing modes: Polygon, Arc, Rectangle, and Circle.
-- Added wall drawing modes: Line, Polyline, Rectangle, and Arc.
-- Added Snap to angle control with adjustable angle increments.
-- Added Snap to distance control with adjustable distance increments.
-- Added alignment controls for Automatic, Center, Left, and Right placement.
-- Passed the selected placement mode and snapping options into SketchUp placement tools.
-- Updated floor and wall live previews to honor snap angle and snap distance behavior.
-- Preserved Shift cycling for wall side placement while drawing.
+- Added sticky placement settings for Floor Builder and Wall Builder.
+- Saves last-used drawing mode, snap angle, snap distance, and alignment per builder.
+- Added a cleaner placement control header with a live mode summary.
+- Added Finish Drawing and Cancel guidance controls to the placement panel.
+- Improved the footer/status summary for the active placement mode.
 
-This release focuses on making assembly placement easier to understand and more precise when tracing plans or laying out floor and wall assemblies in SketchUp.
+## Drawing Feedback
+
+- Added live dimension labels while previewing wall and linear floor placements.
+- Improved placement feedback with clearer start-point and baseline previews.
+- Added Esc handling to cancel active placement tools more predictably.
+- Kept wall Shift cycling for Center / Left / Right placement behavior.
+
+## Workflow Impact
+
+This release focuses on reducing confusion while drawing assemblies. It makes the current Floor Builder and Wall Builder more predictable before adding more builder complexity.
