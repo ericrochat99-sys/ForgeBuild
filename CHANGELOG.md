@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.2.2] - 2026-09-11
+
+### Added
+
+- Live plan-view assembly footprints while drawing walls, masonry, floors, and roofs.
+- High-contrast placement cursor at the inferred first-click location.
+- Persistent origin marker while selecting the assembly endpoint.
+
+### Changed
+
+- Linear previews now show assembly thickness with translucent fill, outside edges, and a centerline instead of only a single placement line.
+
 ## [1.2.1] - 2026-09-10
 
 ### Added
