@@ -54,6 +54,7 @@ module ForgeBuild
         instance.add_action_callback('copy_assembly') { |_context| command(instance, :copy) }
         instance.add_action_callback('delete_assembly') { |_context| command(instance, :delete) }
         instance.add_action_callback('move_assembly') { |_context| Sketchup.send_action('selectMoveTool:') }
+        instance.add_action_callback('push_pull_assembly') { |_context| activate_push_pull }
         instance.add_action_callback('set_display_mode') { |_context, mode| set_display_mode(instance, mode) }
         instance.add_action_callback('save_preset') { |_context, name, parameters, make_default| save_preset(instance, name, parameters, make_default) }
         instance.add_action_callback('apply_preset') { |_context, name| apply_preset(instance, name) }
@@ -99,6 +100,18 @@ module ForgeBuild
         publish_selection(instance)
       rescue StandardError => error
         instance.execute_script("ForgeBuild.showError(#{JSON.generate(error.message)})")
+      end
+
+      def activate_push_pull
+        entity = @container.resolve(:assemblies).selected
+        raise 'Select a ForgeBuild assembly before using Push/Pull Assembly.' unless entity
+
+        Sketchup.active_model.select_tool(
+          Tools::AssemblyPushPullTool.new(service: @container.resolve(:assemblies), entity: entity)
+        )
+        dialog.hide
+      rescue StandardError => error
+        ::UI.messagebox(error.message)
       end
 
       def set_display_mode(instance, mode)
