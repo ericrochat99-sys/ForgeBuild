@@ -12,7 +12,7 @@ module ForgeBuild
       KEY = 'registry'
       SUPPORTED = %w[.pdf .png .jpg .jpeg .tif .tiff .dwg .dxf].freeze
 
-      def import(model:, path:, discipline: 'architectural', sheet: '', revision: '', page: 1)
+      def import(model:, path:, discipline: 'architectural', sheet: '', revision: '', page: 1, elevation: 0)
         extension = File.extname(path).downcase
         raise ArgumentError, "Unsupported drawing format: #{extension}" unless SUPPORTED.include?(extension)
 
@@ -27,6 +27,7 @@ module ForgeBuild
         operation_open = true
         drawing = register(model: model, entity: entity, path: path, discipline: discipline,
                            sheet: sheet, revision: revision, page: page)
+        drawing = set_elevation(model: model, id: drawing[:id], elevation: elevation)
         model.commit_operation
         operation_open = false
         drawing
@@ -50,11 +51,23 @@ module ForgeBuild
         drawing = {
           id: SecureRandom.uuid, path: path.to_s, filename: File.basename(path.to_s), discipline: discipline.to_s,
           sheet: sheet.to_s, revision: revision.to_s, page: Integer(page), imported_at: Time.now.utc.iso8601,
-          scale: 1.0, rotation: 0.0, origin: [0.0, 0.0, 0.0], visible: true, entity_id: persistent_id(entity)
+          scale: 1.0, rotation: 0.0, elevation: 0.0, origin: [0.0, 0.0, 0.0], visible: true, entity_id: persistent_id(entity)
         }
         save(model, registry(model) + [drawing])
         stamp(entity, drawing) if entity
         drawing
+      end
+
+      def set_elevation(model:, id:, elevation:)
+        target = Float(elevation || 0)
+        drawing = find(model, id)
+        current = Float(drawing[:elevation] || 0)
+        entity = find_entity(model, drawing[:entity_id])
+        raise 'The imported plan is no longer available in the modeling area.' unless entity
+
+        delta = target - current
+        entity.transform!(::Geom::Transformation.translation([0, 0, delta])) unless delta.zero?
+        update(model, id, elevation: target)
       end
 
       def calibrate(model:, id:, measured_length:, actual_length:)
