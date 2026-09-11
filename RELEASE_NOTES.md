@@ -1,20 +1,17 @@
-# ForgeBuild 1.2.5 — Parametric Push/Pull Assemblies
+# ForgeBuild 1.2.6 — Floor and Wall Builder Placement Controls
 
-ForgeBuild assemblies can now be resized directly in the SketchUp modeling area without breaking their parametric data.
+ForgeBuild now adds drawing-style placement controls for the Floor Builder and Wall Builder, matching the Snap-to-angle / Snap-to-distance workflow shown in the reference UI.
 
-## Push/Pull Assembly
+## Builder Placement Controls
 
-1. Select a ForgeBuild assembly.
-2. Start Push/Pull Assembly from the toolbar, Properties panel, context-sensitive tools, or right-click menu.
-3. Hover over an assembly face.
-4. Click and drag the highlighted face.
-5. Click again to apply, or type the desired dimension.
+- Added a compact placement control bar for Floor Builder and Wall Builder.
+- Added floor drawing modes: Polygon, Arc, Rectangle, and Circle.
+- Added wall drawing modes: Line, Polyline, Rectangle, and Arc.
+- Added Snap to angle control with adjustable angle increments.
+- Added Snap to distance control with adjustable distance increments.
+- Added alignment controls for Automatic, Center, Left, and Right placement.
+- Passed the selected placement mode and snapping options into SketchUp placement tools.
+- Updated floor and wall live previews to honor snap angle and snap distance behavior.
+- Preserved Shift cycling for wall side placement while drawing.
 
-ForgeBuild determines whether the selected face controls length, width, height, thickness, or depth. It then updates the stored assembly parameter and regenerates the geometry.
-
-- Live face highlighting and dimension feedback
-- Typed-dimension entry
-- Correct origin movement when resizing a starting face
-- Metadata, materials, quantities, and display mode preserved
-- Single-operation SketchUp Undo support
-- Compatible with registered floor, wall, roof, and related ForgeBuild assemblies
+This release focuses on making assembly placement easier to understand and more precise when tracing plans or laying out floor and wall assemblies in SketchUp.
