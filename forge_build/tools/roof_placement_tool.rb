@@ -46,15 +46,31 @@ module ForgeBuild
         ::UI.messagebox(error.message)
       end
       def draw(view)
-        return unless @origin && @input.valid?
+        return unless @input.valid?
+
+        unless @origin
+          draw_placement_cursor(view, inference_position, '#d1492e')
+          draw_inference_point(view)
+          return
+        end
+
         view.drawing_color = '#536373'
         view.line_width = 2
         if %i[area layer].include?(@kind)
           p = inference_position
-          view.draw(::GL_LINE_LOOP, [@origin, [p.x, @origin.y, @origin.z], p, [@origin.x, p.y, @origin.z]])
+          preview = [@origin, [p.x, @origin.y, @origin.z], p, [@origin.x, p.y, @origin.z]]
+          fill = ::Sketchup::Color.new('#536373')
+          fill.alpha = 45
+          view.drawing_color = fill
+          view.draw(::GL_POLYGON, preview)
+          view.drawing_color = '#536373'
+          view.draw(::GL_LINE_LOOP, preview)
+        elsif @kind == :line
+          draw_linear_assembly_preview(view, @origin, inference_position, @options.fetch(:width, 6.0), '#536373')
         else
           view.draw(::GL_LINES, [@origin, inference_position])
         end
+        draw_placement_cursor(view, @origin, '#d1492e')
         draw_inference_point(view)
       end
       private
