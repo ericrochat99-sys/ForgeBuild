@@ -95,8 +95,7 @@ module ForgeBuild
 
         midpoint = ::Geom.linear_combination(0.5, origin, 0.5, endpoint)
         label = "#{prefix}: #{format_model_length(distance)}"
-        view.draw_text(view.screen_coords(midpoint), label,
-                       size: 14, bold: true, color: '#ffffff', align: TextAlignLeft)
+        view.draw_text(view.screen_coords(midpoint), label, size: 14, bold: true, color: '#ffffff')
       rescue StandardError
         # draw_text signatures vary by SketchUp version. Dimension feedback is
         # supplemental, so never let it break placement.
