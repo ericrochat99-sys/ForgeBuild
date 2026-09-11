@@ -1,19 +1,28 @@
-# ForgeBuild 1.2.8 — Phase 2 Plan Tracing Workflow
+# ForgeBuild 1.2.9 — Phase 4 + Phase 9 Assisted Assembly Editing
 
-ForgeBuild v1.2.8 starts the Phase 2 plan-tracing workflow so imported plans can be used as a more guided modeling surface.
+ForgeBuild v1.2.9 adds a stronger Phase 4 + Phase 9 workflow that combines direct assembly editing with an AI-assisted edit planner.
 
-## Trace Plan Mode
+## Assisted Assembly Editing
 
-- Added a dedicated Trace Plan Mode workspace inside Plans & Drawings.
-- Added guided workflow cards for Import, Elevation, Calibrate, Trace, and Review.
-- Added selected-plan controls for calibration, elevation updates, focus guidance, and faded tracing UI.
-- Added quick trace actions for Floor Area, Wall Run, Roof Area, Openings, Grid Lines, and Levels.
-- Added phase-specific trace styling for workflow cards, step indicators, selected-plan tools, and trace assembly buttons.
+- Added the AI Edit Assistant to the selected assembly Property Inspector.
+- Added a Ruby backend `AssemblyEditAssistantService` for deterministic natural-language edit planning.
+- Added natural-language parsing for common assembly edits including height, thickness, width, length, depth, elevation, pitch, slope, STC, R-value, fire rating, material, finish, framing, insulation, sheathing, and commercial assembly metadata.
+- Added one-click application of suggested parameter and metadata changes to the selected assembly.
+- Added apply-to-similar support for matching assemblies with the same builder and object type.
 
-## Workflow Impact
+## Phase 4 Editing Workflow
 
-This release makes the drawing-import workflow easier to follow before tracing assemblies. It gives the user a clearer sequence: import the plan, set the correct elevation, calibrate it, then trace model assemblies from the drawing underlay.
+- Expanded editable assembly fields so assisted edits can update geometry parameters and commercial metadata through the existing regeneration workflow.
+- Separated geometry parameter changes from metadata changes before applying edits.
+- Added safer warnings and follow-up questions for openings, rated assemblies, fixed-side push/pull decisions, and apply-to-similar edits.
+- Added quick access to Push/Pull and Regenerate from the AI edit panel.
+
+## Phase 9 AI Workflow
+
+- Added an AI-ready handoff prompt containing the selected assembly, current parameters, requested edit, detected changes, warnings, questions, and safe-edit instructions.
+- Kept a browser-side fallback analyzer for compatibility while routing primary analysis through Ruby callbacks.
+- Improved the AI panel with ready/review-required status, separated result sections, and apply workflow guidance.
 
 ## Notes
 
-This is the first Phase 2 usability release. The trace buttons use the existing SketchUp tracing callbacks and assembly creation services; the next Phase 2 work should continue into plan-layer controls, plan opacity/locking behavior, and richer trace previews before create.
+This release is the first serious link between the Phase 4 assembly-editing workflow and the Phase 9 AI-assistance workflow. The next work should add grip editing, live preview before commit, richer opening creation, and a true external model-backed assistant call when available.
